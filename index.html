@@ -1,1 +1,487 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>חזי חביבי - פורטפוליו טכני אינטראקטיבי</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chosen Palette: Deep Ocean & Vibrant Accents -->
+    <!-- Application Structure Plan: A multi-section portfolio SPA with top navigation (Overview, Architecture, Features, Digital Studio, Toolbox, Chronology). This thematic structure allows different types of users (recruiters, tech leads) to quickly navigate to the content most relevant to them. The core interaction is a filterable grid of cards for the 'Features' section, which turns a long list into an engaging, explorable interface. This design prioritizes usability and content discovery over a linear report format. A new 'Chronology' section provides a summarized timeline with an option for more details. -->
+    <!-- Visualization & Content Choices: Report Info: Hierarchical project data. Goal: Inform, Organize, Showcase. Viz/Presentation Method: Interactive cards with expand/collapse details for main features, and styled responsive tables for architectural/tooling data. Interaction: Filtering cards by category, clicking to reveal details. Justification: Cards are more engaging than tables for feature lists, and filtering aids discovery. Tables are optimal for presenting structured, descriptive data clearly. The Chronology section uses summarized text blocks for quick overview and a 'Read More' link for potential deeper dive. Library/Method: Vanilla JS for interactions, Tailwind CSS for all styling. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        body {
+            font-family: 'Assistant', sans-serif;
+            background-color: #0F172A; /* Darker background for depth */
+            color: #E2E8F0; /* Lighter text for contrast */
+            scroll-behavior: smooth;
+        }
+        .active-nav {
+            color: #38BDF8; /* Brighter blue accent */
+            border-bottom-color: #38BDF8;
+        }
+        .table-responsive {
+            display: block;
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .feature-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            background-color: #F8FAFC; /* Lighter card background for contrast */
+            color: #1E293B; /* Darker text on cards for readability */
+        }
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
+        }
+        .details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+            color: #475569; /* Slightly darker text for details */
+        }
+        .details.open {
+            max-height: 1200px; /* Adjusted for potentially longer content */
+            padding-top: 1rem;
+            transition: max-height 0.7s ease-in; /* Longer transition for smoother open */
+        }
+        .filter-btn {
+            transition: background-color 0.2s, color 0.2s;
+            background-color: #334155; /* Darker filter button */
+            color: #F8FAFC;
+        }
+        .filter-btn.active {
+            background-color: #38BDF8; /* Brighter blue accent for active filter */
+            color: white;
+        }
+        .highlight-text {
+            background-color: #3B82F6; /* Blue background for highlight */
+            color: white;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-weight: 600; /* Bold text */
+            line-height: 1.6;
+        }
+        .section-title {
+            color: #38BDF8; /* Blue for section titles */
+        }
+        .card-subtitle {
+            color: #6EE7B7; /* Greenish accent for subtitles */
+        }
+        table th {
+            background-color: #334155; /* Darker table header */
+            color: #F8FAFC;
+        }
+        table td {
+            background-color: #1E293B; /* Darker table cell */
+            color: #E2E8F0;
+        }
+        .chronology-item {
+            background-color: #1E293B;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+        }
+        .chronology-item h3 {
+            color: #6EE7B7;
+            font-weight: bold;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+        .chronology-item p {
+            color: #CBD5E1;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .chronology-item .read-more {
+            color: #38BDF8;
+            font-weight: 600;
+            text-decoration: none;
+            margin-top: 0.5rem;
+            display: inline-block;
+        }
+        /* New styles for expandable content */
+        .chronology-full-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.7s ease-in-out; /* Smooth transition for expand/collapse */
+            padding-top: 0;
+            color: #A0AEC0; /* Slightly darker text for full content */
+        }
+        .chronology-full-content.open {
+            max-height: 2000px; /* Increased max-height to ensure all content fits */
+            padding-top: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-slate-900">
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <header class="sticky top-0 bg-slate-900/90 backdrop-blur-sm z-10 border-b border-slate-700">
+            <nav class="flex justify-center items-center py-4 space-x-4 sm:space-x-8 text-sm sm:text-base font-semibold text-slate-300">
+                <a href="#overview" class="nav-link p-2 border-b-2 border-transparent hover:text-sky-400 hover:border-sky-400 transition-colors">מבט על</a>
+                <a href="#architecture" class="nav-link p-2 border-b-2 border-transparent hover:text-sky-400 hover:border-sky-400 transition-colors">ארכיטקטורה</a>
+                <a href="#features" class="nav-link p-2 border-b-2 border-transparent hover:text-sky-400 hover:border-sky-400 transition-colors">פיתוחים ופיצ'רים</a>
+                <a href="#studio" class="nav-link p-2 border-b-2 border-transparent hover:text-sky-400 hover:border-sky-400 transition-colors">אולפן דיגיטלי</a>
+                <a href="#toolbox" class="nav-link p-2 border-b-2 border-transparent hover:text-sky-400 hover:border-sky-400 transition-colors">ארגז כלים</a>
+                <a href="#chronology" class="nav-link p-2 border-b-2 border-transparent hover:text-sky-400 hover:border-sky-400 transition-colors">כרונולוגיה</a>
+            </nav>
+        </header>
+
+        <main class="py-12">
+
+            <section id="overview" class="mb-24 scroll-mt-24">
+                <div class="text-center mb-12">
+                    <h1 class="text-4xl md:text-5xl font-bold text-slate-100">פורטפוליו טכני: ארכיטקטורת מערכת אקולוגית</h1>
+                    <p class="mt-4 text-lg text-slate-400 max-w-3xl mx-auto">מבט-על ארכיטקטוני מקיף על מערך הפיתוחים, הסקריפטים והמודולים המרכיבים את הפרויקט. כל הפיתוחים המוצגים כאן נוצרו ב-3 השנים האחרונות.</p>
+                </div>
+
+                <div class="bg-slate-800 p-6 md:p-8 rounded-xl shadow-lg">
+                    <h2 class="text-3xl font-bold text-sky-400 mb-6 text-center">הסיפור שמאחורי הקוד: מסע של צלילים, טכנולוגיה ורגש</h2>
+                    <div class="prose prose-lg max-w-none text-slate-300 space-y-4">
+                        <p>
+                            סיפורו של חזי חביבי הוא מסע מרתק שמתחיל בחיבור עמוק למוזיקה כבר מגיל הגן, ומתפתח על קו התפר שבין שני עולמות: אמנות וטכנולוגיה. כמוזיקאי, אמן כלי נשיפה (14 כלים שונים) והנדסאי אלקטרוניקה בהכשרתו, הוא מצא דרך ייחודית לשלב את שתי אהבותיו.
+                        </p>
+                        <p>
+                            במשך שנים רבות, שימש כמנהל מוזיקלי נערץ במוסדות חינוך, הקים להקות ייצוגיות מצליחות, טיפח כישרונות צעירים שהגיעו לקדמת הבמה (כמו ב"כוכב נולד"), ואף הקים יחד עם הבמאי ז'אק זרביב את הלהקה הייצוגית של חיל התקשוב. במקביל, יצר מופעים מוסברים בכלי נשיפה שזכו להכרה של "סל תרבות ארצי".
+                        </p>
+                        <p class="highlight-text">
+                            **בשנים האחרונות, המסע הוביל אותו לעולם הגיל הרך, שם זיהה צורך בפעילות חדשנית שתדבר בשפתם של ילדי העידן הדיגיטלי. מתוך החיבור לילד שהיה בעצמו, שהתמודד עם הפרעת קשב חמורה, נולד החזון: ליצור חוויה רב-חושית שתעורר עניין וריכוז דרך רגש. כל הפיתוחים הטכניים המוצגים בפורטפוליו זה הם התוצאה של אותו חזון – הניסיון להפוך סיפור פשוט לחוויה סוחפת, המשלבת מוזיקה, אנימציה, אוטומציה ואינטראקציה, ונוגעת עמוק בלב.**
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="architecture" class="mb-24 scroll-mt-24">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center">⚙️ ארכיטקטורת מערכת וניהול Office</h2>
+                <p class="text-center text-slate-400 max-w-4xl mx-auto mb-10">פרק זה מפרט את יסודות המערכת: קוד הליבה המאפשר אוטומציה ושליטה, ומערך הכלים המנהל את התוכן בסביבת Microsoft Office, שהיא לב המערכת.</p>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-slate-800 p-6 rounded-xl shadow-md">
+                        <h3 class="font-bold text-xl mb-4 card-subtitle">קוד ליבה, אוטומציה וניהול מערכת</h3>
+                        <div class="table-responsive">
+                            <table class="w-full text-sm">
+                                <thead class="bg-slate-700"><tr><th class="p-2 text-right font-semibold">שם הרכיב / מודול</th><th class="p-2 text-right font-semibold">תיאור ותפקיד</th></tr></thead>
+                                <tbody>
+                                    <tr class="border-t border-slate-700"><td>**קוד VBA ראשי**</td><td>קובץ המקור הראשי, נקודת הכניסה לתהליכים המרכזיים.</td></tr>
+                                    <tr class="border-t border-slate-700"><td>**קוד מקור לכל הערוצים**</td><td>מודול ניתוב ובקרה על תהליכים מקבילים.</td></tr>
+                                    <tr class="border-t border-slate-700"><td>**קוד אוטומציה**</td><td>ספריית ליבה של פונקציות אוטומציה גנריות.</td></tr>
+                                    <tr class="border-t border-slate-700"><td>**הפעלת סקריפטים חיצוניים**</td><td>הרצת קבצי Batch ו-AHK להרחבת יכולות המערכת.</td></tr>
+                                    <tr class="border-t border-slate-700"><td>**שליחה למערכת AHK**</td><td>אינטגרציה ייעודית לשליחת פקודות ל-AutoHotkey.</td></tr>
+                                    <tr class="border-t border-slate-700"><td>**אוטומציה, הפעלת תוכנה חיצונית**</td><td>הפעלה ושליטה על תוכנות צד-שלישי (כמו VLC).</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                     <div class="bg-slate-800 p-6 rounded-xl shadow-md">
+                        <h3 class="font-bold text-xl mb-4 card-subtitle">ניהול מצגות ואוטומציה ב-Office</h3>
+                        <div class="table-responsive">
+                            <table class="w-full text-sm">
+                                <thead class="bg-slate-700"><tr><th class="p-2 text-right font-semibold">שם הרכיב / מודול</th><th class="p-2 text-right font-semibold">תיאור ותפקיד</th></tr></thead>
+                                <tbody>
+                                    <tr class="border-t border-slate-700"><td>**מודול מצגות**</td><td>ניהול כללי של קבצי PPTX.</td></tr>
+                                    <tr class="border-t border-slate-700"><td>**שקופית קבע 1-16**</td><td>תהליך אוטומטי לסנכרון תוכן לתבנית בסיס.</td></tr>
+                                    <tr class="border-t border-slate-700"><td>**מודול העתקה**</td><td>העתקה דינמית של שקופיות ואלמנטים.</td></tr>
+                                    <tr class="border-t border-slate-700"><td>**תיקון / שקופיות**</td><td>לוגיקה לתיקון אוטומטי של מבנה או סדר.</td></tr>
+                                    <tr class="border-t border-slate-700"><td>**מודול שמירה ל-PDF**</td><td>המרה אוטומטית של מצגת פעילה ל-PDF.</td></tr>
+                                    <tr class="border-t border-slate-700"><td>**חיבור ותקשורת עם Excel**</td><td>משמש כמקור נתונים דינמי מגיליונות Excel.</td></tr>
+                                    <tr class="border-t border-slate-700"><td>**קוד ל-DOCX**</td><td>אינטגרציה ליצירת דוחות ותסריטים ב-Word.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="features" class="mb-24 scroll-mt-24">
+                <h2 class="text-3xl font-bold section-title mb-2 text-center">📱 פיתוחים ופיצ'רים אינטראקטיביים</h2>
+                <p class="text-center text-slate-400 max-w-4xl mx-auto mb-10">זוהי ליבת הפיתוחים בצד המשתמש: רכיבי UI/UX מתקדמים, לוגיקת משחק ומערכות אינטראקטיביות שנועדו ליצור חוויה עשירה ודינמית. לחצו על קלף כדי לראות הסבר מפורט.</p>
+                 <div id="feature-filters" class="flex flex-wrap justify-center gap-2 mb-8">
+                    <button class="filter-btn active px-4 py-2 text-sm font-semibold rounded-full" data-filter="all">הכל</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold rounded-full" data-filter="UI Component">רכיבי UI</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold rounded-full" data-filter="Game Logic">לוגיקת משחק</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold rounded-full" data-filter="Editor UI">כלי עריכה</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold rounded-full" data-filter="Dialog System">מערכות דיאלוג</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold rounded-full" data-filter="Automation">אוטומציה</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold rounded-full" data-filter="Audio Processing">עיבוד אודיו</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold rounded-full" data-filter="Visual Effects">אפקטים חזותיים</button>
+                </div>
+                <div id="features-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                </div>
+            </section>
+            
+            <section id="studio" class="mb-24 scroll-mt-24">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center">🎨 אולפן דיגיטלי: אנימציה, דיבוב ו-AI</h2>
+                <p class="text-center text-slate-400 max-w-4xl mx-auto mb-10">מכלול הכלים המתקדמים המאפשרים יצירת תוכן אורקולי עשיר, מאנימציית פנים ודיבוב, ועד לשילוב יכולות בינה מלאכותית להעשרת החוויה.</p>
+                <div class="bg-slate-800 p-6 rounded-xl shadow-md">
+                     <div class="table-responsive">
+                        <table class="w-full text-sm">
+                            <thead class="bg-slate-700"><tr><th class="p-2 text-right font-semibold">שם הרכיב / מודול</th><th class="p-2 text-right font-semibold">תיאור ותפקיד</th><th class="p-2 text-right font-semibold">טכנולוגיה / סוג</th></tr></thead>
+                            <tbody>
+                                <tr class="border-t border-slate-700"><td>**אולפן הקלטות ודיבוב**</td><td>מערכת ניהול דיבוב עם UI להקלטה ועורך טקסט און-ליין.</td><td>`Tool`</td></tr>
+                                <tr class="border-t border-slate-700"><td>**עיבוד קולי SRT**</td><td>סקריפט אוטומטי המנתח קובץ כתוביות (SRT) ומייצר דיבוב מסונכרן.</td><td>`Automation Script`</td></tr>
+                                <tr class="border-t border-slate-700"><td>**מערכת Lip-sync**</td><td>כלי עיבוד וידאו לסנכרון שפתיים על-ידי "הלבשת" אנימציות פה.</td><td>`Video Processing`</td></tr>
+                                <tr class="border-t border-slate-700"><td>**כלי אנימציית פנים**</td><td>סט כלים עם ממשק סליידרים (Sliders) לשליטה מדויקת על תנועות פנים.</td><td>`Animation Tool`</td></tr>
+                                <tr class="border-t border-slate-700"><td>**AI לוגיקה**</td><td>קוד ליבה המכיל לוגיקת AI לקבלת החלטות ויצירת תוכן דינמי.</td><td>`VBA`, `AI`</td></tr>
+                                <tr class="border-t border-slate-700"><td>**עיבוד תמונה מבוסס AI**</td><td>שימוש בלוגיקת AI לעיבוד תמונה, זיהוי אובייקטים או יצירת רקעים.</td><td>`Image Processing`, `AI`</td></tr>
+                                <tr class="border-t border-slate-700"><td>**מערכת זיהוי דיבור**</td><td>מערכת המקליטה פקודות קוליות ומבצעת פעולות תואמות.</td><td>`Speech Recognition`</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="toolbox" class="scroll-mt-24">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center">🧰 ארגז הכלים הדיגיטלי: שליטה בתוכנות</h2>
+                 <p class="text-center text-slate-400 max-w-4xl mx-auto mb-10">רשימה זו מפרטת את התוכנות המרכזיות המשמשות ככלי עבודה בפרויקט, ומדגישה את מגוון היכולות הטכניות הנדרשות להפעלתו.</p>
+                <div class="bg-slate-800 p-6 rounded-xl shadow-md">
+                     <div class="table-responsive">
+                        <table class="w-full text-sm">
+                            <thead class="bg-slate-700"><tr><th class="p-2 text-right font-semibold">תוכנה</th><th class="p-2 text-right font-semibold">קטגוריה</th><th class="p-2 text-right font-semibold">הסבר קצר</th></tr></thead>
+                            <tbody>
+                                <tr class="border-t border-slate-700"><td>**Microsoft PowerPoint**</td><td>סביבת פיתוח מרכזית</td><td>הבמה המרכזית שעליה נבנים ומוצגים כל הסיפורים.</td></tr>
+                                <tr class="border-t border-slate-700"><td>**Microsoft Excel**</td><td>סביבת פיתוח מרכזית</td><td>משמש כ"מוח" ומאגר הנתונים של הפרויקטים.</td></tr>
+                                <tr class="border-t border-slate-700"><td>**Microsoft Word**</td><td>סביבת פיתוח מרכזית</td><td>משמש לכתיבה וניהול של התוכן הנרטיבי והתסריטים.</td></tr>
+                                <tr class="border-t border-slate-700"><td>**CrazyTalk**</td><td>אנימציה</td><td>הנפשת פנים ותמונות סטטיות ליצירת דמויות מדברות.</td></tr>
+                                <tr class="border-t border-slate-700"><td>**Cartoon Animator**</td><td>אנימציה</td><td>יצירת סרטי אנימציה דו-ממדיים מלאים.</td></tr>
+                                <tr class="border-t border-slate-700"><td>**Adobe Character Animator**</td><td>אנימציה</td><td>הנפשת דמויות בזמן אמת באמצעות מצלמת רשת.</td></tr>
+                                <tr class="border-t border-slate-700"><td>**MorphVOX Pro**</td><td>אודיו</td><td>תוכנה לשינוי קול בזמן אמת.</td></tr>
+                                <tr class="border-t border-slate-700"><td>**Adobe Photoshop**</td><td>גרפיקה</td><td>עריכת תמונות, ריטוש ועיצוב גרפי.</td></tr>
+                                <tr class="border-t border-slate-700"><td>**Wondershare Filmora**</td><td>וידאו</td><td>תוכנת עריכת וידאו ידידותית עם אפקטים ותבניות.</td></tr>
+                                <tr class="border-t border-slate-700"><td>**Cubase**</td><td>יצירת מוזיקה</td><td>תחנת עבודה דיגיטלית (DAW) מקצועית.</td></tr>
+                                <tr class="border-t border-slate-700"><td>**OBS Studio**</td><td>תוכנת שידור</td><td>שידור חי (סטרימינג) והקלטת מסך.</td></tr>
+                                <tr class="border-t border-slate-700"><td>**Visual Studio / PyCharm**</td><td>תכנות</td><td>סביבות פיתוח (IDE) למגוון שפות ופייתון.</td></tr>
+                                <tr class="border-t border-slate-700"><td>**AutoHotkey**</td><td>תכנות</td><td>שפת סקריפטים לאוטומציה של משימות בחלונות.</td></tr>
+                                <tr class="border-t border-slate-700"><td>**BlueStacks**</td><td>אמולציית אנדרואיד</td><td>אמולטור להרצת אפליקציות ומשחקי אנדרואיד.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="chronology" class="mb-24 scroll-mt-24">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center">⏳ המסע שלי: אבני דרך כרונולוגיות</h2>
+                <p class="text-center text-slate-400 max-w-4xl mx-auto mb-10">הצצה קצרה אל אבני הדרך המרכזיות במסע המקצועי והאישי שלי, שהובילו לפיתוחים הייחודיים המוצגים בפורטפוליו זה.</p>
+                
+                <div class="space-y-6">
+                    <div class="chronology-item">
+                        <h3>פרק 1: הילדות, החשמל והקסם שבטכנולוגיה – ניצוץ ראשוני ומאבקים מוזיקליים</h3>
+                        <p class="chronology-summary">כבר בגן הילדים ניצתה בי אהבה עמוקה למוזיקה, שהתבטאה בנגינה על כלי נשיפה – תחום בו אני שולט כיום ב-14 כלים שונים. אך לצד האהבה העצומה, נולדו גם אתגרים עצומים. הפרעות קשב קשות הפכו את לימוד קריאת התווים למאבק מתסכל... בכיתה ז' כבר הקמתי מעבדת אלקטרוניקה פרטית משלי – עם מערכת בקרה שכולה נתפרה לפי התוכניות שלי. אפילו הדלת נפתחה אוטומטית, ורמקול הכריז "הדלת פתוחה!" באמצעות טייפ ישן וחיישן שהמצאתי. עוד לא ידעתי לקרוא לזה "מיקרו-בקר" או "אוטומציה", אבל הראש שלי ידע בדיוק מה הוא עושה.</p>
+                        <div class="chronology-full-content" id="chapter1-full">
+                            <p>כבר בגן הילדים ניצתה בי אהבה עמוקה למוזיקה, שהתבטאה בנגינה על כלי נשיפה – תחום בו אני שולט כיום ב-14 כלים שונים. אך לצד האהבה העצומה, נולדו גם אתגרים עצומים. הפרעות קשב קשות הפכו את לימוד קריאת התווים למאבק מתסכל, שכן קריאת תווים דרשה ממני ריכוז בלתי אפשרי. חוויתי כישלון בדבר שאהבתי, כשכל חבריי קראו תווים בקלות ואני נסמכתי רק על שמיעתי, שלא תמיד הובילה לדיוק המיוחל. כחבר בלהקת "בני רחובות", אף נחשבתי ל"נגן גרוע" וקינאתי באחרים.
+במקביל לעולם הצלילים, נמשכתי תמיד לתחכום הפטנטים וההמצאות. עוד לפני שמישהו הסביר לי איך דברים עובדים, פירקתי אותם – כדי להבין לבד. בשנות ה-70, בעודי ילד, קראתי לא מעט ספרים: "הטכנאי הצעיר", "חידושי האלקטרוניקה", ומגזינים נדירים, כל מה שיכולתי לשים עליו יד. בניתי קיטים, מגברים, טלווקסים, שאבים – וכל מה שהציעה התקופה. בכיתה ז' כבר הקמתי מעבדת אלקטרוניקה פרטית משלי – עם מערכת בקרה שכולה נתפרה לפי התוכניות שלי. אפילו הדלת נפתחה אוטומטית, ורמקול הכריז "הדלת פתוחה!" באמצעות טייפ ישן וחיישן שהמצאתי. עוד לא ידעתי לקרוא לזה "מיקרו-בקר" או "אוטומציה", אבל הראש שלי ידע בדיוק מה הוא עושה.</p>
+                        </div>
+                        <a href="#" class="read-more" data-chapter="chapter1-full">קרא עוד על פרק 1</a>
+                    </div>
+                    
+                    <div class="chronology-item">
+                        <h3>פרק 2: תיכון, להקה ראשונה ושירות צבאי ביחידת הלוחמה האלקטרונית</h3>
+                        <p class="chronology-summary">בתיכון ייסדתי, יחד עם מורה שהאמינה בי, את הלהקה הראשונה של אורט רחובות. שם התחילו ניסיונות ההרמוניה והעיבודים שלי. לא ידעתי תווים – אז פשוט שרתי את התפקידים, והילדים ניגנו לפי הקול שלי. במקביל, למרות שעברתי את כל מבחני הקבלה, נותרה בי תחושת צער על כך שלא זכיתי להיות בלהקה צבאית. מאוחר יותר שירתתי במקום יוקרתי בחיל הקשר – יחידת הלוחמה האלקטרונית. שם הוכשרתי לדרג ד', ברמת רכיב, וידעתי שזהו שלב משמעותי בהעמקת ההבנה הטכנית שלי.</p>
+                        <div class="chronology-full-content" id="chapter2-full">
+                            <p>בתיכון ייסדתי, יחד עם מורה שהאמינה בי, את הלהקה הראשונה של אורט רחובות. שם התחילו ניסיונות ההרמוניה והעיבודים שלי. לא ידעתי תווים – אז פשוט שרתי את התפקידים, והילדים ניגנו לפי הקול שלי. חצוצרן רשם בתווים את מה ששרתי – וכך התזמורת ניגנה את מה ש"הסתובב לי בראש". במקביל, למרות שעברתי את כל מבחני הקבלה, נותרה בי תחושת צער על כך שלא זכיתי להיות בלהקה צבאית.
+מאוחר יותר שירתתי במקום יוקרתי בחיל הקשר – יחידת הלוחמה האלקטרונית. שם הוכשרתי לדרג ד', ברמת רכיב, וידעתי שזהו שלב משמעותי בהעמקת ההבנה הטכנית שלי.</p>
+                        </div>
+                        <a href="#" class="read-more" data-chapter="chapter2-full">קרא עוד על פרק 2</a>
+                    </div>
+
+                    <div class="chronology-item">
+                        <h3>פרק 3: הנדסאי אלקטרוניקה ואולפן ביתי – שילוב העולמות</h3>
+                        <p class="chronology-summary">עם סיום השירות, למדתי במסלול הנדסאים ב"יד סינגלובסקי", מוסד יוקרתי למקצועות הטכנולוגיה. הידע שלי באלקטרוניקה היה יסודי, פרקטי ומדויק. השלב הבא היה מתבקש: אבי העביר לי את דירת המרתף שבביתנו הפרטי – ושם בניתי את האולפן האנלוגי הראשון שלי. לא קניתי מערכת מוכנה – תכננתי הכול בעצמי: טייפ פוסטקס 16 ערוצים עם Dolby C, מערכת בקרה, כבלים, מיקסרים – שבניתי או התאמתי, חדרים מבודדים ותאורה מבוקרת. האולפן פעל 7 שנים ברציפות, שימש להקלטות, הפקות ועבודה עם אמנים צעירים. אך בסוף – בגלל בעיות מול העירייה, נאלצתי לפרק אותו בדמעות.</p>
+                        <div class="chronology-full-content" id="chapter3-full">
+                            <p>עם סיום השירות, למדתי במסלול הנדסאים ב"יד סינגלובסקי", מוסד יוקרתי למקצועות הטכנולוגיה. הידע שלי באלקטרוניקה היה יסודי, פרקטי ומדויק. השלב הבא היה מתבקש: אבי העביר לי את דירת המרתף שבביתנו הפרטי – ושם בניתי את האולפן האנלוגי הראשון שלי. לא קניתי מערכת מוכנה – תכננתי הכול בעצמי: טייפ פוסטקס 16 ערוצים עם Dolby C, מערכת בקרה, כבלים, מיקסרים – שבניתי או התאמתי, חדרים מבודדים ותאורה מבוקרת. האולפן פעל 7 שנים ברציפות, שימש להקלטות, הפקות ועבודה עם אמנים צעירים. אך בסוף – בגלל בעיות מול העירייה, נאלצתי לפרק אותו בדמעות.</p>
+                        </div>
+                        <a href="#" class="read-more" data-chapter="chapter3-full">קרא עוד על פרק 3</a>
+                    </div>
+
+                    <div class="chronology-item">
+                        <h3>פרק 4: תקופת המעבר – שטח, הקלטות ניידות, ומתודות שנולדו מתוך אילוץ – ניהול מוזיקלי והצלחה ארצית</h3>
+                        <p class="chronology-summary">כשאין אולפן – יוצאים לשטח. הרכבתי אולפן נייד עם Roland 16 ערוצים, ופיתחתי טכניקות אילתור שהמצאתי בעצמי: הקלטת אקו בעזרת טייפ עם ראש נוסף, שימוש חוזר ברכיבים ישנים, ותכנון "מהראש" – תוך כדי תנועה. במקביל, הגיע גם המחשב הראשון שלי: Atari 1040 ST עם תוכנת SILB, מונו-כרום – וכך התחיל החיבור הראשון בין מוזיקה למחשב. הבנתי אז משהו מהותי: הקוד הוא רק עוד דרך לתת צורה למה שיש לי בראש.
+לאחר מכן, חזרתי לניהול מוזיקלי באורט, והפעם, עם ניסיון חיים עשיר יותר, העמקתי את ניסיונותיי בווקאליזציה. הגעתי לרמות נדירות, כאלו שלא נראו בישראל עד אז, כשאני מנצח על נוער – תלמידים ממגמות שאינן מוזיקה – ומביא אותם לרמת שירה בסגנון ה"סווינגל סינגרס". הדבר היה כה יוצא דופן, עד כי כאשר הלהקה המקורית הגיעה לארץ למופעים, חבריה נדהמו לשמוע בני נוער ישראלים מבצעים את יצירותיהם המורכבות.
+תוך כדי העבודה במספר רב של תיכונים בארץ, המשכתי להקים ולהוביל להקות ייצוגיות ברחבי הארץ. במהלך שנותיי כמנהל מוזיקלי, זיהיתי וטיפחתי תלמידים מוכשרים רבים. חלקם הגדול פרץ לתודעה הציבורית והפך למפורסם במסגרות כמו "כוכב נולד" ובתיאטראות מובילים בארץ – עדות נוספת להשפעתי העצומה. שנים ספורות לאחר סיום פרויקטים אלו, הגיעה הפגישה הגורלית עם הבמאי ז'אק זרביב, שותפי לדרך. יחד, התחלנו לברוא מופעים שלמים, שכללו לא רק תוכן מוזיקלי עשיר, אלא גם תנועה, חוויה, תפאורה ומחזות זמר רבים – כל מה שנדרש כדי להפוך מופע לבלתי נשכח. שנינו כבשנו את במות התיכונים המובחרים בארץ, והצלחתנו הייתה מסחררת. הפכנו למבוקשים, יצרנו להקות ייצוגיות, ערבי כישרונות, והובלנו מאות (!) מסיבות סיום ומחזות זמר מקוריים, והצבנו סטנדרט אמנותי גבוה ויוצא דופן שלא היה מוכר באותה תקופה.
+ואז, הגיע הרגע לסגור את המעגל הצבאי. יחד עם ז'אק, הגשמתי חלום והקמתי את הלהקה הייצוגית של חיל הקשר (כיום להקת חיל התקשוב). הלהקה, שפעילה עד היום, העניקה במה לכישרונות רבים, והוציאה אמנים כמו הראל סקעת ומאיה אברהם (זמרת בתוכניתו של פרויקט רייכל).</p>
+                        </div>
+                        <a href="#" class="read-more" data-chapter="chapter4-full">קרא עוד על פרק 4</a>
+                    </div>
+
+                    <div class="chronology-item">
+                        <h3>פרק 5: המסע המוזיקלי - מופעים בכלי נשיפה, תיכונים וגני ילדים</h3>
+                        <p class="chronology-summary">לאחר סיום פרויקטי הלהקות, החל פרק חדש ומרתק – פיתוח מופעי הנגינה בכלי נשיפה. יצרתי תוכניות נגינה שהן מעין מופעים מוסברים בכלי נשיפה, אשר עברו את מבחני "סל תרבות ארצי" ו"נוער מוזיקלי". תוכניות אלו מיועדות לחטיבות ביניים ותיכונים, וכוללות מופעי "מפגש חוויה" ומופעים גדולים יותר לכלל בית הספר. בשלב זה, בלי לדעת, נכנסתי לאחד מהשלבים המכוננים של דרכי – עולם הגיל הרך. לא כמורה בלבד – אלא כמי שמביא עמו שפה מוזיקלית שלמה שנולדה מהשטח. נכנסתי לגנים עם יכולת שמעטים החזיקו אז: יכולת לנגן על עשרות כלים שונים, לחבר בין סיפור לבין סאונד, ולייצר חוויה מוחשית גם בלי תיאוריה או מצגת.
+אבל העיקר היה ביכולת להמציא פטנטים חיים. רציתי לחשוף את הילדים לסוד הצליל – אז בניתי מודלים מכלים ביתיים, חתכתי בקבוקים, פתחתי צעצועים, חיברתי צינורות ויצרתי מהם כלי נגינה מאולתרים. בכל פעם, הסברתי איך הצליל נוצר דרך המחשה פיזית. אחת הדוגמאות שאני זוכר עד היום – כשהצגתי לילדים את משפחת הסקסופונים ורציתי להמחיש את גודלו של סקסופון קונטרבס. הדפסתי תמונה בגובה של 40 דפי A4 – הילדים אחזו בתחתית על הרצפה, ואני עמדתי על כיסא והצמדתי את הקצה העליון לתקרה. כך הם הרגישו בעצמם את גודל הכלי. הם לא רק ראו – הם חוו. באותה תקופה פיתחתי עשרות תוכניות כאלה, וכל אחת מהן כללה שילוב של סיפור, הדגמה, כלי נגינה אמיתי, הפעלת הילדים ועבודה רב-חושית. לא הייתי רק "מורה למוזיקה", אלא ממציא של גישה. היום אני יודע: כאן נולד השילוב הראשון בין הידע הטכני שלי לבין הדמיון החווייתי, שנבט שנים אחר כך לתוך הקוד, ה-AI, והתיאוריה הרחבה שבניתי.
+פועלי מתחלק לארבע קטגוריות מופעים עיקריות, לצד פיתוחים ותוכניות נוספות:
+**מופעים חד-פעמיים 1:** המופע המבוקש "צלילים שנוגים", המותאם במיוחד לקהל המבוגר יותר. הוא כולל תוכנית נגינה בשלל הכלים, הנוגעת בניגוני עבר נצחיים, המעובדים באופן מרגש לנגינה בכלי הנשיפה. לפרטים מעמיקים יותר בעניין המופע הזה, ניתן לחפש בגוגל: "חזי חביבי דף בית".
+**מופעי הקראות:**
+הראשון, "הספר של כלי נשיפה", מבוסס על סיפורי הראשי, שמטרתו לתת דוגמה חיה לרצון בלתי מתפשר לכבוש מטרה: מוזיקה ונגינה.
+"הספר של כלי נשיפה B" הוא שדרוג מהותי של אותו מופע, הכולל משחק רב-חושי ומוצגים ויזואליים שנוצרו במיוחד עבור התוכנית. סרטים מצוירים מספרים את העלילה והשירים הנלווים בתיאום מוחלט למופע החי, ומספקים חיזוק משלים, המותאם במיוחד לילדים שרגילים לשאוב מידע חזותי בעידן זה.
+**מופעים חד-פעמיים 2:** מופעים מקוריים אלה עוסקים בנושאים שונים ומגוונים, כמובן דרך פריזמת הנגינה בכלי הנשיפה.
+**סדרת קונצרטים "זה מרלך לגיל הרך":** במהלך הזמן, נחשפתי לתוכנית הלימודים של משרד החינוך בגנים, המבוססת על הספרים "זה מרלך לגיל הרך". בעקבות גישת משרד החינוך, יצרתי סדרת קונצרטים ייחודית, המותאמת באופן מושלם לשדרת הספרים הזו ולמועד שבו נלמדות היצירות הכלולות בו – לאורך השנה, על פי לוח השנה העברי. הסדרה מתבססת על שיתוף פעולה ביני לבין הגננות. אני מגיש לילדים קונצרטים שהם אירועי שיא, החותמים תקופה של למידה. כך שהילדים מגיעים לקונצרט כשהם מכירים את החומר, ולכן יכולים לקחת חלק פעיל בחוויה וליהנות ממנה באופן מקסימלי. הילדים מקבלים הכנה לקראת הקונצרט, והם מצפים לו ונרגשים לקראתו, כפי שכל שוחר מוזיקה מבוגר נערך ומתארגן לקראת אירוע תרבותי חשוב ואיכותי.
+**סדנאות ספציפיות ועדכונים שנתיים:**
+**"אינסלט, עד באמת מתחילים" (תוכנית ירוקה):** תוכנית חדשנית לילד בגיל הגן, שיכולה להוות פתרון פשוט ונגיש, הכוללת את כל הנושאים המוזיקליים אותם הילדים אמורים להכיר. התוכנית כוללת ערכה שהוכנה במיוחד וכן דיסק מקורי הכולל ארבעים ושבע רצועות שמע, המכיל שלל דוגמאות וכן שירים מקוריים, המדגישים נושאים חשובים כדרך ללמוד והטמעה אצל הילדים.
+**"כלי הנשיפה שלי":** סדרת קונצרטים מקוריים, המכילה באופן יסודי את כל תחום כלי הנשיפה על צדדיו השונים והמרתקים. היא חוקרת נושאים כמו: כיצד מיוצר הצליל (באמצעות מודלים שנבנו במיוחד מחומרים מוכרים מחיי היומיום), החומרים השונים המשמשים לבניית הכלים, שוני הצליל בין הכלים השונים, הקשר המרתק בין הגודל הפיזי והצליל, צורת הכלים, וכיצד כל זה קורה – כולל הצצה למפעלי כלים בעבר ובהווה.</p>
+                        </div>
+                        <a href="#" class="read-more" data-chapter="chapter5-full">קרא עוד על פרק 5</a>
+                    </div>
+
+                    <div class="chronology-item">
+                        <h3>פרק 6: המעבר לצהרונים – כשהמפגש התחלף למחויבות ארוכת טווח</h3>
+                        <p class="chronology-summary">התחנה הבאה, והמהפכנית לא פחות, הייתה הצהרונים. שם, מתוך צורך אמיתי בשטח, פיתחתי סוג חדש של פעילות: תוכנית רב-פעמית, כמעין חוג שבועי קבוע הנפרש לאורך כל השנה, וכולל לא פחות מארבעה עשר חוגים שונים בנושאים מרתקים לילדים. ביצעתי מהלך אסטרטגי ששינה את פני הדברים: בחרתי חוג מרכזי סביבו יתארגנו שאר התכנים – "הסיפור המוזיקלי", שזכה לנתח עניין מדהים של 96% בניסויי שטח. כך, מרבית המאמץ וההשקעה הופנו לפיתוח וליטוש הסיפור המוזיקלי, שהפך לעוגן המרכזי של חוגי הצהרונים, כאשר תתי-חוגים אחרים משולבים כריענון תקופתי.
+חוגי הצהרונים: מהשקפה רחבה לליבת העניין המוזיקלי. פיתוח התכנים לצהרונים, המורכב ממגוון עשיר של כ-14 תתי-חוגים, שואב השראה מניסיון עבר עשיר. אך בפורמט החדש, ביצעתי מהלך אסטרטגי ששינה את פני הדברים: בחרתי חוג מרכזי סביבו יתארגנו שאר התכנים. הבחירה הזו לא הייתה מקרית. היא נבעה משנה שלמה של ניסוי ובחינת שטח בחוגים הקבועים בצהרונים. במהלך תקופה זו, נמדדה רמת העניין של הילדים בכל אחד מהחוגים באופן פרטני. התוצאות היו חד-משמעיות: הסיפור המוזיקלי זכה לנתח עניין של 96%, נתון מדהים שהכתיר אותו לליבת הפעילות. משמעות הדבר היא שמרבית המאמץ וההשקעה הופנו לפיתוח וליטוש הסיפור המוזיקלי, שהפך לעוגן המרכזי של חוגי הצהרונים. תתי-החוגים האחרים, על אף עניינם, ישולבו כעת במינון נכון יותר, וישמשו כגורם מרענן ומשלים בתוך המבנה המרוכז סביב הסיפור המוזיקלי. כך, למשל, אם חוג נגינה זכה ל-70% עניין, הוא לא ייעלם, אלא ישולב כריענון תקופתי, ויבטיח שילדים ימשיכו ליהנות ממנו במינון אופטימלי ששומר על רעננותו ואטרקטיביותו.</p>
+                        </div>
+                        <a href="#" class="read-more" data-chapter="chapter6-full">קרא עוד על פרק 6</a>
+                    </div>
+
+                    <div class="chronology-item">
+                        <h3>פרק 7: החזון של היום – מקארו, מרחב חושי-רגשי, ופיתוחים מתקדמים</h3>
+                        <p class="chronology-summary">אני מאמין במספר עקרונות ברזל המנחים את כל פעילותי עם ילדים, במיוחד בעידון הנוכחי. השאלה המרכזית עבורי היא: כיצד להעביר את המסר באופן שיעורר עניין וסקרנות אצל הילד? אני חוזר אל הילד שהייתי פעם, אל הקושי שלי להקשיב בשל הפרעת קשב חמורה, ומציב לעצמי רף גבוה: אם אצליח לעניין ילד עם הפרעת קשב, הרי ברור שזה יצליח עם כל שאר הילדים. זו גם דרכי להעניק לאותם ילדים רגעים של שקט וריכוז. כאמן שהגיע להישגים מוזיקליים כנגד כל הסיכויים, אני יודע היטב מה מניע ומשפיע: רגש, רגש ושוב רק רגש. אני זוכר את החלילן שריגש אותי בילדותי, ולא עסק ב"הפעלות", אלא פשוט ניגן בכישרון. לכן, כאשר יש לי את היכולת לרגש, לא רק דרך המוזיקה אלא בכל היבטי פעילותי, אני מקדיש לכך את זמני היקר. אני מאמין שהרגש הוא המפתח שיגיע אל הילד ויוביל להשפעה ארוכת טווח. היום, אני לא רק מלמד. אני בונה מרחבים רגשיים-חושיים לילדים. אני קורא לזה: מקארו – מקום שבו הילד חווה, לא לומד. שקופיות מדברות בקול, אורות מגיבים, מוזיקה יוצרת הבנה לפני מילים. מקארו הוא רגע שילד שוכח שהוא בכיתה, חיבור בין אור, צבע, צליל ותוכן, ותנועה שבאה מהלב ונוגעת בלב. אני לא רק מתכנת, לא רק מוזיקאי, לא רק ממציא. אני הילד שפעם רצה שהתמונה תזוז – והיום אני מזיז אותה. אני ממשיך לחדש ולפרוץ דרך בתחומים מגוונים.</p>
+                        </div>
+                        <a href="#" class="read-more" data-chapter="chapter7-full">קרא עוד על פרק 7</a>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const featuresData = [
+        { index: 1, original: 'הנפשה לתמונה אחת', professional: 'מנוע הנפשה עדינה לתמונות סטטיות', simple: 'מפיח חיים בתמונה בודדת באמצעות תנועה קלה (נשימה, רעד קסום), ללא צורך באנימציה מורכבת. **מיועד להפוך ציורים סטטיים שנוצרו ב-AI לחוויה נושמת ומרגשת, כמו קסם ילדותי.**', category: 'Visual Effects', localPath: '' },
+        { index: 2, original: 'עיוות רקע אוטומטי לזוז', professional: 'מנוע הנפשת רקעים דינמי', simple: 'יוצר תנועה גלית או קלה ברקעים סטטיים (שמיים, ים, אור) כדי להפוך אותם לחיים ונושמים. **מחזיר לתמונות סטילס את התחושה שהעולם ממשיך לפעול, כמו בזיכרונות ילדות שבהם גם השמש צחקה והעננים הלכו.**', category: 'Visual Effects', localPath: '' },
+        { index: 3, original: 'קול לכל שקופית', professional: 'מערכת קריינות מותאמת שקופית', simple: 'סורק מצגת ויוצר קובץ קול מותאם לכל שקופית, לפי סיפור, טון או דמות שנבחרו מראש, להעצמת החוויה הרגשית. **מבוסס על ניסיון עמוק במוזיקה והבנה שמוזיקה מעצימה סצנה רגשית, כמו ילד שביטא: "חזי, זה כמו בסרט!".**', category: 'Dialog System', localPath: '' },
+        { index: 4, original: 'שכבת ציפורים באוויר', professional: 'מודול שכבות אנימציה (ציפורים)', simple: 'מוסיף שכבת GIF/PNG מונפשת של ציפורים בתנועה לכל סצנה, להוספת חיים, קצב ותחושת טבע. **הבנה שגם ציפורים סטטיות ראויות להנפשה, כדי ליצור תחושת מרחב, תנועה וזמן, כמו בחלומות ילדות.**', category: 'Visual Effects', localPath: '' },
+        { index: 5, original: 'מצלמת קריינות', professional: 'מערכת הקלטת קריינות אישית', simple: 'פותח מצלמה פנימית ומקליט את קול המשתמש תוך כדי תצוגת שקופיות, כדי לספר את הסיפור בקול אישי וליצור זיכרון רגשי. **הרעיון נבע מההבנה שקול איכותי מרמקול מודרני מזכיר לילדים את "הבית" (טלוויזיה/מדיה), מה שגורם לאוזן להתביית על הקול ולחיבור עמוק יותר.**', category: 'Dialog System', localPath: '' },
+        { index: 6, original: 'הפעלת רקעים לפי זיהוי שקופית', professional: 'מנוע רקעים חכמים למצגות', simple: 'מזהה את מספר השקופית הפעילה במצגת PowerPoint ומפעיל רקע תואם אוטומטית (יער, לילה, שמיים זזים), ללא התערבות ידנית. **מטרתו ליצור קסם אישי עבור הילד, שירגיש שהשקופית נושמת והעולם זז מעצמו, בלי צורך בפעולה מצדו.**', category: 'Automation', localPath: '' },
+        { index: 7, original: 'שכבת עצים נעים', professional: 'מודול שכבות אנימציה (עצים)', simple: 'מוסיף לכל תמונה שכבת GIF של עצים נעים ברוח, ליצירת תחושת עולם חי ונושם. **מגשר על הפער בין ציור יפה למציאות חיה, והופך תמונה קפואה לסצנה עם נשימה, שילד שוקע בה.**', category: 'Visual Effects', localPath: '' },
+        { index: 8, original: 'יצירת מצגת לפי מערך טקסט', professional: 'מחולל מצגות אוטומטי', simple: 'מקבל מערך טקסטים ויוצר מצגת מלאה עם שקופיות מסודרות, תוך ניצול תצוגת מגיש להפרדת תוכן למורה ולצופה. **מבוסס על הפטנט של תצוגת מגיש, המאפשרת לילד לראות רק את התמונה בגודל מלא, בעוד הטקסט וההוראות נשארים אצל המורה, ליצירת חוויה חלקה וממוקדת.**', category: 'Automation', localPath: '' },
+        { index: 9, original: 'תזמון קולות לשקופיות לפי טבלה', professional: 'מערכת תזמון קריינות מדויקת', simple: 'מתאים בין שקופיות לקובצי קול ומשייך אוטומטית לכל שקופית את הקריינות הנכונה, תוך התחשבות במחקר קשב וריכוז. **נולד מתוך מחקר מעמיק וניסיון בשטח על מה לוכד הקשבה רגעית של ילדים וכמה זמן, במטרה ליצור שינוי קולות לפי דמויות שונות.**', category: 'Dialog System', localPath: '' },
+        { index: 10, original: 'אפקט קולות משולבים לפי טון', professional: 'מעצב גוון קול דינמי', simple: 'משנה קובץ קול כך שישמע בגוון אחר (עמוק, דק, הד) ליצירת מגוון דמויות מאותו קול מקור, כמו תיאטרון שלם מקול יחיד. **נועד להעניק "אישיות" לכל דמות בסיפור ללא צוות מדובבים, תוך הבנה ששינוי קול הופך את הדמות לדמיונית וממשית יותר עבור הילד.**', category: 'Audio Processing', localPath: '' },
+        { index: 11, original: 'הוספת שכבת עננים לשקופית', professional: 'מודול שכבות אנימציה (עננים)', simple: 'מוסיף שכבת GIF של עננים נעים לכל שקופית עם שמיים פתוחים, ליצירת תחושת מרחב וזרימה. **מטרתו לגרום לילד להרגיש שהעולם אינו עומד, אלא נושם וחי, באמצעות תנועה עדינה.**', category: 'Visual Effects', localPath: '' },
+        { index: 12, original: 'בדיקת ריקנות שקופית והשלמת טקסט אוטומטית', professional: 'מערכת השלמת תוכן חכמה למצגות', simple: 'סורק מצגת ומזהה שקופיות ריקות מטקסט, ומשלים עבורן טקסט אוטומטי מותאם לעלילה, למניעת רגעים מתים. **נועד להבטיח רצף חוויתי ולמנוע ניתוק קשב אצל ילדים ברגעים שקטים או ריקים בסיפור.**', category: 'Automation', localPath: '' },
+        { index: 13, original: 'יצירת רקעים חיים מתוך פריסטים', professional: 'מחולל רקעים חיים מבוסס פריסטים', simple: 'מטעין "פריסט" של תנועה (גלים, צל, רוח) ומשלב אותו על רקע סטטי ליצירת מצגת נושמת, ללא צורך באנימטור. **פותח מתוך הבנה שגם ללא אנימטור, ניתן להפוך כל רקע דומם לעולם שזז, וליצור אווירה אמיתית.**', category: 'Visual Effects', localPath: '' },
+        { index: 14, original: 'הפעלת שכבות אוטומטית לפי קטגוריה (GIF)', professional: 'מנוע שכבות GIF חכם', simple: 'ממפה כל שקופית לקטגוריה (יער, יום, לילה, חצר) ומשלב בה את ה־GIF המתאים, לפי כללים מוגדרים, להוספת חיים. **נועד להבטיח שכל שקופית תקבל את האלמנט הוויזואלי המדויק והקטן שיעשה אותה אמיתית ומוחשית עבור הילד.**', category: 'Automation', localPath: '' },
+        { index: 15, original: 'איתור והתאמה של קבצי קול למצגת', professional: 'מערכת התאמת אודיו אוטומטית למצגות', simple: 'מזהה אוטומטית את קובץ הקול המתאים לכל שקופית לפי שם או מזהה, ומצמיד אותו למצגת ללא התערבות ידנית. **פותח מתוך צורך לייעל את תהליך השיוך של עשרות קבצי קול, כדי לשחרר זמן למה שחשוב באמת: הסיפור והחוויה.**', category: 'Automation', localPath: '' },
+        { index: 16, original: 'הנפשה תמונה סטטית עם תנועת גלים (Wave Preset)', professional: 'פריסט גלים להנפשת תמונות', simple: 'יוצר תנועת גלים עדינה בתמונה רגילה (מים, רוח) כדי להפיח בה חיים, במיוחד בתמונות AI איכותיות. **נולד מתוך הרצון להנפיש גם את הים היפה בתמונות AI, וליצור פורמט גנרי שיעבוד לכל סצנות הממים בסיפורים, כולל אפקטים כמו בועות עולות.**', category: 'Visual Effects', localPath: '' },
+        { index: 17, original: 'יצירת רקעים מרובדים עם עומק (Layered Backgrounds)', professional: 'מחולל רקעים תלת-שכבתיים', simple: 'משלב רקע, שכבת אובייקטים ותנועה ליצירת תחושת עומק תלת-שכבתית בתמונה אחת, כמו ציור ישן עם פרספקטיבה. **מטרתו להחזיר לתמונות את העומק, ההצללות והפרספקטיבה של פעם, אך באמצעות קוד, כך שהילד ירגיש בתוך עולם רב-ממדי.**', category: 'Visual Effects', localPath: '' },
+        { index: 18, original: 'זיהוי שקופיות "חוץ" ו"שיחרור" עצים וציפורים אוטומטי', professional: 'מנוע זיהוי סביבה והוספת אלמנטים אוטומטית', simple: 'מזהה אם שקופית מציגה מרחב חיצוני ומוסיף אוטומטית ציפורים, עצים ועננים לפי קטגוריה, למניעת בלבול. **פותח מתוך הבנה שילדים קולטים מיד אם משהו לא "מתאים" בסצנה, ולכן הקוד יודע בעצמו היכן להכניס חיים ללא בלבול.**', category: 'Automation', localPath: '' },
+        { index: 19, original: 'הפעלת נגן VLC במסך 2 לפי שליטה מהמצגת', professional: 'מערכת בקרת הקרנה דו-מסכית', simple: 'פותח סרטון ב-VLC במסך השני (מקרן) תוך שליטה מלאה מתוך PowerPoint, המאפשר הרצאה מקצועית עם הקרנה חיה. **נולד מתוך צורך בפתרון הצגה חיצונית במצב "תצוגת מגיש" (Presenter View), המונעת מעבר בין חלונות ושומרת על שליטה מלאה מאחורי הקלעים.**', category: 'Automation', localPath: '' },
+        { index: 20, original: 'סנכרון בין קובצי סאונד לבין מספרי שקופיות', professional: 'מנגנון סנכרון אודיו-שקופיות', simple: 'משייך קובצי MP3 לשקופיות לפי שמות או טבלת התאמה, ומוודא שהכול מסונכרן בדיוק, ליצירת סיפור זורם. **מטרתו להבטיח שהילד ישמע את הקריינות המתאימה בדיוק לשקופית הנוכחית, ללא טעויות או דילוגים, כדי שהקסם יקרה.**', category: 'Automation', localPath: '' },
+        { index: 21, original: 'בדיקת עומס קולי בקבצי MP3 – נרמול עוצמה', professional: 'מערכת נרמול עוצמת אודיו אוטומטית', simple: 'סורק קבצי סאונד ומאזן את עוצמתם לרמה אחידה, תוך שמירה על דינמיקה רגשית, למניעת הפרעות שמע. **פותח מתוך הבנה שחשוב שכל סצנה או אפקט סאונד יהיה ברמה שווה, כמובן תוך שמירה על דינמיקה מוזיקלית המעצימה רגשות, כדי למנוע ניתוק קשב אצל ילדים.**', category: 'Audio Processing', localPath: '' },
+        { index: 22, original: 'הנפשה מתקדמת של עצים וציפורים לפי פריסטים', professional: 'מנוע הנפשה אטמוספרית מבוסס פריסטים', simple: 'מחייה עצים או ציפורים בתמונה עם תנועה עדינה מוגדרת מראש (רוח רכה, ציפור ממריאה), להוספת עומק רגשי ואווירה. **נועד לגרום לילד להרגיש שיש "רוח" ו"עולם" חי גם בגיף יחיד, ולהוסיף עומק רגשי באמצעות תנועה מתוזמנת.**', category: 'Visual Effects', localPath: '' },
+        { index: 23, original: 'בקרת גוון קול אוטומטית לפי דמות – ילד, מכשפה, דובון', professional: 'מחולל קולות דמויות דינמי', simple: 'מקבל טקסט ודמות ויוצר קובץ סאונד מותאם לקול הרצוי (ילד, דובון, מכשפה), ליצירת "אישיות" לכל דמות ללא צוות מדובבים. **מטרתו להעניק לכל דמות "אישיות" ייחודית באמצעות שינוי קול, ולהפוך את חווית הסיפור לתיאטרון שלם מתוך קול יחיד.**', category: 'Audio Processing', localPath: '' },
+        { index: 24, original: 'טבלת שליטה למצגות – הצגת מצב בשקופית נוכחית', professional: 'ממשק בקרה בזמן אמת למצגות', simple: 'יוצר טבלת שליטה המציגה בזמן אמת את השקופית הנוכחית ואת הפריסטים/אודיו/אפקטים המשויכים אליה, לשליטה חלקה במצגות מורכבות. **נועד למנוע לחץ אצל המפעיל ולאפשר לו לדעת תמיד מה אמור לקרות ומה קורה בפועל, ליצירת הופעה חלקה ומקצועית.**', category: 'UI Component', localPath: '' },
+        { index: 25, original: 'סריקה חכמה של תיקיית סיפורים – איתור קבצים חסרים או כפולים', professional: 'מערכת איתור ותיקון קבצים אוטומטית', simple: 'סורק תיקייה עם קבצי סיפור ומזהה חוסרים, כפילויות או טעויות, כדי להבטיח שלמות והמשכיות הסיפור. **פותח מתוך הבנה שבתוך אלפי קבצים, חוסר או כפילות קטנה יכולים להרוס מצגת שלמה לילדים, והקוד משמש כעוזר הפקה אישי.**', category: 'Automation', localPath: '' },
+        { index: 26, original: 'הנפשת רקע גל על תמונה סטטית (פריסטים)', professional: 'פריסט הנפשת גלים לרקעים', simple: 'מנפיש רקע של תמונה סטטית (ים, שמיים) בתנועות גל עדינות ואפקטים שקופים, ליצירת תחושת חיים ו"נשימה" בתמונה. **נועד להכניס חיים לתמונה סטטית, וליצור אשליה שקטה של תנועה, בדיוק מספיק כדי לגרום לילד להרגיש שהרקע חי.**', category: 'Visual Effects', localPath: '' },
+        { index: 27, original: 'הנפשת עיניים ופה על עצם סטטי (דמות)', professional: 'מנוע הנפשת פנים לדמויות סטטיות', simple: 'מקבל תמונה רגילה ומוסיף לה פה מדבר ועיניים זזות, כדי להחיות אותה כשחקן קטן עם הבעות. **מטרתו להפוך ציור לדמות עם אופי, שתחזיר מבט ותדבר, כי אני נתתי לה חיים בתכנות.**', category: 'Visual Effects', localPath: '' },
+        { index: 28, original: 'רקע שקוף למניפולציה או הקרנה על רקעים אחרים', professional: 'מחולל וידאו עם רקע Chroma Key', simple: 'יוצר וידאו מונפש עם רקע ירוק/שקוף (Chroma Key) להלבשה על סיפורים או מצגות אחרות, המאפשר "ללהק" דמויות מחדש. **פותח מתוך הרצון ש"הבעה אחת תוכל לשמש בכל סיפור", ושהדמות תחיה כמו שחקן שניתן "ללהק" מחדש לכל הצגה.**', category: 'Visual Effects', localPath: '' },
+        { index: 29, original: 'סקריפט שילוב קול עם הנפשת פה (לפי דיבור)', professional: 'מנגנון סנכרון שפתיים-דיבור בעברית', simple: 'מקבל קובץ קול (עברית) ומחולל הנפשה תואמת של תנועת פה, בקצב מדויק, ליצירת דמות עברית שמדברת באופן טבעי. **נועד לוודא שדמות בעברית מדברת כמו שצריך, ושכל מילה שילד שומע תבוא לידי ביטוי בתנועת הפה, כי הסנכרון הזה הופך את הסיפור לחי.**', category: 'Dialog System', localPath: '' },
+        { index: 30, original: 'הפקת סרטון מלא אוטומטי משקופיות + קול + רקע מונפש', professional: 'מערכת הפקת סרטונים אוטומטית', simple: 'מקבל תיקייה עם שקופיות, קבצי קול ורקעים מונפשים, ומייצר סרטון סיפור שלם ואוטומטי, כולל תזמון והנפשה. **פותח מתוך הרצון שילד יוכל לשמוע סיפור מהכיתה גם בבית, ללא צורך בעריכת וידאו ידנית, בלחיצה אחת.**', category: 'Automation', localPath: '' },
+        { index: 31, original: 'עיוות קול לפי רגשות (לחישה, צעקה, פחד)', professional: 'מעצב קול רגשי דינמי', simple: 'משמיע טקסטים מוקלטים באפקטים משתנים (קול רועד, לוחש, נרגש, פחד) כדי שהקול יספר את הרגש שמאחורי המילים. **נועד לוודא שכל משפט מבטא את הרגש הנכון, גם אם הדמות פוחדת או מבקשת בעדינות, כך שהקול יספר את הסיפור הרגשי.**', category: 'Audio Processing', localPath: '' },
+        { index: 32, 'original': 'בדיקת מצבים אוטומטית למצגת – אילו שקופיות ריקות', professional: 'מערכת בקרת שלמות מצגות', simple: 'סורק מצגת ומזהה שקופיות חסרות טקסט או תוכן, כדי להבטיח שכל סצנה בסיפור מספרת משהו. **פותח כדי להבטיח שלא יהיה רגע מת או שקופית ריקה שתגרום לילד להתנתק מהסיפור.**', category: 'Automation', localPath: '' },
+        { index: 33, 'original': 'מציאת מילים ראשונות מתוך הקראה ושיוך למצגת', professional: 'מערכת זיהוי דיבור ושיוך תוכן אוטומטית', simple: 'קולט הקראה בקול, שולף ממנה מילים ראשונות ומקשר אוטומטית לכל שקופית תואמת, ללא עריכה ידנית. **נועד ליצור התאמה אוטומטית בין הקראה לשקופית, ללא תיוג או עריכה ידנית, כך שהמערכת תבין את הדיבור ותסדר אותו כמו קסם.**', category: 'Automation', localPath: '' },
+        { index: 34, 'original': 'פריסטים להנפשת תמונות סטטיות – גלים, נשימה, תנועה', professional: 'מאגר פריסטים להנפשת תמונות', simple: 'מוסיף אנימציות עדינות לתמונה קפואה (תנועת ממים, רטט אוויר, נשימת דמות), כדי להחזיר לה דופק וחיים. **פותח מתוך הרצון להחזיר "דופק" לתמונה עומדת, וליצור שכבת תנועה שקטה שמחזירה חיים למשהו קפוא.**', category: 'Visual Effects', localPath: '' },
+        { index: 35, 'original': 'הנפשת קטעי סאונד לפי תזמון סיפור – פסקול מלווה', professional: 'מערכת פסקול סיפורי דינמית', simple: 'מוסיף פסי קול (פחד, מתח, הקלה, קסם) לכל שקופית במצגת בהתאם לעלילה, כדי שהמוזיקה תספר את הרגש. **מטרתו לוודא שלכל רגש תהיה מנגינה משלו, גם אם לא נאמרה מילה, כך שהמוזיקה תהיה מספר-שותף לסיפור.**', category: 'Audio Processing', localPath: '' },
+        { index: 36, 'original': 'פתיחת מצלמה בזמן אמת והוספת שכבת עננים נעים', professional: 'מערכת מציאות רבודה (AR) למצלמה', simple: 'פותח את מצלמת המחשב, מציג את המשתמש ומוסיף מעליו שכבת עננים נעים, כאילו הוא חלק מהעולם המצולם. **נועד לאפשר לילדים להיכנס לתוך הסרט ולהיות הדמויות, כך שהרקע יגיב להם והדמיון יעבוד.**', category: 'Visual Effects', localPath: '' },
+        { index: 37, 'original': 'ממשק בחירה אינטראקטיבי למצגות ילדים – עם כפתורים ודמויות', professional: 'ממשק בחירה חוויתי למצגות', simple: 'פותח תפריט גרפי אינטראקטיבי המאפשר לילד לבחור סיפור, דמות או מצב רוח בלחיצת כפתור, ומעביר את השליטה לידיו. **מטרתו להעביר את השליטה לידי הילדים, וכשהם בוחרים הם מתחייבים והסיפור נוגע יותר.**', category: 'UI Component', localPath: '' },
+        { index: 38, 'original': 'איתור אוטומטי של דממה בסרטון והוספת מוזיקה רכה במקומה', professional: 'מערכת מילוי דממה אוטומטית עם מוזיקה', simple: 'סורק קובץ וידאו, מאתר מקטעים שקטים ללא דיבור, ומכניס מוזיקת רקע רכה במקומות אלו, למניעת רגעים מתים וניתוק קשב. **נועד למנוע רגעים מתים בסרטון שיגרמו לניתוק קשב, וליצור מוזיקה שמלטפת ושומרת על קשר רגשי.**', category: 'Audio Processing', localPath: '' },
+        { index: 39, 'original': 'שילוב בין תנועת מים, שמיים ורקע סטטי על תמונה אחת – יצירת עומק מדומה', professional: 'מחולל עומק ויזואלי בתמונות', simple: 'מפרק תמונה רגילה לשכבות (שמיים, מים, רקע) ומזיז כל אחת בקצב שונה ליצירת עומק מונפש ותחושת מרחב. **מטרתו להחיות ציור ולהפוך דף נייר לעולם חי, תוך מתן תחושה של מרחב ועומק ללא צורך בוידאו מלא.**', category: 'Visual Effects', localPath: '' },
+        { index: 40, 'original': 'החלפת רקע בזמן אמת לפי תנועה – הילד זז, העננים מגיבים', professional: 'מערכת רקע אינטראקטיבי מבוסס תנועה', simple: 'משנה את הרקע בזמן אמת לפי תנועת הילד מול המצלמה (לדוגמה, הרמת יד מפלגת ענן), כדי שהילד ירגיש שהוא מזיז את העולם. **נועד לגרום לילדים להזיז את העולם ולהבין שהעולם מגיב אליהם, ובכך להפוך אותם לא רק לצופים אלא ליוצרים.**', category: 'Visual Effects', localPath: '' },
+    ];
+
+    const grid = document.getElementById('features-grid');
+    featuresData.forEach(feature => {
+        const card = document.createElement('div');
+        card.className = 'feature-card bg-white p-6 rounded-xl shadow-md cursor-pointer';
+        card.dataset.category = feature.category.replace(/\s+/g, '-');
+        
+        card.innerHTML = `
+            <div class="flex items-start justify-between">
+                <div class="flex-1">
+                    <p class="text-sm font-semibold text-sky-600">${feature.professional}</p>
+                    <h4 class="font-bold text-lg mt-1 text-slate-800">${feature.index}. ${feature.original}</h4>
+                </div>
+            </div>
+            <div class="details mt-4 pt-4 border-t border-slate-200">
+                <p class="text-slate-600">${feature.simple}</p>
+                ${feature.localPath ? `<p class="text-xs mt-2 text-slate-500">נתיב קובץ במחשב: <span class="font-mono text-blue-600 break-all">${feature.localPath}</span></p>` : ''}
+                ${feature.localPath ? `<p class="text-xs mt-1 text-slate-500">💡 העתק נתיב זה והפעל ידנית מחוץ לדפדפן מטעמי אבטחה.</p>` : ''}
+            </div>
+        `;
+        
+        card.addEventListener('click', (event) => {
+            event.preventDefault(); // Prevent default anchor behavior
+            card.querySelector('.details').classList.toggle('open');
+        });
+
+        grid.appendChild(card);
+    });
+
+    const filters = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.feature-card');
+
+    filters.forEach(button => {
+        button.addEventListener('click', () => {
+            filters.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            
+            const filter = button.dataset.filter;
+
+            cards.forEach(card => {
+                if (filter === 'all' || card.dataset.category === filter.replace(/\s+/g, '-')) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('section');
+
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            // Adjust this offset based on your fixed header height
+            if (pageYOffset >= sectionTop - 100) { 
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active-nav');
+            if (link.getAttribute('href').includes(current)) {
+                link.classList.add('active-nav');
+            }
+        });
+    });
+
+    // Handle "Read More" links in Chronology section
+    const readMoreLinks = document.querySelectorAll('.chronology-item .read-more');
+    readMoreLinks.forEach(link => {
+        link.addEventListener('click', (event) => {
+            event.preventDefault(); // Prevent default anchor behavior
+            const chapterId = link.dataset.chapter;
+            const fullContentDiv = document.getElementById(chapterId);
+            if (fullContentDiv) {
+                fullContentDiv.classList.toggle('open');
+                // Optional: Scroll to the top of the expanded content for better UX
+                if (fullContentDiv.classList.contains('open')) {
+                    fullContentDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }
+        });
+    });
+});
+</script>
+
+</body>
+</html>
 
