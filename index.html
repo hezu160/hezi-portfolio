@@ -1,198 +1,456 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>החוגים של חזי - "כפתור הקסם"</title>
-  <!-- Heebo -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
-  <!-- Tailwind -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body { font-family: 'Heebo', sans-serif; background-color: #f0f4f8; direction: rtl; text-align: right; }
-    .cosmic-nebula-bg{position:relative;background:radial-gradient(ellipse at center,#4c1d95 0%,#2e1065 50%,#1e1b4b 100%);overflow:hidden;border:1px solid rgba(167,139,250,0.2);box-shadow:0 0 25px rgba(45,212,191,0.15)}
-    .stars{position:absolute;top:0;left:0;width:100%;height:100%;background-repeat:repeat;background-position:center;z-index:1}
-    .stars1{background-image:radial-gradient(1px 1px at 20px 30px,#eee,transparent),radial-gradient(1px 1px at 40px 70px,#fff,transparent),radial-gradient(1px 1px at 50px 160px,#ddd,transparent),radial-gradient(2px 2px at 90px 40px,#fff,transparent);background-size:200px 200px;animation:zoom 25s linear infinite}
-    .stars2{background-image:radial-gradient(1px 1px at 10px 90px,#eee,transparent),radial-gradient(2px 2px at 80px 30px,#fff,transparent),radial-gradient(2px 2px at 100px 100px,#ddd,transparent);background-size:250px 250px;animation:zoom 40s linear infinite}
-    @keyframes zoom{0%{transform:scale(1);opacity:.7}50%{transform:scale(1.2);opacity:1}100%{transform:scale(1);opacity:.7}}
-    .space-object{position:absolute;opacity:0;z-index:4;pointer-events:none}
-    .light-beam{position:absolute;opacity:0;pointer-events:none;z-index:1;transform-origin:top center;filter:blur(5px)}
-    .sun-beam{top:5%;left:45%;width:120px;height:180px;background:radial-gradient(ellipse at center top,rgba(253,224,71,.6) 0%,transparent 70%)}
-    .lamp-beam{top:18%;left:50%;width:100px;height:150px;background:radial-gradient(ellipse at center top,rgba(56,189,248,.7) 0%,transparent 70%)}
-    .sun-beam.animate{animation:shine-spike-sun-effect 8s ease-in-out 1}
-    .lamp-beam.animate{animation:shine-spike-lamp-effect 8s ease-in-out 1}
-    @keyframes shine-spike-sun-effect{0%{opacity:0;transform:scaleY(.5) translateX(-50%)}20%{opacity:.7;transform:scaleY(1) translateX(-50%);filter:blur(5px)}49%{opacity:.7;transform:scaleY(1) translateX(-50%);filter:blur(5px)}50%{opacity:1;transform:scaleY(1.2) translateX(-50%);filter:blur(0) brightness(2.5)}52%{opacity:.7;transform:scaleY(1) translateX(-50%);filter:blur(5px)}80%{opacity:.7;transform:scaleY(1) translateX(-50%)}100%{opacity:0;transform:scaleY(.5) translateX(-50%)}}
-    @keyframes shine-spike-lamp-effect{0%{opacity:0;transform:scaleY(.5) translateX(-50%)}20%{opacity:.8;transform:scaleY(1) translateX(-50%)}50%{opacity:1;filter:blur(2px);transform:scaleY(1.1) translateX(-50%)}52%{opacity:.8;filter:blur(5px);transform:scaleY(1) translateX(-50%)}80%{opacity:.8;transform:scaleY(1) translateX(-50%)}100%{opacity:0;transform:scaleY(.5) translateX(-50%)}}
-    .ufo{width:60px;height:25px;background:radial-gradient(ellipse at top,#e0e0e0,#909090);border-radius:50%;box-shadow:0 0 15px #c4b5fd}
-    .ufo::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:0;height:0;border-left:15px solid transparent;border-right:15px solid transparent;border-bottom:30px solid rgba(196,181,253,.4)}
-    .ufo.animate{animation:ufo-hover 10s ease-in-out 1}
-    @keyframes ufo-hover{0%{opacity:0;transform:translateY(0) scale(.8)}20%{opacity:1;transform:translateY(-5px) scale(1)}80%{opacity:1;transform:translateY(5px) scale(1)}100%{opacity:0;transform:translateY(0) scale(.8)}}
-    .fairy-gif{width:120px;height:auto;top:10%;right:50%;filter:drop-shadow(0 0 15px rgba(250,204,21,.6))}
-    .fairy-gif.animate{animation:fairy-gif-path 14s ease-in-out 1}
-    @keyframes fairy-gif-path{0%{opacity:0;transform:translate(200px,-120px) scale(.2) rotate(-30deg)}25%{opacity:1;transform:translate(0,0) scale(1) rotate(0)}85%{opacity:1;transform:translate(0,0) scale(1) rotate(0)}100%{opacity:0;transform:translate(-200px,120px) scale(.2) rotate(30deg)}}
-    .robot-video{width:130px;height:auto;mix-blend-mode:lighten;filter:drop-shadow(0 0 10px rgba(56,189,248,.5));transform:scaleX(-1)}
-    .robot-video.animate{animation:video-fly-in 10s ease-in-out 1}
-    @keyframes video-fly-in{0%{opacity:0;transform:translateX(-100px) scaleX(-1)}20%{opacity:1;transform:translateX(0) scaleX(-1)}80%{opacity:1;transform:translateX(0) scaleX(-1)}100%{opacity:0;transform:translateX(100px) scaleX(-1)}}
-    .magic-text-yellow{animation:shimmer-yellow 4s ease-in-out infinite}
-    .magic-text-teal{animation:shimmer-teal 4s ease-in-out infinite}
-    @keyframes shimmer-yellow{0%,100%{text-shadow:0 0 8px rgba(252,211,77,.4)}50%{text-shadow:0 0 16px rgba(252,211,77,.8)}}
-    @keyframes shimmer-teal{0%,100%{text-shadow:0 0 8px rgba(45,212,191,.4)}50%{text-shadow:0 0 16px rgba(45,212,191,.8)}}
-    .content-layer{position:relative;z-index:3}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>החוגים של חזי - "כפתור הקסם"</title>
+    <!-- Import Heebo font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Heebo', sans-serif;
+            background-color: #f0f4f8;
+            direction: rtl;
+            text-align: right;
+        }
+
+        .cosmic-nebula-bg {
+            position: relative;
+            background: radial-gradient(ellipse at center, #4c1d95 0%, #2e1065 50%, #1e1b4b 100%);
+            overflow: hidden;
+            border: 1px solid rgba(167, 139, 250, 0.2);
+            box-shadow: 0 0 25px rgba(45, 212, 191, 0.15);
+        }
+
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-repeat: repeat;
+            background-position: center;
+            z-index: 1;
+        }
+
+        .stars1 {
+            background-image: radial-gradient(1px 1px at 20px 30px, #eee, transparent),
+                              radial-gradient(1px 1px at 40px 70px, #fff, transparent),
+                              radial-gradient(1px 1px at 50px 160px, #ddd, transparent),
+                              radial-gradient(2px 2px at 90px 40px, #fff, transparent);
+            background-size: 200px 200px;
+            animation: zoom 25s linear infinite;
+        }
+
+        .stars2 {
+            background-image: radial-gradient(1px 1px at 10px 90px, #eee, transparent),
+                              radial-gradient(2px 2px at 80px 30px, #fff, transparent),
+                              radial-gradient(2px 2px at 100px 100px, #ddd, transparent);
+            background-size: 250px 250px;
+            animation: zoom 40s linear infinite;
+        }
+        
+        @keyframes zoom {
+            0% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.7; }
+        }
+
+        .space-object {
+            position: absolute;
+            opacity: 0;
+            z-index: 4; /* Ensure it's on top */
+            pointer-events: none;
+        }
+
+        .light-beam {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1;
+            transform-origin: top center;
+            filter: blur(5px);
+        }
+        .sun-beam {
+            top: 5%; left: 45%; width: 120px; height: 180px;
+            background: radial-gradient(ellipse at center top, rgba(253, 224, 71, 0.6) 0%, transparent 70%);
+        }
+        .lamp-beam {
+            top: 18%; left: 50%; width: 100px; height: 150px;
+            background: radial-gradient(ellipse at center top, rgba(56, 189, 248, 0.7) 0%, transparent 70%);
+        }
+        .sun-beam.animate {
+            animation: shine-spike-sun-effect 8s ease-in-out 1;
+        }
+        .lamp-beam.animate {
+            animation: shine-spike-lamp-effect 8s ease-in-out 1;
+        }
+        @keyframes shine-spike-sun-effect {
+            0% { opacity: 0; transform: scaleY(0.5) translateX(-50%); }
+            20% { opacity: 0.7; transform: scaleY(1) translateX(-50%); filter: blur(5px); }
+            49% { opacity: 0.7; transform: scaleY(1) translateX(-50%); filter: blur(5px); }
+            50% { opacity: 1; transform: scaleY(1.2) translateX(-50%); filter: blur(0px) brightness(2.5); }
+            52% { opacity: 0.7; transform: scaleY(1) translateX(-50%); filter: blur(5px); }
+            80% { opacity: 0.7; transform: scaleY(1) translateX(-50%); }
+            100% { opacity: 0; transform: scaleY(0.5) translateX(-50%); }
+        }
+        @keyframes shine-spike-lamp-effect {
+            0% { opacity: 0; transform: scaleY(0.5) translateX(-50%); }
+            20% { opacity: 0.8; transform: scaleY(1) translateX(-50%); filter: blur(4px); }
+            49% { opacity: 0.8; transform: scaleY(1) translateX(-50%); filter: blur(4px); }
+            50% { opacity: 1; transform: scaleY(1.2) translateX(-50%); filter: blur(0px) brightness(2.5); }
+            52% { opacity: 0.8; transform: scaleY(1) translateX(-50%); filter: blur(4px); }
+            80% { opacity: 0.8; transform: scaleY(1) translateX(-50%); }
+            100% { opacity: 0; transform: scaleY(0.5) translateX(-50%); }
+        }
+        
+        .ufo {
+            width: 60px; height: 25px;
+            background: radial-gradient(ellipse at top, #e0e0e0, #909090);
+            border-radius: 50%; box-shadow: 0 0 15px #c4b5fd;
+        }
+        .ufo::after {
+            content: ''; position: absolute; bottom: 0; left: 50%;
+            transform: translateX(-50%); width: 0; height: 0;
+            border-left: 15px solid transparent; border-right: 15px solid transparent;
+            border-bottom: 30px solid rgba(196, 181, 253, 0.4);
+        }
+        .ufo.animate { animation: ufo-hover 10s ease-in-out 1; }
+        @keyframes ufo-hover {
+            0% { opacity: 0; transform: translateY(0) scale(0.8); }
+            20% { opacity: 1; transform: translateY(-5px) scale(1); }
+            80% { opacity: 1; transform: translateY(5px) scale(1); }
+            100% { opacity: 0; transform: translateY(0) scale(0.8); }
+        }
+
+        .fairy-gif {
+            width: 120px; height: auto;
+            top: 10%; right: 50%; 
+            filter: drop-shadow(0 0 15px rgba(250, 204, 21, 0.6));
+        }
+        .fairy-gif.animate {
+            animation: fairy-gif-path 14s ease-in-out 1;
+        }
+        @keyframes fairy-gif-path {
+            0% { opacity: 0; transform: translate(200px, -120px) scale(0.2) rotate(-30deg); }
+            25% { opacity: 1; transform: translate(0, 0) scale(1) rotate(0deg); }
+            85% { opacity: 1; transform: translate(0, 0) scale(1) rotate(0deg); }
+            100% { opacity: 0; transform: translate(-200px, 120px) scale(0.2) rotate(30deg); }
+        }
+        
+        .robot-video {
+            width: 130px;
+            height: auto;
+            mix-blend-mode: lighten;
+            filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.5));
+            transform: scaleX(-1);
+        }
+        .robot-video.animate {
+            animation: video-fly-in 10s ease-in-out 1;
+        }
+        @keyframes video-fly-in {
+            0% { opacity: 0; transform: translateX(-100px) scaleX(-1); }
+            20% { opacity: 1; transform: translateX(0) scaleX(-1); }
+            80% { opacity: 1; transform: translateX(0) scaleX(-1); }
+            100% { opacity: 0; transform: translateX(100px) scaleX(-1); }
+        }
+        
+        .rocket-gif {
+            width: 100px;
+            height: auto;
+        }
+        .rocket-gif.animate {
+            animation: rocket-fly-by 6s linear 1;
+        }
+        @keyframes rocket-fly-by {
+            0% { opacity: 1; right: -15%; transform: translateY(0) rotate(-90deg); }
+            50% { transform: translateY(-20px) rotate(-90deg); } /* Arc path */
+            100% { opacity: 1; right: 115%; transform: translateY(0) rotate(-90deg); }
+        }
+        
+        .starship2-gif {
+            width: 90px;
+            height: auto;
+        }
+        .starship2-gif.animate {
+            animation: starship2-fly-by 12s ease-in-out 1;
+        }
+        @keyframes starship2-fly-by {
+            0% { opacity: 0; transform: translate(200px, 50px) rotate(20deg) scale(0.8); }
+            20% { opacity: 1; transform: translate(0, 0) rotate(20deg) scale(1); }
+            80% { opacity: 1; transform: translate(0, 0) rotate(20deg) scale(1); }
+            100% { opacity: 0; transform: translate(-200px, -50px) rotate(20deg) scale(0.8); }
+        }
+        
+        .scanner-gif {
+            width: 150px;
+            height: auto;
+            mix-blend-mode: screen;
+        }
+        .scanner-gif.animate {
+            animation: scan-effect 7s ease-in-out 1;
+        }
+        @keyframes scan-effect {
+            0% { opacity: 0; transform: translateX(300px); }
+            20% { opacity: 0.7; }
+            80% { opacity: 0.7; }
+            100% { opacity: 0; transform: translateX(-300px); }
+        }
+
+        .trippy-ball-gif {
+            width: 100px;
+            height: auto;
+        }
+        .trippy-ball-gif.animate {
+            animation: float-effect 10s ease-in-out 1;
+        }
+        @keyframes float-effect {
+            0% { opacity: 0; transform: translate(150px, -80px) scale(0.5); }
+            25% { opacity: 1; transform: translate(0, 0) scale(1); }
+            75% { opacity: 1; transform: translate(0, 0) scale(1); }
+            100% { opacity: 0; transform: translate(-150px, 80px) scale(0.5); }
+        }
+        
+        .mysterious-orb {
+            width: 15px;
+            height: 15px;
+            background: radial-gradient(circle, #a78bfa, #7c3aed);
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px #c4b5fd;
+        }
+        .mysterious-orb.animate {
+            animation: orb-pulse 8s ease-in-out 1;
+        }
+        @keyframes orb-pulse {
+            0% { opacity: 0; transform: scale(0.5); }
+            25% { opacity: 1; transform: scale(1); }
+            75% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.5); }
+        }
+
+        .magic-text-yellow { animation: shimmer-yellow 4s ease-in-out infinite; }
+        .magic-text-teal { animation: shimmer-teal 4s ease-in-out infinite; }
+        @keyframes shimmer-yellow {
+            0%, 100% { text-shadow: 0 0 8px rgba(252, 211, 77, 0.4); }
+            50% { text-shadow: 0 0 16px rgba(252, 211, 77, 0.8); }
+        }
+        @keyframes shimmer-teal {
+            0%, 100% { text-shadow: 0 0 8px rgba(45, 212, 191, 0.4); }
+            50% { text-shadow: 0 0 16px rgba(45, 212, 191, 0.8); }
+        }
+
+        .content-layer {
+            position: relative;
+            z-index: 3;
+        }
+
+    </style>
 </head>
 <body class="p-4 sm:p-8 flex items-center justify-center min-h-screen">
 
-  <!-- לינק קבוע "כתובת 1" בפינה -->
-  <div class="fixed bottom-4 right-4 z-50">
-    <a href="https://hezu160.github.io/hezi-portfolio/" target="_blank" rel="noopener"
-       class="bg-white/80 hover:bg-white text-purple-800 font-bold rounded-full px-4 py-2 shadow-lg transition">
-      כתובת 1
-    </a>
-  </div>
+    <div class="bg-gradient-to-br from-purple-800 to-indigo-900 p-6 sm:p-8 rounded-3xl shadow-2xl max-w-4xl w-full text-white">
+        
+        <header class="cosmic-nebula-bg text-center mb-8 p-4 rounded-2xl">
+            <div class="stars stars1"></div>
+            <div class="stars stars2"></div>
+            <div id="ufo1" class="space-object ufo"></div>
+            <img id="rocket1" class="space-object rocket-gif" src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmFreHY5N3p1OW1yeDF1M3htM2xyOTA0N2d2c3RnNzlzMDF6bWttdyZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9cw/YqVb9BoN0EGssyiIFY/giphy.webp" alt="טיל בחלל">
+            <video id="robot-video1" class="space-object robot-video" autoplay muted loop playsinline>
+                <source src="https://storage.googleapis.com/async-sandbox-prod-files/c915192e-e9db-408e-ac0e-3a3bd8772416" type="video/mp4">
+            </video>
+            <img id="scanner1" class="space-object scanner-gif" src="https://media.giphy.com/media/MB6Id8S83YQeqsesgc/giphy.gif" alt="סורק טכנולוגי">
+            <img id="trippy-ball1" class="space-object trippy-ball-gif" src="https://media4.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3ZDlueHBzeDNhbTZubmZkNnR1dHdidDc3YWNmeGNvNHczMGNydmc4bCZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9cw/Ils3YidvTnb71nBeae/giphy.webp" alt="כדור קסם">
+            <div class="content-layer">
+                <h1 class="magic-text-yellow text-4xl sm:text-5xl font-semibold mb-2 text-yellow-300 italic">החוגים של חזי</h1>
+                <h2 class="magic-text-teal text-3xl sm:text-4xl font-bold text-teal-300 italic">"כפתור הקסם"</h2>
+                <p class="text-md sm:text-lg font-light mt-2 italic">
+                    "וולט דיסני המודרני" - חוויה פורצת דרך שמשתמשת בטכנולוגיה עכשווית
+                </p>
+            </div>
+        </header>
 
-  <div class="bg-gradient-to-br from-purple-800 to-indigo-900 p-6 sm:p-8 rounded-3xl shadow-2xl max-w-4xl w-full text-white">
-    <header class="cosmic-nebula-bg text-center mb-8 p-4 rounded-2xl">
-      <div class="stars stars1"></div>
-      <div class="stars stars2"></div>
-      <div id="ufo1" class="space-object ufo"></div>
-      <video id="robot-video1" class="space-object robot-video" autoplay muted loop playsinline>
-        <source src="https://storage.googleapis.com/async-sandbox-prod-files/c915192e-e9db-408e-ac0e-3a3bd8772416" type="video/mp4">
-      </video>
-      <div class="content-layer">
-        <h1 class="magic-text-yellow text-4xl sm:text-5xl font-semibold mb-2 text-yellow-300 italic">החוגים של חזי</h1>
-        <h2 class="magic-text-teal text-3xl sm:text-4xl font-bold text-teal-300 italic">"כפתור הקסם"</h2>
-        <p class="text-md sm:text-lg font-light mt-2 italic">"וולט דיסני המודרני" - חוויה פורצת דרך המשלבת טכנולוגיה עכשווית</p>
-      </div>
-    </header>
+        <div class="flex flex-col md:flex-row justify-center items-center gap-4 mb-8">
+            <div class="relative w-full md:w-1/2">
+                <img 
+                    src="https://b.stablecog.com/481daccd-90e6-4579-a525-45b8d219fdac.jpeg" 
+                    alt="ילדים בחוג במתחם טכנולוגי" 
+                    class="w-full rounded-2xl shadow-xl border-4 border-yellow-300"
+                >
+                <div id="light-beam-1" class="light-beam sun-beam"></div>
+            </div>
+            <div class="relative w-full md:w-1/2">
+                <img 
+                    src="https://b.stablecog.com/bb370798-5966-48cc-b030-29058cf7281e.jpeg" 
+                    alt="חדר החוג המתקדם" 
+                    class="w-full rounded-2xl shadow-xl border-4 border-teal-300"
+                >
+                <div id="light-beam-2" class="light-beam lamp-beam"></div>
+                <div id="mysterious-orb1" class="space-object mysterious-orb"></div>
+            </div>
+        </div>
 
-    <div class="flex flex-col md:flex-row justify-center items-center gap-4 mb-8">
-      <div class="relative w-full md:w-1/2">
-        <img src="https://b.stablecog.com/481daccd-90e6-4579-a525-45b8d219fdac.jpeg" alt="ילדים בחוג במתחם טכנולוגי" class="w-full rounded-2xl shadow-xl border-4 border-yellow-300">
-        <div id="light-beam-1" class="light-beam sun-beam"></div>
-      </div>
-      <div class="relative w-full md:w-1/2">
-        <img src="https://b.stablecog.com/bb370798-5966-48cc-b030-29058cf7281e.jpeg" alt="חדר החוג המתקדם" class="w-full rounded-2xl shadow-xl border-4 border-teal-300">
-        <div id="light-beam-2" class="light-beam lamp-beam"></div>
-      </div>
+        <section class="cosmic-nebula-bg p-6 rounded-2xl mb-8">
+            <div class="stars stars1"></div>
+            <div class="stars stars2"></div>
+            <div id="starship1" class="space-object starship"></div>
+            <img id="starship2" class="space-object starship2-gif" src="https://media1.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3ZzAzYmd6Zzhid2Z1NHBpb2ViajE0YTl4eWhiOTM1MWcxcG5zN3NkbSZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9cw/CaSmWHPi53aaoS6u9w/giphy.webp" alt="חללית נוספת">
+            <div class="content-layer">
+                <h3 class="magic-text-yellow text-2xl font-bold text-yellow-300 mb-4 text-center italic">מסע יצירתי רב-חושי לילדים</h3>
+                <p class="text-lg mb-4 text-gray-200 italic">
+                    במקום שהילדים יצרכו מסכים באופן פסיבי, אנחנו הופכים את המסך לכלי יצירה! במתחם פנטזיה ייחודי, עם מערכות אור-קוליות מתוזמנות ובינה מלאכותית, אנו לוקחים את הילדים למסע רב-חושי ומרתק. המטרה היא לפתח את הקשב, הביטוי האישי והיצירתיות שלהם באופן חוויתי שלא נראה כמוהו.
+                </p>
+            </div>
+        </section>
+
+        <section class="cosmic-nebula-bg p-6 rounded-2xl mb-8 flex flex-col md:flex-row items-center gap-6">
+            <div class="stars stars1"></div>
+            <div class="stars stars2"></div>
+            <img id="fairy1" class="space-object fairy-gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdG54N3hpZ2Z5a25tYWN0c2x0d3V0ZHF0a241b250N3h4cnFpZ2c5ZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/JKFOAjDl44nWN7KEkZ/giphy.gif" alt="קסם של פיה">
+            
+            <div class="content-layer flex flex-col md:flex-row items-center gap-6">
+                <div class="md:w-2/3">
+                    <h3 class="magic-text-yellow text-2xl font-bold text-yellow-300 mb-2 text-center md:text-right italic">החוג המרכזי: הסיפור המנצח</h3>
+                    <h4 class="magic-text-teal text-xl font-semibold text-teal-300 mb-3 text-center md:text-right italic">"סיפור מוזיקלי שאהבתי"</h4>
+                    <p class="text-lg text-gray-200 italic">
+                        דמיינו ספר שמנגן ומתעורר לחיים – בכיתה שהופכת לפתע למתחם קסום, מלא אור, צליל ופנטזיה. דרך סיפור מוזיקלי בהמשכים, הילדים יפתחו קשב ודמיון בסביבה שונה לגמרי מהיומיום ומעוררת השראה – ויחכו תמיד לשיעור הבא.
+                    </p>
+                </div>
+                <div class="md:w-1/3 w-full">
+                     <img src="https://b.stablecog.com/24f047bb-44a6-4c43-8a12-b6d3f68105cd.jpeg" alt="סיפור מוזיקלי" class="rounded-2xl shadow-lg w-full">
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-8">
+            <h3 class="magic-text-yellow text-3xl font-bold text-center mb-6 text-yellow-300 italic">ומה עוד? טעימות מעולמות תוכן נוספים</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg p-4 rounded-2xl shadow-lg transition-transform hover:scale-105 group">
+                    <img src="https://b.stablecog.com/33accfa9-9d33-43b6-b942-91e931cc81ac.jpeg" alt="פעלולי הקולנוע" class="rounded-xl mb-3 w-full">
+                    <h4 class="text-xl font-bold mb-1 italic">פעלולי הקולנוע</h4>
+                    <p class="text-md italic">נגלה איך עושים את הקסמים שבסרטים ואיך הופכים לספיידרמן בשידור חי.</p>
+                </div>
+                <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg p-4 rounded-2xl shadow-lg transition-transform hover:scale-105 group">
+                    <img src=https://b.stablecog.com/5abf181d-ca0a-471e-bfbb-bb62c3c3a4dd.jpeg alt="פוֹטוֹמוֹנְטָאז'" class="rounded-xl mb-3 w-full">
+                    <h4 class="text-xl font-bold mb-1 italic">פוֹטוֹמוֹנְטָאז'</h4>
+                    <p class="text-md italic">נלמד איך יצירת תמונה מורכבת שפעם דרשה חיתוך ידני נעשית היום בשניות באפליקציה או על ידי בינה מלאכותית (AI).</p>
+                </div>
+                <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg p-4 rounded-2xl shadow-lg transition-transform hover:scale-105 group">
+                    <img src="https://b.stablecog.com/8c0aaac8-b395-4530-b4d5-1e5b0ad13940.jpeg" alt="מוזיקה ונגינה" class="rounded-xl mb-3 w-full">
+                    <h4 class="text-xl font-bold mb-1 italic">מוזיקה ונגינה</h4>
+                    <p class="text-md italic">"איך נשמעת תזמורת של איש אחד? נצפה בחזי מנגן על 14 כלים מדהימים, נלמד איך כלים נולדו פעם והיום, ונגלה שגם בנו חבוי מוזיקאי קטן שרק מחכה להתעורר."</p>
+                </div>
+                <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg p-4 rounded-2xl shadow-lg transition-transform hover:scale-105 group">
+                    <img src="https://b.stablecog.com/a2f4b2c0-491a-4b7c-81ab-4015a4069e66.jpeg" alt="אולפן הטלוויזיה שלי AI" class="rounded-xl mb-3 w-full">
+                    <h4 class="text-xl font-bold mb-1 italic">אולפן הטלוויזיה שלי AI</h4>
+                    <p class="text-md italic"> הילדים נכנסים לעולם הקסום של שידורי הטלוויזיה, משתתפים בתוכניות אירוח, ומגלים איך יוצרים תוכן בקלות בעידן המתקדם הזה  </p>
+                </div>
+                <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg p-4 rounded-2xl shadow-lg transition-transform hover:scale-105 group">
+                    <img src="https://b.stablecog.com/84ab9d9a-ca2e-4fef-bb76-b6ec55e5d2eb.jpeg" alt="קשב בעזרת תיפוף" class="rounded-xl mb-3 w-full">
+                    <h4 class="text-xl font-bold mb-1 italic">קשב בעזרת תיפוף</h4>
+                    <p class="text-md italic">נחדד קשב וריכוז באמצעות תזמור קבוצתי ותקשורת מוזיקלית.</p>
+                </div>
+                <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg p-4 rounded-2xl shadow-lg transition-transform hover:scale-105 group">
+                    <img src="https://b.stablecog.com/a6930538-0627-45eb-96c1-f47d9ac4f2ce.jpeg" alt="סרטים מוזיקליים" class="rounded-xl mb-3 w-full">
+                    <h4 class="text-xl font-bold mb-1 italic">סרטים מוזיקליים מרגשים</h4>
+                    <p class="text-md italic">נצפה בסרטים מוזיקליים מקוריים על ילדים שהגשימו חלום.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="text-center mt-8">
+            <h4 class="text-2xl sm:text-3xl font-bold mb-4 text-yellow-300 animate-pulse italic">בואו להצטרף למסע!</h4>
+            <a href="#" class="inline-block bg-yellow-400 text-purple-800 font-bold py-3 px-8 rounded-full text-lg sm:text-xl shadow-lg transition-all duration-300 transform hover:scale-110 hover:bg-yellow-300 italic">
+                לפרטים נוספים והרשמה
+            </a>
+        </div>
+
     </div>
 
-    <section class="cosmic-nebula-bg p-6 rounded-2ל mb-8">
-      <div class="stars stars1"></div>
-      <div class="stars stars2"></div>
-      <div class="content-layer">
-        <h3 class="magic-text-yellow text-2xl font-bold text-yellow-300 mb-4 text-center italic">מסע יצירתי רב-חושי לילדים</h3>
-        <p class="text-lg mb-4 text-gray-200 italic">
-          במקום שהילדים יצרכו מסכים באופן פסיבי, אנחנו הופכים את המסך לכלי יצירה! במתחם פנטזיה ייחודי, עם מערכות אור-קוליות מתוזמנות ובינה מלאכותית, אנו לוקחים את הילדים למסע רב-חושי ומרתק. המטרה היא לפתח את הקשב, הביטוי האישי והיצירתיות שלהם באופן חוויתי שלא נראה כמוהו.
-        </p>
-      </div>
-    </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const headerAnimations = [
+                { id: 'ufo1', duration: 10000 },
+                { id: 'rocket1', duration: 6000 },
+                { id: 'robot-video1', duration: 10000 },
+                { id: 'scanner1', duration: 7000 },
+                { id: 'trippy-ball1', duration: 10000 }
+            ];
 
-    <section class="cosmic-nebula-bg p-6 rounded-2xl mb-8 flex flex-col md:flex-row items-center gap-6">
-      <div class="stars stars1"></div>
-      <div class="stars stars2"></div>
-      <img id="fairy1" class="space-object fairy-gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdG54N3hpZ2Z5a25tYWN0c2x0d3V0ZHF0a241b250N3h4cnFpZ2c5ZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/JKFOAjDl44nWN7KEkZ/giphy.gif" alt="קסם של פיה">
-      <div class="content-layer flex flex-col md:flex-row items-center gap-6">
-        <div class="md:w-2/3">
-          <h3 class="magic-text-yellow text-2xl font-bold text-yellow-300 mb-2 text-center md:text-right italic">החוג המרכזי: הסיפור המנצח</h3>
-          <h4 class="magic-text-teal text-xl font-semibold text-teal-300 mb-3 text-center md:text-right italic">"סיפור מוזיקלי שאהבתי"</h4>
-          <p class="text-lg text-gray-200 italic">
-            דמיינו ספר שמנגן ומתעורר לחיים – בכיתה שהופכת לפתע למתחם קסום, מלא אור, צליל ופנטזיה. דרך סיפור מוזיקלי בהמשכים, הילדים יפתחו קשב ודמיון בסביבה שונה לגמרי מהיומיום ומעוררת השראה – ויחכו תמיד לשיעור הבא.
-          </p>
-        </div>
-        <div class="md:w-1/3 w-full">
-          <img src="https://b.stablecog.com/24f047bb-44a6-4c43-8a12-b6d3f68105cd.jpeg" alt="סיפור מוזיקלי" class="rounded-2xl shadow-lg w-full">
-        </div>
-      </div>
-    </section>
+            const mainAnimations = [
+                { id: 'light-beam-1', duration: 8000 },
+                { id: 'light-beam-2', duration: 8000 },
+                { id: 'fairy1', duration: 14000 },
+                { id: 'starship1', duration: 15000 },
+                { id: 'starship2', duration: 12000 },
+                { id: 'mysterious-orb1', duration: 8000 }
+            ];
 
-    <section class="mb-8">
-      <h3 class="magic-text-yellow text-3xl font-bold text-center mb-6 text-yellow-300 italic">ומה עוד? טעימות מעולמות תוכן נוספים</h3>
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg p-4 rounded-2xl shadow-lg transition-transform hover:scale-105 group">
-          <img src="https://img.stablecog.com/insecure/512w:q70/aHR0cHM6Ly9iLnN0YWJsZWNvZy5jb20vMjFjZDVhOGEtZTAxZC00YTZmLTkzYTEtZDcwZjVhYmNmODJlLmpwZWc.webp" alt="פעלולי הקולנוע" class="rounded-xl mb-3 w-full">
-          <h4 class="text-xl font-bold mb-1 italic">פעלולי הקולנוע</h4>
-          <p class="text-md italic">נגלה איך עושים את הקסמים שבסרטים ואיך הופכים לסופרמן בשידור חי.</p>
-        </div>
-        <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg p-4 rounded-2xl shadow-lg transition-transform hover:scale-105 group">
-          <img src="https://b.stablecog.com/5abf181d-ca0a-471e-bfbb-bb62c3c3a4dd.jpeg" alt="פוֹטוֹמוֹנְטָאז'" class="rounded-xl mb-3 w-full">
-          <h4 class="text-xl font-bold mb-1 italic">פוֹטוֹמוֹנְטָאז'</h4>
-          <p class="text-md italic">נלמד איך יצירת תמונה מורכבת שפעם דרשה חיתוך ידני נעשית היום בשניות באפליקציה או על ידי בינה מלאכותית עכשווית (AI).</p>
-        </div>
-        <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg p-4 rounded-2xl shadow-lg transition-transform hover:scale-105 group">
-          <img src="https://b.stablecog.com/dfb36b39-3ce1-4d7e-bf78-ff29bd8411f4.jpeg" alt="מוזיקה ונגינה" class="rounded-xl mb-3 w-full">
-          <h4 class="text-xl font-bold mb-1 italic">מוזיקה ונגינה</h4>
-          <p class="text-md italic">"איך נשמעת תזמורת של איש אחד? נצפה בחזי מנגן על 14 כלים שונים..."</p>
-        </div>
-        <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg p-4 rounded-2xl shadow-lg transition-transform hover:scale-105 group">
-          <img src="https://b.stablecog.com/8a21cc2c-f838-41fc-b9c0-08d831828bee.jpeg" alt="אולפן הטלוויזיה שלי AI" class="rounded-xl mb-3 w-full">
-          <h4 class="text-xl font-bold mb-1 italic">אולפן הטלוויזיה שלי AI</h4>
-          <p class="text-md italic">שידורי טלוויזיה, השתתפות בתוכניות, ויצירת תוכן קלילה ומהנה.</p>
-        </div>
-        <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg p-4 rounded-2xl shadow-lg transition-transform hover:scale-105 group">
-          <img src="https://img.stablecog.com/insecure/512w:q70/aHR0cHM6Ly9iLnN0YWJsZWNvZy5jb20vMTg1OGUxNjAtMzI2ZS00MTA1LWEyNTEtNGJhYWE2MDFmNzdmLmpwZWc.webp" alt="קשב בעזרת תיפוף" class="rounded-xl mb-3 w-full">
-          <h4 class="text-xl font-bold mb-1 italic">קשב בעזרת תיפוף</h4>
-          <p class="text-md italic">נחדד קשב וריכוז באמצעות תזמור קבוצתי ותקשורת מוזיקלית.</p>
-        </div>
-        <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg p-4 rounded-2xl shadow-lg transition-transform hover:scale-105 group">
-          <img src="https://b.stablecog.com/2c26976e-9917-439e-b955-579159c7a31c.jpeg" alt="סרטים מוזיקליים" class="rounded-xl mb-3 w-full">
-          <h4 class="text-xl font-bold mb-1 italic">סרטים מוזיקליים מרגשים</h4>
-          <p class="text-md italic">נצפה בסרטים מוזיקליים מקוריים על ילדים שהגשימו חלום.</p>
-        </div>
-      </div>
-    </section>
+            function createAnimationManager(configs, minCooldown, maxCooldown) {
+                let lastIndex = -1;
+                
+                function scheduleNext() {
+                    let nextIndex;
+                    do {
+                        nextIndex = Math.floor(Math.random() * configs.length);
+                    } while (nextIndex === lastIndex && configs.length > 1);
+                    lastIndex = nextIndex;
 
-    <div class="text-center mt-8">
-      <h4 class="text-2xl sm:text-3xl font-bold mb-4 text-yellow-300 animate-pulse italic">בואו להצטרף למסע!</h4>
-      <a href="https://hezu160.github.io/hezi-portfolio/" target="_blank" rel="noopener"
-         class="inline-block bg-yellow-400 text-purple-800 font-bold py-3 px-8 rounded-full text-lg sm:text-xl shadow-lg transition-all duration-300 transform hover:scale-110 hover:bg-yellow-300 italic">
-        לפרטים נוספים והרשמה
-      </a>
-    </div>
-  </div>
+                    const config = configs[nextIndex];
+                    const element = document.getElementById(config.id);
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const headerAnimations = [
-        { id: 'ufo1', duration: 10000 },
-        { id: 'robot-video1', duration: 10000 }
-      ];
-      const mainAnimations = [
-        { id: 'light-beam-1', duration: 8000 },
-        { id: 'light-beam-2', duration: 8000 },
-        { id: 'fairy1', duration: 14000 }
-      ];
-      function createAnimationManager(configs, minCooldown, maxCooldown) {
-        let lastIndex = -1;
-        function scheduleNext() {
-          let nextIndex;
-          do { nextIndex = Math.floor(Math.random()*configs.length); }
-          while (nextIndex === lastIndex && configs.length > 1);
-          lastIndex = nextIndex;
-          const config = configs[nextIndex];
-          const element = document.getElementById(config.id);
-          if (element) {
-            element.classList.remove('animate');
-            if (element.id === 'ufo1') {
-              element.style.top = `10%`;
-              element.style.left = `${Math.random()*60+20}%`;
-            } else if (element.id === 'robot-video1') {
-              element.style.top = '50%';
-              element.style.left = '10%';
-              element.style.transform = 'translateY(-50%) scaleX(-1)';
+                    if (element) {
+                        element.classList.remove('animate');
+                        
+                        // Set random position before animation starts
+                        const parent = element.parentElement;
+                        if (parent) {
+                                if (element.id === 'ufo1') {
+                                    element.style.top = `10%`;
+                                    element.style.left = `${Math.random() * 60 + 20}%`;
+                                } else if (element.id === 'rocket1') {
+                                    element.style.top = `${Math.random() * 20 + 5}%`;
+                                } else if (element.id === 'robot-video1') {
+                                    element.style.top = '50%';
+                                    element.style.left = '10%';
+                                    element.style.transform = 'translateY(-50%) scaleX(-1)';
+                                } else if (element.id === 'starship1') {
+                                    element.style.top = `${Math.random() * 80 + 10}%`;
+                                    element.style.left = '5%';
+                                } else if (element.id === 'starship2') {
+                                    element.style.top = `${Math.random() * 60 + 20}%`;
+                                    element.style.left = `${Math.random() * 60 + 20}%`;
+                                } else if (element.id === 'scanner1') {
+                                    element.style.top = `${Math.random() * 60 + 20}%`;
+                                    element.style.left = '0%';
+                                } else if (element.id === 'trippy-ball1') {
+                                    element.style.top = `${Math.random() * 60 + 20}%`;
+                                    element.style.left = `${Math.random() * 60 + 20}%`;
+                                } else if (element.id === 'mysterious-orb1') {
+                                    element.style.top = `${Math.random() * 40 + 30}%`;
+                                    element.style.left = `${Math.random() * 40 + 30}%`;
+                                }
+                        }
+
+                        setTimeout(() => {
+                            element.classList.add('animate');
+                        }, 50);
+                    }
+
+                    const cooldown = Math.random() * (maxCooldown - minCooldown) + minCooldown;
+                    setTimeout(scheduleNext, config.duration + cooldown);
+                }
+                
+                setTimeout(scheduleNext, minCooldown);
             }
-            setTimeout(()=>element.classList.add('animate'),50);
-          }
-          const cooldown = Math.random()*(maxCooldown-minCooldown)+minCooldown;
-          setTimeout(scheduleNext, config.duration + cooldown);
-        }
-        setTimeout(scheduleNext, minCooldown);
-      }
-      createAnimationManager(headerAnimations, 1000, 2000);
-      createAnimationManager(mainAnimations, 2000, 4000);
-    });
-  </script>
+
+            createAnimationManager(headerAnimations, 1000, 2000);
+            createAnimationManager(mainAnimations, 2000, 4000);
+        });
+    </script>
+    
 </body>
 </html>
-
