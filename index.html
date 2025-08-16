@@ -288,6 +288,21 @@
             filter: brightness(90%) contrast(110%);
         }
 
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #a78bfa;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
     </style>
 </head>
 <body class="p-4 sm:p-8 flex items-center justify-center min-h-screen">
@@ -383,7 +398,7 @@
                 <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg p-4 rounded-2xl shadow-lg transition-transform hover:scale-105 group flex flex-col">
                     <img src="https://b.stablecog.com/8c0aaac8-b395-4530-b4d5-1e5b0ad13940.jpeg" alt="מוזיקה ונגינה" class="rounded-xl mb-3 w-full music-image">
                     <h4 class="text-xl font-bold mb-1 italic">מוזיקה ונגינה</h4>
-                    <p class="text-md italic">ננצפה בחזי המנגן כתזמורת של איש אחד על 14 כלים שונים. נגלה איך נוצר הצליל בכלים, איך הם נבנו בעבר ואיך הם נוצרים כיום, ואיך הקסם המוזיקלי מתרחש. אולי זה אפילו ידליק בכם את הרצון לנגן בעצמכם ?</p>
+                    <p class="text-md italic">נצפה בחזי המנגן כתזמורת של איש אחד על 14 כלים שונים. נגלה איך נוצר הצליל בכלים, איך הם נבנו בעבר ואיך הם נוצרים כיום, ואיך הקסם המוזיקלי מתרחש. אולי זה אפילו ידליק בכם את הרצון לנגן בעצמכם ?</p>
                 </div>
                 <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg p-4 rounded-2xl shadow-lg transition-transform hover:scale-105 group flex flex-col">
                     <img src="https://b.stablecog.com/a2f4b2c0-491a-4b7c-81ab-4015a4069e66.jpeg" alt="אולפן הטלוויזיה שלי AI" class="rounded-xl mb-3 w-full">
@@ -400,6 +415,24 @@
                     <h4 class="text-xl font-bold mb-1 italic">סרטים מוזיקליים מרגשים</h4>
                     <p class="text-md italic">נצפה בסרטים מוזיקליים : פטר והזאב,טבי הטובה,ובסרטים מקוריים על ילדים שהגשימו חלום.</p>
                 </div>
+            </div>
+        </section>
+
+        <!-- Gemini API Feature Section -->
+        <section class="cosmic-nebula-bg p-6 rounded-2xl mb-8">
+            <div class="stars stars1"></div>
+            <div class="stars stars2"></div>
+            <div class="content-layer text-center">
+                <h3 class="magic-text-yellow text-3xl font-bold text-yellow-300 mb-4 italic">✨ מחולל הרעיונות הקסום ✨</h3>
+                <p class="text-lg mb-4 text-gray-200">רוצים רעיון לסיפור או פעילות? כתבו נושא וגלו מה הקסם ימציא לכם!</p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-lg mx-auto">
+                    <input type="text" id="idea-input" class="w-full sm:w-2/3 bg-white bg-opacity-20 text-white placeholder-gray-300 rounded-full py-3 px-5 text-center" placeholder="לדוגמה: חלל, דינוזאורים, פיות...">
+                    <button id="generate-idea-btn" class="w-full sm:w-auto bg-yellow-400 text-purple-800 font-bold py-3 px-8 rounded-full text-lg shadow-lg transition-all duration-300 transform hover:scale-110 hover:bg-yellow-300">
+                        צרו לי קסם!
+                    </button>
+                </div>
+                <div id="loader" class="loader hidden"></div>
+                <div id="idea-result" class="mt-6 text-lg text-teal-200 bg-white bg-opacity-10 rounded-xl p-4 min-h-[100px] whitespace-pre-wrap"></div>
             </div>
         </section>
 
@@ -500,6 +533,68 @@
 
             createAnimationManager(headerAnimations, 1000, 2000);
             createAnimationManager(mainAnimations, 2000, 4000);
+
+            // Gemini API Feature
+            const generateBtn = document.getElementById('generate-idea-btn');
+            const ideaInput = document.getElementById('idea-input');
+            const ideaResult = document.getElementById('idea-result');
+            const loader = document.getElementById('loader');
+
+            const callGeminiAPI = async (prompt, retries = 3, delay = 1000) => {
+                loader.classList.remove('hidden');
+                ideaResult.textContent = '';
+                
+                const apiKey = ""; 
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                const payload = {
+                    contents: [{
+                        parts: [{ text: prompt }]
+                    }]
+                };
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        if (response.status === 429 && retries > 0) {
+                            await new Promise(resolve => setTimeout(resolve, delay));
+                            return callGeminiAPI(prompt, retries - 1, delay * 2); 
+                        }
+                        throw new Error(`שגיאת API: ${response.status}`);
+                    }
+                    
+                    const result = await response.json();
+                    
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        const text = result.candidates[0].content.parts[0].text;
+                        ideaResult.textContent = text;
+                    } else {
+                       ideaResult.textContent = 'לא הצלחנו ליצור רעיון. אולי ננסה שוב?';
+                    }
+                } catch (error) {
+                    console.error("Error calling Gemini API:", error);
+                    ideaResult.textContent = 'אוי, משהו השתבש. אנא נסו שוב מאוחר יותר.';
+                } finally {
+                    loader.classList.add('hidden');
+                }
+            };
+
+            generateBtn.addEventListener('click', () => {
+                const topic = ideaInput.value.trim();
+                if (topic) {
+                    const prompt = `כתוב רעיון קצר וקסום לפעילות יצירתית לילדים בגילאי 6-9 בנושא "${topic}". שמור על טון קליל, דמיוני ומעורר השראה. הרעיון צריך להיות באורך של 2-3 משפטים.`;
+                    callGeminiAPI(prompt);
+                } else {
+                    ideaResult.textContent = 'כדי שהקסם יעבוד, צריך לכתוב נושא...';
+                }
+            });
         });
     </script>
     
