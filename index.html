@@ -3,600 +3,546 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>החוגים של חזי - "כפתור הקסם"</title>
-    <!-- Import Heebo font from Google Fonts -->
+    <title>חזי חביבי - פורטפוליו טכני אינטראקטיבי</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
     <style>
         body {
-            font-family: 'Heebo', sans-serif;
-            background-color: #f0f4f8;
-            direction: rtl;
-            text-align: right;
+            font-family: 'Assistant', sans-serif;
+            background-color: #0F172A; /* Dark Slate Blue */
+            color: #E2E8F0; /* Light Slate Gray */
+            scroll-behavior: smooth;
         }
-
-        .cosmic-nebula-bg {
-            position: relative;
-            background: radial-gradient(ellipse at center, #4c1d95 0%, #2e1065 50%, #1e1b4b 100%);
-            overflow: hidden;
-            border: 1px solid rgba(167, 139, 250, 0.2);
-            box-shadow: 0 0 25px rgba(45, 212, 191, 0.15);
+        .active-nav {
+            color: #38BDF8; /* Sky Blue */
+            border-bottom-color: #38BDF8;
         }
-
-        .stars {
-            position: absolute;
-            top: 0;
-            left: 0;
+        .table-responsive {
+            display: block;
             width: 100%;
-            height: 100%;
-            background-repeat: repeat;
-            background-position: center;
-            z-index: 1;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
-
-        .stars1 {
-            background-image: radial-gradient(1px 1px at 20px 30px, #eee, transparent),
-                              radial-gradient(1px 1px at 40px 70px, #fff, transparent),
-                              radial-gradient(1px 1px at 50px 160px, #ddd, transparent),
-                              radial-gradient(2px 2px at 90px 40px, #fff, transparent);
-            background-size: 200px 200px;
-            animation: zoom 25s linear infinite;
+        .feature-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, border-color 0.2s ease-in-out;
+            background-color: #1E293B; /* Darker Slate Blue */
+            color: #F8FAFC; /* White */
+            border: 1px solid #334155;
         }
-
-        .stars2 {
-            background-image: radial-gradient(1px 1px at 10px 90px, #eee, transparent),
-                              radial-gradient(2px 2px at 80px 30px, #fff, transparent),
-                              radial-gradient(2px 2px at 100px 100px, #ddd, transparent);
-            background-size: 250px 250px;
-            animation: zoom 40s linear infinite;
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(56, 189, 248, 0.1), 0 4px 6px -4px rgba(56, 189, 248, 0.1);
+            border-color: #38BDF8;
         }
-        
-        @keyframes zoom {
-            0% { transform: scale(1); opacity: 0.7; }
-            50% { transform: scale(1.2); opacity: 1; }
-            100% { transform: scale(1); opacity: 0.7; }
+        .details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+            color: #CBD5E1; /* Lighter Slate Gray */
         }
-
-        .space-object {
-            position: absolute;
-            opacity: 0;
-            z-index: 2; 
-            pointer-events: none;
+        .details.open {
+            max-height: 500px; /* Adjust if needed */
+            transition: max-height 0.5s ease-in;
         }
-
-        .light-beam {
-            position: absolute;
-            opacity: 0;
-            pointer-events: none;
-            z-index: 1;
-            transform-origin: top center;
-            filter: blur(5px);
+        .filter-btn {
+            transition: background-color 0.2s, color 0.2s;
+            background-color: #334155; /* Even Darker Slate Blue */
+            color: #F8FAFC;
         }
-        .sun-beam {
-            top: 5%; left: 45%; width: 120px; height: 180px;
-            background: radial-gradient(ellipse at center top, rgba(253, 224, 71, 0.6) 0%, transparent 70%);
+        .filter-btn.active {
+            background-color: #38BDF8; /* Sky Blue */
+            color: white;
         }
-        .lamp-beam {
-            top: 18%; left: 50%; width: 100px; height: 150px;
-            background: radial-gradient(ellipse at center top, rgba(56, 189, 248, 0.7) 0%, transparent 70%);
+        .highlight-text {
+            background-color: #3B82F6; /* Indigo */
+            color: white;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-weight: 600;
+            line-height: 1.6;
         }
-        .sun-beam.animate {
-            animation: shine-spike-sun-effect 8s ease-in-out 1;
+        .section-title {
+            color: #38BDF8; /* Sky Blue */
         }
-        .lamp-beam.animate {
-            animation: shine-spike-lamp-effect 8s ease-in-out 1;
+        .card-subtitle {
+            color: #6EE7B7; /* Emerald Green */
         }
-        @keyframes shine-spike-sun-effect {
-            0% { opacity: 0; transform: scaleY(0.5) translateX(-50%); }
-            20% { opacity: 0.7; transform: scaleY(1) translateX(-50%); filter: blur(5px); }
-            49% { opacity: 0.7; transform: scaleY(1) translateX(-50%); filter: blur(5px); }
-            50% { opacity: 1; transform: scaleY(1.2) translateX(-50%); filter: blur(0px) brightness(2.5); }
-            52% { opacity: 0.7; transform: scaleY(1) translateX(-50%); filter: blur(5px); }
-            80% { opacity: 0.7; transform: scaleY(1) translateX(-50%); }
-            100% { opacity: 0; transform: scaleY(0.5) translateX(-50%); }
+        table th {
+            background-color: #334155;
+            color: #F8FAFC;
         }
-        @keyframes shine-spike-lamp-effect {
-            0% { opacity: 0; transform: scaleY(0.5) translateX(-50%); }
-            20% { opacity: 0.8; transform: scaleY(1) translateX(-50%); filter: blur(4px); }
-            49% { opacity: 0.8; transform: scaleY(1) translateX(-50%); filter: blur(4px); }
-            50% { opacity: 1; transform: scaleY(1.2) translateX(-50%); filter: blur(0px) brightness(2.5); }
-            52% { opacity: 0.8; transform: scaleY(1) translateX(-50%); filter: blur(4px); }
-            80% { opacity: 0.8; transform: scaleY(1) translateX(-50%); }
-            100% { opacity: 0; transform: scaleY(0.5) translateX(-50%); }
+        table td {
+            background-color: #1E293B;
+            color: #E2E8F0;
         }
-        
-        .ufo {
-            width: 60px; height: 25px;
-            background: radial-gradient(ellipse at top, #e0e0e0, #909090);
-            border-radius: 50%; box-shadow: 0 0 15px #c4b5fd;
+        .chronology-item {
+            background-color: #1E293B;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
         }
-        .ufo::after {
-            content: ''; position: absolute; bottom: 0; left: 50%;
-            transform: translateX(-50%); width: 0; height: 0;
-            border-left: 15px solid transparent; border-right: 15px solid transparent;
-            border-bottom: 30px solid rgba(196, 181, 253, 0.4);
+        .chronology-item h3 {
+            color: #6EE7B7;
+            font-weight: bold;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
         }
-        .ufo.animate { animation: ufo-hover 10s ease-in-out 1; }
-        @keyframes ufo-hover {
-            0% { opacity: 0; transform: translateY(0) scale(0.8); }
-            20% { opacity: 1; transform: translateY(-5px) scale(1); }
-            80% { opacity: 1; transform: translateY(5px) scale(1); }
-            100% { opacity: 0; transform: translateY(0) scale(0.8); }
+        .chronology-item p {
+            color: #CBD5E1;
+            font-size: 0.95rem;
+            line-height: 1.5;
         }
-
-        .fairy-gif {
-            width: 120px; height: auto;
-            top: 10%; right: 50%; 
-            filter: drop-shadow(0 0 15px rgba(250, 204, 21, 0.6));
+        .chronology-item .read-more {
+            color: #38BDF8;
+            font-weight: 600;
+            text-decoration: none;
+            margin-top: 0.5rem;
+            display: inline-block;
+            cursor: pointer;
         }
-        .fairy-gif.animate {
-            animation: fairy-gif-path 14s ease-in-out 1;
+        .chronology-full-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.7s ease-in-out;
+            padding-top: 0;
+            color: #A0AEC0; /* Grayish Blue */
         }
-        @keyframes fairy-gif-path {
-            0% { opacity: 0; transform: translate(200px, -120px) scale(0.2) rotate(-30deg); }
-            25% { opacity: 1; transform: translate(0, 0) scale(1) rotate(0deg); }
-            85% { opacity: 1; transform: translate(0, 0) scale(1) rotate(0deg); }
-            100% { opacity: 0; transform: translate(-200px, 120px) scale(0.2) rotate(30deg); }
+        .chronology-full-content.open {
+            max-height: 2000px; /* Increased height for long content */
+            padding-top: 1rem;
         }
-        
-        .robot-video {
-            width: 100px; /* Reduced size from 130px */
-            height: auto;
-            mix-blend-mode: lighten;
-            filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.5));
-            transform: scaleX(-1);
-        }
-        .robot-video.animate {
-            animation: video-fly-in 10s ease-in-out 1;
-        }
-        @keyframes video-fly-in {
-            0% { opacity: 0; transform: translateX(-100px) scaleX(-1); }
-            20% { opacity: 1; transform: translateX(0) scaleX(-1); }
-            80% { opacity: 1; transform: translateX(0) scaleX(-1); }
-            100% { opacity: 0; transform: translateX(100px) scaleX(-1); }
-        }
-        
-        .rocket-gif {
-            width: 100px;
-            height: auto;
-        }
-        .rocket-gif.animate {
-            animation: rocket-fly-by 6s linear 1;
-        }
-        @keyframes rocket-fly-by {
-            0% { opacity: 1; right: -15%; transform: translateY(0) rotate(-90deg); }
-            50% { transform: translateY(-20px) rotate(-90deg); } /* Arc path */
-            100% { opacity: 1; right: 115%; transform: translateY(0) rotate(-90deg); }
-        }
-        
-        .starship2-gif {
-            width: 90px;
-            height: auto;
-        }
-        .starship2-gif.animate {
-            animation: starship2-fly-by 12s ease-in-out 1;
-        }
-        @keyframes starship2-fly-by {
-            0% { opacity: 0; transform: translate(200px, 50px) rotate(20deg) scale(0.8); }
-            20% { opacity: 1; transform: translate(0, 0) rotate(20deg) scale(1); }
-            80% { opacity: 1; transform: translate(0, 0) rotate(20deg) scale(1); }
-            100% { opacity: 0; transform: translate(-200px, -50px) rotate(20deg) scale(0.8); }
-        }
-        
-        .scanner-gif {
-            width: 150px;
-            height: auto;
-            mix-blend-mode: screen;
-        }
-        .scanner-gif.animate {
-            animation: scan-effect 7s ease-in-out 1;
-        }
-        @keyframes scan-effect {
-            0% { opacity: 0; transform: translateX(300px); }
-            20% { opacity: 0.7; }
-            80% { opacity: 0.7; }
-            100% { opacity: 0; transform: translateX(-300px); }
-        }
-
-        .trippy-ball-gif {
-            width: 100px;
-            height: auto;
-        }
-        .trippy-ball-gif.animate {
-            animation: float-effect 10s ease-in-out 1;
-        }
-        @keyframes float-effect {
-            0% { opacity: 0; transform: translate(150px, -80px) scale(0.5); }
-            25% { opacity: 1; transform: translate(0, 0) scale(1); }
-            75% { opacity: 1; transform: translate(0, 0) scale(1); }
-            100% { opacity: 0; transform: translate(-150px, 80px) scale(0.5); }
-        }
-        
-        .mysterious-orb {
-            width: 15px;
-            height: 15px;
-            background: radial-gradient(circle, #a78bfa, #7c3aed);
-            border-radius: 50%;
-            box-shadow: 0 0 10px 2px #c4b5fd;
-        }
-        .mysterious-orb.animate {
-            animation: orb-pulse 8s ease-in-out 1;
-        }
-        @keyframes orb-pulse {
-            0% { opacity: 0; transform: scale(0.5); }
-            25% { opacity: 1; transform: scale(1); }
-            75% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0; transform: scale(0.5); }
-        }
-
-        .comet-gif {
-            width: 40px;
-            height: auto;
-        }
-        .comet-gif.animate {
-            animation: comet-inward-fly 12s ease-in-out 1;
-        }
-        @keyframes comet-inward-fly {
-            0% {
-                opacity: 0;
-                transform: translate(0, 0) scale(1) rotate(-120deg);
-            }
-            20% {
-                opacity: 0.9;
-            }
-            100% {
-                opacity: 0;
-                transform: translate(-200px, 150px) scale(0.3) rotate(-120deg);
-            }
-        }
-
-        .header-gif {
-            width: 150px;
-            height: auto;
-            filter: drop-shadow(0 0 15px rgba(167, 139, 250, 0.7));
-        }
-        .header-gif.animate {
-            animation: header-gif-fade-in 15s ease-in-out 1;
-        }
-        @keyframes header-gif-fade-in {
-            0% { opacity: 0; transform: scale(0.8) translateY(-50%); }
-            15% { opacity: 1; transform: scale(1) translateY(-50%); }
-            85% { opacity: 1; transform: scale(1) translateY(-50%); }
-            100% { opacity: 0; transform: scale(0.8) translateY(-50%); }
-        }
-
-        .magic-text-yellow { animation: shimmer-yellow 4s ease-in-out infinite; }
-        .magic-text-teal { animation: shimmer-teal 4s ease-in-out infinite; }
-        @keyframes shimmer-yellow {
-            0%, 100% { text-shadow: 0 0 8px rgba(252, 211, 77, 0.4); }
-            50% { text-shadow: 0 0 16px rgba(252, 211, 77, 0.8); }
-        }
-        @keyframes shimmer-teal {
-            0%, 100% { text-shadow: 0 0 8px rgba(45, 212, 191, 0.4); }
-            50% { text-shadow: 0 0 16px rgba(45, 212, 191, 0.8); }
-        }
-
-        .content-layer {
-            position: relative;
-            z-index: 3;
-        }
-
-        .music-image {
-            filter: brightness(90%) contrast(110%);
-        }
-
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #a78bfa;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
     </style>
 </head>
-<body class="p-4 sm:p-8 flex items-center justify-center min-h-screen">
+<body class="bg-slate-900">
 
-    <div class="bg-gradient-to-br from-purple-800 to-indigo-900 p-6 sm:p-8 rounded-3xl shadow-2xl max-w-4xl w-full text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        <header class="cosmic-nebula-bg text-center mb-8 p-4 rounded-2xl">
-            <div class="stars stars1"></div>
-            <div class="stars stars2"></div>
-            <div id="ufo1" class="space-object ufo"></div>
-            <img id="rocket1" class="space-object rocket-gif" src="https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmFreHY5N3p1OW1yeDF1M3htM2xyOTA0N2d2c3RnNzlzMDF6bWttdyZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9cw/YqVb9BoN0EGssyiIFY/giphy.webp" alt="טיל בחלל">
-            <video id="robot-video1" class="space-object robot-video" autoplay muted loop playsinline>
-                <source src="https://storage.googleapis.com/async-sandbox-prod-files/c915192e-e9db-408e-ac0e-3a3bd8772416" type="video/mp4">
-            </video>
-            <img id="scanner1" class="space-object scanner-gif" src="https://media.giphy.com/media/MB6Id8S83YQeqsesgc/giphy.gif" alt="סורק טכנולוגי">
-            <img id="trippy-ball1" class="space-object trippy-ball-gif" src="https://media4.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3ZDlueHBzeDNhbTZubmZkNnR1dHdidDc3YWNmeGNvNHczMGNydmc4bCZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9cw/Ils3YidvTnb71nBeae/giphy.webp" alt="כדור קסם">
-            <img id="header-gif" class="space-object header-gif" src="https://i.imgur.com/olGFUlM.gif" alt="רובוט בחלל">
-            <div class="content-layer">
-                <h1 class="magic-text-yellow text-4xl sm:text-5xl font-semibold mb-2 text-yellow-300 italic">החוגים של חזי</h1>
-                <h2 class="magic-text-teal text-3xl sm:text-4xl font-bold text-teal-300 italic">"כפתור הקסם"</h2>
-                <p class="text-md sm:text-lg font-light mt-2 italic">
-                    "וולט דיסני המודרני" - חוויה פורצת דרך שמשתמשת בטכנולוגיה עכשווית
-                </p>
-            </div>
+        <header class="sticky top-0 bg-slate-900/90 backdrop-blur-sm z-10 border-b border-slate-700">
+            <nav class="flex justify-center items-center py-4 space-x-4 sm:space-x-8 text-sm sm:text-base font-semibold text-slate-300">
+                <a href="#overview" class="nav-link p-2 border-b-2 border-transparent hover:text-sky-400 hover:border-sky-400 transition-colors">מבט על</a>
+                <a href="#architecture" class="nav-link p-2 border-b-2 border-transparent hover:text-sky-400 hover:border-sky-400 transition-colors">ארכיטקטורה</a>
+                <a href="#features" class="nav-link p-2 border-b-2 border-transparent hover:text-sky-400 hover:border-sky-400 transition-colors">פיתוחים ופיצ'רים</a>
+                <a href="#studio" class="nav-link p-2 border-b-2 border-transparent hover:text-sky-400 hover:border-sky-400 transition-colors">אולפן דיגיטלי</a>
+                <a href="#toolbox" class="nav-link p-2 border-b-2 border-transparent hover:text-sky-400 hover:border-sky-400 transition-colors">ארגז כלים</a>
+                <a href="#chronology" class="nav-link p-2 border-b-2 border-transparent hover:text-sky-400 hover:border-sky-400 transition-colors">כרונולוגיה</a>
+            </nav>
         </header>
 
-        <div class="flex flex-col md:flex-row justify-center items-center gap-4 mb-8">
-            <div class="relative w-full md:w-1/2">
-                <img 
-                    src="https://b.stablecog.com/481daccd-90e6-4579-a525-45b8d219fdac.jpeg" 
-                    alt="ילדים בחוג במתחם טכנולוגי" 
-                    class="w-full rounded-2xl shadow-xl border-4 border-yellow-300"
-                >
-                <div id="light-beam-1" class="light-beam sun-beam"></div>
-            </div>
-            <div class="relative w-full md:w-1/2">
-                <img 
-                    src="https://b.stablecog.com/bb370798-5966-48cc-b030-29058cf7281e.jpeg" 
-                    alt="חדר החוג המתקדם" 
-                    class="w-full rounded-2xl shadow-xl border-4 border-teal-300"
-                >
-                <div id="light-beam-2" class="light-beam lamp-beam"></div>
-                <div id="mysterious-orb1" class="space-object mysterious-orb"></div>
-                <img id="comet1" class="space-object comet-gif" src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXBrN2IyODM1dTUyNHB5OWlpM2lsNGVuZTF3ajZkemYwN2k2dzh4NCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/Tk4OJ3kfLa7VstKwd0/giphy.gif" alt="שביט">
-            </div>
-        </div>
+        <main class="py-12">
 
-        <section class="cosmic-nebula-bg p-6 rounded-2xl mb-8">
-            <div class="stars stars1"></div>
-            <div class="stars stars2"></div>
-            <div id="starship1" class="space-object starship"></div>
-            <img id="starship2" class="space-object starship2-gif" src="https://media1.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3ZzAzYmd6Zzhid2Z1NHBpb2ViajE0YTl4eWhiOTM1MWcxcG5zN3NkbSZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9cw/CaSmWHPi53aaoS6u9w/giphy.webp" alt="חללית נוספת">
-            <div class="content-layer">
-                <h3 class="magic-text-yellow text-2xl font-bold text-yellow-300 mb-4 text-center italic">מסע יצירתי רב-חושי לילדים</h3>
-                <p class="text-lg mb-4 text-gray-200 italic">
-                    במקום שהילדים יצרכו מסכים באופן פסיבי, אנחנו הופכים את המסך לכלי יצירה! במתחם פנטזיה ייחודי, עם מערכות אור-קוליות מתוזמנות ובינה מלאכותית, אנו לוקחים את הילדים למסע רב-חושי ומרתק. המטרה היא לפתח את הקשב, הביטוי האישי והיצירתיות שלהם באופן חוויתי שלא נראה כמוהו.
-                </p>
-            </div>
-        </section>
+            <!-- Overview Section -->
+            <section id="overview" class="mb-24 scroll-mt-24">
+                <!-- Cover Image -->
+                <div class="mb-12">
+                    <img src="https://i.imgur.com/IcsoK61.jpg" alt="Hezi Habibi - Creative Technologist" class="w-full h-auto rounded-xl shadow-lg border-2 border-slate-700">
+                </div>
 
-        <section class="cosmic-nebula-bg p-6 rounded-2xl mb-8 flex flex-col md:flex-row items-center gap-6">
-            <div class="stars stars1"></div>
-            <div class="stars stars2"></div>
-            <img id="fairy1" class="space-object fairy-gif" src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdG54N3hpZ2Z5a25tYWN0c2x0d3V0ZHF0a241b250N3h4cnFpZ2c5ZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9cw/JKFOAjDl44nWN7KEkZ/giphy.gif" alt="קסם של פיה">
+                <div class="text-center mb-12">
+                    <h1 class="text-4xl md:text-5xl font-bold text-slate-100">פורטפוליו טכני: ארכיטקטורת מערכת אקולוגית</h1>
+                    <p class="mt-4 text-lg text-slate-400 max-w-3xl mx-auto">מבט-על ארכיטקטוני מקיף על מערך הפיתוחים, הסקריפטים והמודולים המרכיבים את הפרויקט. כל הפיתוחים המוצגים כאן נוצרו ב-3 השנים האחרונות.</p>
+                </div>
+                <div class="bg-slate-800 p-6 md:p-8 rounded-xl shadow-lg">
+                    <h2 class="text-3xl font-bold text-sky-400 mb-6 text-center">הסיפור שמאחורי הקוד: מסע של צלילים, טכנולוגיה ורגש</h2>
+                    <div class="prose prose-lg max-w-none text-slate-300 space-y-4">
+                        <p>סיפורו של חזי חביבי הוא מסע מרתק שמתחיל בחיבור עמוק למוזיקה כבר מגיל הגן, ומתפתח על קו התפר שבין שני עולמות: אמנות וטכנולוגיה. כמוזיקאי, אמן כלי נשיפה (14 כלים שונים) והנדסאי אלקטרוניקה בהכשרתו, הוא מצא דרך ייחודית לשלב את שתי אהבותיו.</p>
+                        <p>במשך שנים רבות, שימש כמנהל מוזיקלי נערץ במוסדות חינוך, הקים להקות ייצוגיות מצליחות, טיפח כישרונות צעירים שהגיעו לקדמת הבמה (כמו ב"כוכב נולד"), ואף הקים יחד עם הבמאי ז'אק זרביב את הלהקה הייצוגית של חיל התקשוב. במקביל, יצר מופעים מוסברים בכלי נשיפה שזכו להכרה של "סל תרבות ארצי".</p>
+                        <p class="highlight-text">**בשנים האחרונות, המסע הוביל אותו לעולם הגיל הרך, שם זיהה צורך בפעילות חדשנית שתדבר בשפתם של ילדי העידן הדיגיטלי. מתוך החיבור לילד שהיה בעצמו, שהתמודד עם הפרעת קשב חמורה, נולד החזון: ליצור חוויה רב-חושית שתעורר עניין וריכוז דרך רגש. כל הפיתוחים הטכניים המוצגים בפורטפוליו זה הם התוצאה של אותו חזון – הניסיון להפוך סיפור פשוט לחוויה סוחפת, המשלבת מוזיקה, אנימציה, אוטומציה ואינטראקציה, ונוגעת עמוק בלב.**</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Architecture Section -->
+            <section id="architecture" class="mb-24 scroll-mt-24">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center">⚙️ ארכיטקטורת מערכת וניהול Office</h2>
+                <p class="text-center text-slate-400 max-w-4xl mx-auto mb-10">פרק זה מפרט את יסודות המערכת: קוד הליבה המאפשר אוטומציה ושליטה, ומערך הכלים המנהל את התוכן בסביבת Microsoft Office.</p>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-slate-800 p-6 rounded-xl shadow-md">
+                        <h3 class="font-bold text-xl mb-4 card-subtitle">קוד ליבה, אוטומציה וניהול מערכת</h3>
+                        <div class="table-responsive">
+                            <table class="w-full text-sm text-right">
+                                <thead><tr><th class="p-2 font-semibold">שם הרכיב / מודול</th><th class="p-2 font-semibold">תיאור ותפקיד</th></tr></thead>
+                                <tbody>
+                                    <tr class="border-t border-slate-700"><td class="p-2">**קוד VBA ראשי**</td><td class="p-2">קובץ המקור הראשי, נקודת הכניסה לתהליכים המרכזיים.</td></tr>
+                                    <tr class="border-t border-slate-700"><td class="p-2">**קוד מקור לכל הערוצים**</td><td class="p-2">מודול ניתוב ובקרה על תהליכים מקבילים.</td></tr>
+                                    <tr class="border-t border-slate-700"><td class="p-2">**קוד אוטומציה**</td><td class="p-2">ספריית ליבה של פונקציות אוטומציה גנריות.</td></tr>
+                                    <tr class="border-t border-slate-700"><td class="p-2">**הפעלת סקריפטים חיצוניים**</td><td class="p-2">הרצת קבצי Batch ו-AHK להרחבת יכולות המערכת.</td></tr>
+                                    <tr class="border-t border-slate-700"><td class="p-2">**שליחה למערכת AHK**</td><td class="p-2">אינטגרציה ייעודית לשליחת פקודות ל-AutoHotkey.</td></tr>
+                                    <tr class="border-t border-slate-700"><td class="p-2">**אוטומציה, הפעלת תוכנה חיצונית**</td><td class="p-2">הפעלה ושליטה על תוכנות צד-שלישי (כמו VLC).</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                     <div class="bg-slate-800 p-6 rounded-xl shadow-md">
+                        <h3 class="font-bold text-xl mb-4 card-subtitle">ניהול מצגות ואוטומציה ב-Office</h3>
+                        <div class="table-responsive">
+                            <table class="w-full text-sm text-right">
+                                <thead><tr><th class="p-2 font-semibold">שם הרכיב / מודול</th><th class="p-2 font-semibold">תיאור ותפקיד</th></tr></thead>
+                                <tbody>
+                                    <tr class="border-t border-slate-700"><td class="p-2">**מודול מצגות**</td><td class="p-2">ניהול כללי של קבצי PPTX.</td></tr>
+                                    <tr class="border-t border-slate-700"><td class="p-2">**שקופית קבע 1-16**</td><td class="p-2">תהליך אוטומטי לסנכרון תוכן לתבנית בסיס.</td></tr>
+                                    <tr class="border-t border-slate-700"><td class="p-2">**מודול העתקה**</td><td class="p-2">העתקה דינמית של שקופיות ואלמנטים.</td></tr>
+                                    <tr class="border-t border-slate-700"><td class="p-2">**תיקון / שקופיות**</td><td class="p-2">לוגיקה לתיקון אוטומטי של מבנה או סדר.</td></tr>
+                                    <tr class="border-t border-slate-700"><td class="p-2">**מודול שמירה ל-PDF**</td><td class="p-2">המרה אוטומטית של מצגת פעילה ל-PDF.</td></tr>
+                                    <tr class="border-t border-slate-700"><td class="p-2">**חיבור ותקשורת עם Excel**</td><td class="p-2">משמש כמקור נתונים דינמי מגיליונות Excel.</td></tr>
+                                    <tr class="border-t border-slate-700"><td class="p-2">**קוד ל-DOCX**</td><td class="p-2">אינטגרציה ליצירת דוחות ותסריטים ב-Word.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section id="features" class="mb-24 scroll-mt-24">
+                <h2 class="text-3xl font-bold section-title mb-2 text-center">📱 פיתוחים ופיצ'רים אינטראקטיביים</h2>
+                <p class="text-center text-slate-400 max-w-4xl mx-auto mb-10">זוהי ליבת הפיתוחים בצד המשתמש. כל פיתוח מודגם עם תרשים זרימה ייחודי הממחיש את התהליך. לחצו על קלף כדי לראות הסבר מפורט.</p>
+                
+                 <div id="feature-filters" class="flex flex-wrap justify-center gap-2 mb-8">
+                    <button class="filter-btn active px-4 py-2 text-sm font-semibold rounded-full" data-filter="all">הכל</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold rounded-full" data-filter="UI-Component">רכיבי UI</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold rounded-full" data-filter="Game-Logic">לוגיקת משחק</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold rounded-full" data-filter="Editor-UI">כלי עריכה</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold rounded-full" data-filter="Dialog-System">מערכות דיאלוג</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold rounded-full" data-filter="Automation">אוטומציה</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold rounded-full" data-filter="Audio-Processing">עיבוד אודיו</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold rounded-full" data-filter="Visual-Effects">אפקטים חזותיים</button>
+                </div>
+                <div id="features-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Feature cards with individual diagrams will be injected here by JavaScript -->
+                </div>
+            </section>
             
-            <div class="content-layer flex flex-col md:flex-row items-center gap-6">
-                <div class="md:w-2/3">
-                    <h3 class="magic-text-yellow text-2xl font-bold text-yellow-300 mb-2 text-center md:text-right italic">החוג המרכזי: הסיפור המנצח</h3>
-                    <h4 class="magic-text-teal text-xl font-semibold text-teal-300 mb-3 text-center md:text-right italic">"סיפור מוזיקלי שאהבתי"</h4>
-                    <p class="text-lg text-gray-200 italic">
-                        דמיינו ספר שמורה מקריא בקולו, ובאותו הזמן הספר מתעורר לחיים בכיתה שהופכת למרחב קסום, שונה לגמרי מהיומיום ומעורר השראה. זהו סיפור מוזיקלי בהמשכים – הילדים מקשיבים, נשבים בקסם, והטכנולוגיה מוסיפה מוזיקה ותפאורות שמעצימות את החוויה. וכל זה גורם להם לחכות בסקרנות לשיעור הבא, כדי לגלות מה יקרה בהמשך הסיפור.
-                    </p>
+            <!-- Digital Studio Section -->
+            <section id="studio" class="mb-24 scroll-mt-24">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center">🎨 אולפן דיגיטלי: אנימציה, דיבוב ו-AI</h2>
+                <p class="text-center text-slate-400 max-w-4xl mx-auto mb-10">מכלול הכלים המתקדמים המאפשרים יצירת תוכן אורקולי עשיר, מאנימציית פנים ודיבוב, ועד לשילוב יכולות בינה מלאכותית להעשרת החוויה.</p>
+                
+                <div class="bg-slate-800 p-6 rounded-xl shadow-md">
+                     <div class="table-responsive">
+                        <table class="w-full text-sm text-right">
+                            <thead><tr><th class="p-2 font-semibold">שם הרכיב / מודול</th><th class="p-2 font-semibold">תיאור ותפקיד</th><th class="p-2 font-semibold">טכנולוגיה / סוג</th></tr></thead>
+                            <tbody>
+                                <tr class="border-t border-slate-700"><td class="p-2">**אולפן הקלטות ודיבוב**</td><td class="p-2">מערכת ניהול דיבוב עם UI להקלטה ועורך טקסט און-ליין.</td><td class="p-2">`Tool`</td></tr>
+                                <tr class="border-t border-slate-700"><td class="p-2">**עיבוד קולי SRT**</td><td class="p-2">סקריפט אוטומטי המנתח קובץ כתוביות (SRT) ומייצר דיבוב מסונכרן.</td><td class="p-2">`Automation Script`</td></tr>
+                                <tr class="border-t border-slate-700"><td class="p-2">**מערכת Lip-sync**</td><td class="p-2">כלי עיבוד וידאו לסנכרון שפתיים על-ידי "הלבשת" אנימציות פה.</td><td class="p-2">`Video Processing`</td></tr>
+                                <tr class="border-t border-slate-700"><td class="p-2">**כלי אנימציית פנים**</td><td class="p-2">סט כלים עם ממשק סליידרים (Sliders) לשליטה מדויקת על תנועות פנים.</td><td class="p-2">`Animation Tool`</td></tr>
+                                <tr class="border-t border-slate-700"><td class="p-2">**AI לוגיקה**</td><td class="p-2">קוד ליבה המכיל לוגיקת AI לקבלת החלטות ויצירת תוכן דינמי.</td><td class="p-2">`VBA`, `AI`</td></tr>
+                                <tr class="border-t border-slate-700"><td class="p-2">**עיבוד תמונה מבוסס AI**</td><td class="p-2">שימוש בלוגיקת AI לעיבוד תמונה, זיהוי אובייקטים או יצירת רקעים.</td><td class="p-2">`Image Processing`, `AI`</td></tr>
+                                <tr class="border-t border-slate-700"><td class="p-2">**מערכת זיהוי דיבור**</td><td class="p-2">מערכת המקליטה פקודות קוליות ומבצעת פעולות תואמות.</td><td class="p-2">`Speech Recognition`</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="md:w-1/3 w-full">
-                     <img src="https://b.stablecog.com/24f047bb-44a6-4c43-8a12-b6d3f68105cd.jpeg" alt="סיפור מוזיקלי" class="rounded-2xl shadow-lg w-full">
-                </div>
-            </div>
-        </section>
+            </section>
 
-        <section class="mb-8">
-            <h3 class="magic-text-yellow text-3xl font-bold text-center mb-6 text-yellow-300 italic">ומה עוד? טעימות מעולמות תוכן נוספים</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg p-4 rounded-2xl shadow-lg transition-transform hover:scale-105 group flex flex-col">
-                    <img src="https://b.stablecog.com/33accfa9-9d33-43b6-b942-91e931cc81ac.jpeg" alt="פעלולי הקולנוע" class="rounded-xl mb-3 w-full">
-                    <h4 class="text-xl font-bold mb-1 italic">פעלולי הקולנוע</h4>
-                    <p class="text-md italic">ננגלה איך עושים את הקסמים שבסרטים, איך אפשר ממש להיכנס אל תוך הסרט ולהיות חלק מהסיפור, ואפילו להפוך לספיידרמן בשידור חי. הכל קורה מול העיניים, בזמן אמת, בשיעור מלא הרפתקאות </p>
+            <!-- Toolbox Section -->
+            <section id="toolbox" class="mb-24 scroll-mt-24">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center">🧰 ארגז הכלים הדיגיטלי: שליטה בתוכנות</h2>
+                 <p class="text-center text-slate-400 max-w-4xl mx-auto mb-10">רשימה זו מפרטת את התוכנות המרכזיות המשמשות ככלי עבודה בפרויקט, ומדגישה את מגוון היכולות הטכניות הנדרשות להפעלתו.</p>
+                <div class="bg-slate-800 p-6 rounded-xl shadow-md">
+                     <div class="table-responsive">
+                        <table class="w-full text-sm text-right">
+                            <thead><tr><th class="p-2 font-semibold">תוכנה</th><th class="p-2 font-semibold">קטגוריה</th><th class="p-2 font-semibold">הסבר קצר</th></tr></thead>
+                            <tbody>
+                                <tr class="border-t border-slate-700"><td class="p-2">**Microsoft PowerPoint**</td><td class="p-2">סביבת פיתוח מרכזית</td><td class="p-2">הבמה המרכזית שעליה נבנים ומוצגים כל הסיפורים.</td></tr>
+                                <tr class="border-t border-slate-700"><td class="p-2">**Microsoft Excel**</td><td class="p-2">סביבת פיתוח מרכזית</td><td class="p-2">משמש כ"מוח" ומאגר הנתונים של הפרויקטים.</td></tr>
+                                <tr class="border-t border-slate-700"><td class="p-2">**Microsoft Word**</td><td class="p-2">סביבת פיתוח מרכזית</td><td class="p-2">משמש לכתיבה וניהול של התוכן הנרטיבי והתסריטים.</td></tr>
+                                <tr class="border-t border-slate-700"><td class="p-2">**CrazyTalk**</td><td class="p-2">אנימציה</td><td class="p-2">הנפשת פנים ותמונות סטטיות ליצירת דמויות מדברות.</td></tr>
+                                <tr class="border-t border-slate-700"><td class="p-2">**Cartoon Animator**</td><td class="p-2">אנימציה</td><td class="p-2">יצירת סרטי אנימציה דו-ממדיים מלאים.</td></tr>
+                                <tr class="border-t border-slate-700"><td class="p-2">**Adobe Character Animator**</td><td class="p-2">אנימציה</td><td class="p-2">הנפשת דמויות בזמן אמת באמצעות מצלמת רשת.</td></tr>
+                                <tr class="border-t border-slate-700"><td class="p-2">**MorphVOX Pro**</td><td class="p-2">אודיו</td><td class="p-2">תוכנה לשינוי קול בזמן אמת.</td></tr>
+                                <tr class="border-t border-slate-700"><td class="p-2">**Adobe Photoshop**</td><td class="p-2">גרפיקה</td><td class="p-2">עריכת תמונות, ריטוש ועיצוב גרפי.</td></tr>
+                                <tr class="border-t border-slate-700"><td class="p-2">**Wondershare Filmora**</td><td class="p-2">וידאו</td><td class="p-2">תוכנת עריכת וידאו ידידותית עם אפקטים ותבניות.</td></tr>
+                                <tr class="border-t border-slate-700"><td class="p-2">**Cubase**</td><td class="p-2">יצירת מוזיקה</td><td class="p-2">תחנת עבודה דיגיטלית (DAW) מקצועית.</td></tr>
+                                <tr class="border-t border-slate-700"><td class="p-2">**OBS Studio**</td><td class="p-2">תוכנת שידור</td><td class="p-2">שידור חי (סטרימינג) והקלטת מסך.</td></tr>
+                                <tr class="border-t border-slate-700"><td class="p-2">**Visual Studio / PyCharm**</td><td class="p-2">תכנות</td><td class="p-2">סביבות פיתוח (IDE) למגוון שפות ופייתון.</td></tr>
+                                <tr class="border-t border-slate-700"><td class="p-2">**AutoHotkey**</td><td class="p-2">תכנות</td><td class="p-2">שפת סקריפטים לאוטומציה של משימות בחלונות.</td></tr>
+                                <tr class="border-t border-slate-700"><td class="p-2">**BlueStacks**</td><td class="p-2">אמולציית אנדרואיד</td><td class="p-2">אמולטור להרצת אפליקציות ומשחקי אנדרואיד.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg p-4 rounded-2xl shadow-lg transition-transform hover:scale-105 group flex flex-col">
-                    <img src=https://b.stablecog.com/5abf181d-ca0a-471e-bfbb-bb62c3c3a4dd.jpeg alt="פוֹטוֹמוֹנְטָאז'" class="rounded-xl mb-3 w-full">
-                    <h4 class="text-xl font-bold mb-1 italic">פוֹטוֹמוֹנְטָאז'</h4>
-                    <p class="text-md italic">נלמד איך פעם היו צריכים לגזור ולהדביק ידנית כדי ליצור תמונה מורכבת, והיום עושים את זה באפליקציה או אפילו בעזרת בינה מלאכותית בשניות. ננסה בעצמנו להרכיב דמויות על רקעים שונים – ונראה איך הקסם קורה ממש מולנו.  .</p>
+            </section>
+            
+            <!-- Chronology Section -->
+            <section id="chronology" class="mb-24 scroll-mt-24">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center">⏳ המסע שלי: אבני דרך כרונולוגיות</h2>
+                <p class="text-center text-slate-400 max-w-4xl mx-auto mb-10">הצצה קצרה אל אבני הדרך המרכזיות במסע המקצועי והאישי שלי, שהובילו לפיתוחים הייחודיים המוצגים בפורטפוליו זה.</p>
+                <div class="space-y-6">
+                    <!-- Chapter 1 -->
+                    <div class="chronology-item">
+                        <h3>פרק 1: הילדות, החשמל והקסם שבטכנולוגיה – ניצוץ ראשוני ומאבקים מוזיקליים</h3>
+                        <p>כבר בגן הילדים ניצתה בי אהבה עמוקה למוזיקה... בכיתה ז' כבר הקמתי מעבדת אלקטרוניקה פרטית משלי... עוד לא ידעתי לקרוא לזה "מיקרו-בקר" או "אוטומציה", אבל הראש שלי ידע בדיוק מה הוא עושה.</p>
+                        <div class="chronology-full-content" id="chapter1-full">
+                            <p>כבר בגן הילדים ניצתה בי אהבה עמוקה למוזיקה, שהתבטאה בנגינה על כלי נשיפה – תחום בו אני שולט כיום ב-14 כלים שונים. אך לצד האהבה העצומה, נולדו גם אתגרים עצומים. הפרעות קשב קשות הפכו את לימוד קריאת התווים למאבק מתסכל, שכן קריאת תווים דרשה ממני ריכוז בלתי אפשרי. חוויתי כישלון בדבר שאהבתי, כשכל חבריי קראו תווים בקלות ואני נסמכתי רק על שמיעתי, שלא תמיד הובילה לדיוק המיוחל. כחבר בלהקת "בני רחובות", אף נחשבתי ל"נגן גרוע" וקינאתי באחרים. במקביל לעולם הצלילים, נמשכתי תמיד לתחכום הפטנטים וההמצאות. עוד לפני שמישהו הסביר לי איך דברים עובדים, פירקתי אותם – כדי להבין לבד. בשנות ה-70, בעודי ילד, קראתי לא מעט ספרים: "הטכנאי הצעיר", "חידושי האלקטרוניקה", ומגזינים נדירים, כל מה שיכולתי לשים עליו יד. בניתי קיטים, מגברים, טלווקסים, שאבים – וכל מה שהציעה התקופה. בכיתה ז' כבר הקמתי מעבדת אלקטרוניקה פרטית משלי – עם מערכת בקרה שכולה נתפרה לפי התוכניות שלי. אפילו הדלת נפתחה אוטומטית, ורמקול הכריז "הדלת פתוחה!" באמצעות טייפ ישן וחיישן שהמצאתי. עוד לא ידעתי לקרוא לזה "מיקרו-בקר" או "אוטומציה", אבל הראש שלי ידע בדיוק מה הוא עושה.</p>
+                        </div>
+                        <a class="read-more" data-chapter="chapter1-full">קרא עוד</a>
+                    </div>
+                    <!-- Chapter 2 -->
+                    <div class="chronology-item">
+                        <h3>פרק 2: תיכון, להקה ראשונה ושירות צבאי ביחידת הלוחמה האלקטרונית</h3>
+                        <p>בתיכון ייסדתי, יחד עם מורה שהאמינה בי, את הלהקה הראשונה של אורט רחובות... מאוחר יותר שירתתי במקום יוקרתי בחיל הקשר – יחידת הלוחמה האלקטרונית. שם הוכשרתי לדרג ד', ברמת רכיב, וידעתי שזהו שלב משמעותי בהעמקת ההבנה הטכנית שלי.</p>
+                        <div class="chronology-full-content" id="chapter2-full">
+                            <p>בתיכון ייסדתי, יחד עם מורה שהאמינה בי, את הלהקה הראשונה של אורט רחובות. שם התחילו ניסיונות ההרמוניה והעיבודים שלי. לא ידעתי תווים – אז פשוט שרתי את התפקידים, והילדים ניגנו לפי הקול שלי. חצוצרן רשם בתווים את מה ששרתי – וכך התזמורת ניגנה את מה ש"הסתובב לי בראש". במקביל, למרות שעברתי את כל מבחני הקבלה, נותרה בי תחושת צער על כך שלא זכיתי להיות בלהקה צבאית. מאוחר יותר שירתתי במקום יוקרתי בחיל הקשר – יחידת הלוחמה האלקטרונית. שם הוכשרתי לדרג ד', ברמת רכיב, וידעתי שזהו שלב משמעותי בהעמקת ההבנה הטכנית שלי.</p>
+                        </div>
+                        <a class="read-more" data-chapter="chapter2-full">קרא עוד</a>
+                    </div>
+                    <!-- Chapter 3 -->
+                    <div class="chronology-item">
+                        <h3>פרק 3: הנדסאי אלקטרוניקה ואולפן ביתי – שילוב העולמות</h3>
+                        <p>עם סיום השירות, למדתי במסלול הנדסאים ב"יד סינגלובסקי"... אבי העביר לי את דירת המרתף שבביתנו הפרטי – ושם בניתי את האולפן האנלוגי הראשון שלי... האולפן פעל 7 שנים ברציפות, שימש להקלטות, הפקות ועבודה עם אמנים צעירים. אך בסוף – בגלל בעיות מול העירייה, נאלצתי לפרק אותו בדמעות.</p>
+                        <div class="chronology-full-content" id="chapter3-full">
+                            <p>עם סיום השירות, למדתי במסלול הנדסאים ב"יד סינגלובסקי", מוסד יוקרתי למקצועות הטכנולוגיה. הידע שלי באלקטרוניקה היה יסודי, פרקטי ומדויק. השלב הבא היה מתבקש: אבי העביר לי את דירת המרתף שבביתנו הפרטי – ושם בניתי את האולפן האנלוגי הראשון שלי. לא קניתי מערכת מוכנה – תכננתי הכול בעצמי: טייפ פוסטקס 16 ערוצים עם Dolby C, מערכת בקרה, כבלים, מיקסרים – שבניתי או התאמתי, חדרים מבודדים ותאורה מבוקרת. האולפן פעל 7 שנים ברציפות, שימש להקלטות, הפקות ועבודה עם אמנים צעירים. אך בסוף – בגלל בעיות מול העירייה, נאלצתי לפרק אותו בדמעות.</p>
+                        </div>
+                        <a class="read-more" data-chapter="chapter3-full">קרא עוד</a>
+                    </div>
+                    <!-- Chapter 4 -->
+                    <div class="chronology-item">
+                        <h3>פרק 4: תקופת המעבר – שטח, הקלטות ניידות, ומתודות שנולדו מתוך אילוץ – ניהול מוזיקלי והצלחה ארצית</h3>
+                        <p>כשאין אולפן – יוצאים לשטח... הגיע גם המחשב הראשון שלי: Atari 1040 ST... הבנתי אז משהו מהותי: הקוד הוא רק עוד דרך לתת צורה למה שיש לי בראש... ואז, הגיע הרגע לסגור את המעגל הצבאי. יחד עם ז'אק, הגשמתי חלום והקמתי את הלהקה הייצוגית של חיל הקשר (כיום להקת חיל התקשוב).</p>
+                        <div class="chronology-full-content" id="chapter4-full">
+                            <p>כשאין אולפן – יוצאים לשטח. הרכבתי אולפן נייד עם Roland 16 ערוצים, ופיתחתי טכניקות אילתור שהמצאתי בעצמי: הקלטת אקו בעזרת טייפ עם ראש נוסף, שימוש חוזר ברכיבים ישנים, ותכנון "מהראש" – תוך כדי תנועה. במקביל, הגיע גם המחשב הראשון שלי: Atari 1040 ST עם תוכנת SILB, מונו-כרום – וכך התחיל החיבור הראשון בין מוזיקה למחשב. הבנתי אז משהו מהותי: הקוד הוא רק עוד דרך לתת צורה למה שיש לי בראש. לאחר מכן, חזרתי לניהול מוזיקלי באורט, והפעם, עם ניסיון חיים עשיר יותר, העמקתי את ניסיונותיי בווקאליזציה. הגעתי לרמות נדירות, כאלו שלא נראו בישראל עד אז, כשאני מנצח על נוער – תלמידים ממגמות שאינן מוזיקה – ומביא אותם לרמת שירה בסגנון ה"סווינגל סינגרס". הדבר היה כה יוצא דופן, עד כי כאשר הלהקה המקורית הגיעה לארץ למופעים, חבריה נדהמו לשמוע בני נוער ישראלים מבצעים את יצירותיהם המורכבות. תוך כדי העבודה במספר רב של תיכונים בארץ, המשכתי להקים ולהוביל להקות ייצוגיות ברחבי הארץ. במהלך שנותיי כמנהל מוזיקלי, זיהיתי וטיפחתי תלמידים מוכשרים רבים. חלקם הגדול פרץ לתודעה הציבורית והפך למפורסם במסגרות כמו "כוכב נולד" ובתיאטראות מובילים בארץ – עדות נוספת להשפעתי העצומה. שנים ספורות לאחר סיום פרויקטים אלו, הגיעה הפגישה הגורלית עם הבמאי ז'אק זרביב, שותפי לדרך. יחד, התחלנו לברוא מופעים שלמים, שכללו לא רק תוכן מוזיקלי עשיר, אלא גם תנועה, חוויה, תפאורה ומחזות זמר רבים – כל מה שנדרש כדי להפוך מופע לבלתי נשכח. שנינו כבשנו את במות התיכונים המובחרים בארץ, והצלחתנו הייתה מסחררת. הפכנו למבוקשים, יצרנו להקות ייצוגיות, ערבי כישרונות, והובלנו מאות (!) מסיבות סיום ומחזות זמר מקוריים, והצבנו סטנדרט אמנותי גבוה ויוצא דופן שלא היה מוכר באותה תקופה. ואז, הגיע הרגע לסגור את המעגל הצבאי. יחד עם ז'אק, הגשמתי חלום והקמתי את הלהקה הייצוגית של חיל הקשר (כיום להקת חיל התקשוב). הלהקה, שפעילה עד היום, העניקה במה לכישרונות רבים, והוציאה אמנים כמו הראל סקעת ומאיה אברהם (זמרת בתוכניתו של פרויקט רייכל).</p>
+                        </div>
+                        <a class="read-more" data-chapter="chapter4-full">קרא עוד</a>
+                    </div>
+                    <!-- Chapter 5 -->
+                    <div class="chronology-item">
+                        <h3>פרק 5: המסע המוזיקלי - מופעים בכלי נשיפה, תיכונים וגני ילדים</h3>
+                        <p>לאחר סיום פרויקטי הלהקות, החל פרק חדש ומרתק – פיתוח מופעי הנגינה בכלי נשיפה... בלי לדעת, נכנסתי לאחד מהשלבים המכוננים של דרכי – עולם הגיל הרך... היום אני יודע: כאן נולד השילוב הראשון בין הידע הטכני שלי לבין הדמיון החווייתי, שנבט שנים אחר כך לתוך הקוד, ה-AI, והתיאוריה הרחבה שבניתי.</p>
+                        <div class="chronology-full-content" id="chapter5-full">
+                            <p>לאחר סיום פרויקטי הלהקות, החל פרק חדש ומרתק – פיתוח מופעי הנגינה בכלי נשיפה. יצרתי תוכניות נגינה שהן מעין מופעים מוסברים בכלי נשיפה, אשר עברו את מבחני "סל תרבות ארצי" ו"נוער מוזיקלי". תוכניות אלו מיועדות לחטיבות ביניים ותיכונים, וכוללות מופעי "מפגש חוויה" ומופעים גדולים יותר לכלל בית הספר. בשלב זה, בלי לדעת, נכנסתי לאחד מהשלבים המכוננים של דרכי – עולם הגיל הרך. לא כמורה בלבד – אלא כמי שמביא עמו שפה מוזיקלית שלמה שנולדה מהשטח. נכנסתי לגנים עם יכולת שמעטים החזיקו אז: יכולת לנגן על עשרות כלים שונים, לחבר בין סיפור לבין סאונד, ולייצר חוויה מוחשית גם בלי תיאוריה או מצגת. אבל העיקר היה ביכולת להמציא פטנטים חיים. רציתי לחשוף את הילדים לסוד הצליל – אז בניתי מודלים מכלים ביתיים, חתכתי בקבוקים, פתחתי צעצועים, חיברתי צינורות ויצרתי מהם כלי נגינה מאולתרים. בכל פעם, הסברתי איך הצליל נוצר דרך המחשה פיזית. אחת הדוגמאות שאני זוכר עד היום – כשהצגתי לילדים את משפחת הסקסופונים ורציתי להמחיש את גודלו של סקסופון קונטרבס. הדפסתי תמונה בגובה של 40 דפי A4 – הילדים אחזו בתחתית על הרצפה, ואני עמדתי על כיסא והצמדתי את הקצה העליון לתקרה. כך הם הרגישו בעצמם את גודל הכלי. הם לא רק ראו – הם חוו. באותה תקופה פיתחתי עשרות תוכניות כאלה, וכל אחת מהן כללה שילוב של סיפור, הדגמה, כלי נגינה אמיתי, הפעלת הילדים ועבודה רב-חושית. לא הייתי רק "מורה למוזיקה", אלא ממציא של גישה. היום אני יודע: כאן נולד השילוב הראשון בין הידע הטכני שלי לבין הדמיון החווייתי, שנבט שנים אחר כך לתוך הקוד, ה-AI, והתיאוריה הרחבה שבניתי. פועלי מתחלק לארבע קטגוריות מופעים עיקריות, לצד פיתוחים ותוכניות נוספות: **מופעים חד-פעמיים 1:** המופע המבוקש "צלילים שנוגים", המותאם במיוחד לקהל המבוגר יותר. הוא כולל תוכנית נגינה בשלל הכלים, הנוגעת בניגוני עבר נצחיים, המעובדים באופן מרגש לנגינה בכלי הנשיפה. לפרטים מעמיקים יותר בעניין המופע הזה, ניתן לחפש בגוגל: "חזי חביבי דף בית". **מופעי הקראות:** הראשון, "הספר של כלי נשיפה", מבוסס על סיפורי הראשי, שמטרתו לתת דוגמה חיה לרצון בלתי מתפשר לכבוש מטרה: מוזיקה ונגינה. "הספר של כלי נשיפה B" הוא שדרוג מהותי של אותו מופע, הכולל משחק רב-חושי ומוצגים ויזואליים שנוצרו במיוחד עבור התוכנית. סרטים מצוירים מספרים את העלילה והשירים הנלווים בתיאום מוחלט למופע החי, ומספקים חיזוק משלים, המותאם במיוחד לילדים שרגילים לשאוב מידע חזותי בעידן זה. **מופעים חד-פעמיים 2:** מופעים מקוריים אלה עוסקים בנושאים שונים ומגוונים, כמובן דרך פריזמת הנגינה בכלי הנשיפה. **סדרת קונצרטים "זה מרלך לגיל הרך":** במהלך הזמן, נחשפתי לתוכנית הלימודים של משרד החינוך בגנים, המבוססת על הספרים "זה מרלך לגיל הרך". בעקבות גישת משרד החינוך, יצרתי סדרת קונצרטים ייחודית, המותאמת באופן מושלם לשדרת הספרים הזו ולמועד שבו נלמדות היצירות הכלולות בו – לאורך השנה, על פי לוח השנה העברי. הסדרה מתבססת על שיתוף פעולה ביני לבין הגננות. אני מגיש לילדים קונצרטים שהם אירועי שיא, החותמים תקופה של למידה. כך שהילדים מגיעים לקונצרט כשהם מכירים את החומר, ולכן יכולים לקחת חלק פעיל בחוויה וליהנות ממנה באופן מקסימלי. הילדים מקבלים הכנה לקראת הקונצרט, והם מצפים לו ונרגשים לקראתו, כפי שכל שוחר מוזיקה מבוגר נערך ומתארגן לקראת אירוע תרבותי חשוב ואיכותי. **סדנאות ספציфиות ועדכונים שנתיים:** **"אינסלט, עד באמת מתחילים" (תוכנית ירוקה):** תוכנית חדשנית לילד בגיל הגן, שיכולה להוות פתרון פשוט ונגיש, הכוללת את כל הנושאים המוזיקליים אותם הילדים אמורים להכיר. התוכנית כוללת ערכה שהוכנה במיוחד וכן דיסק מקורי הכולל ארבעים ושבע רצועות שמע, המכיל שלל דוגמאות וכן שירים מקוריים, המדגישים נושאים חשובים כדרך ללמוד והטמעה אצל הילדים. **"כלי הנשיפה שלי":** סדרת קונצרטים מקוריים, המכילה באופן יסודי את כל תחום כלי הנשיפה על צדדיו השונים והמרתקים. היא חוקרת נושאים כמו: כיצד מיוצר הצליל (באמצעות מודלים שנבנו במיוחד מחומרים מוכרים מחיי היומיום), החומרים השונים המשמשים לבניית הכלים, שוני הצליל בין הכלים השונים, הקשר המרתק בין הגודל הפיזי והצליל, צורת הכלים, וכיצד כל זה קורה – כולל הצצה למפעלי כלים בעבר ובהווה.</p>
+                        </div>
+                        <a class="read-more" data-chapter="chapter5-full">קרא עוד</a>
+                    </div>
+                    <!-- Chapter 6 -->
+                    <div class="chronology-item">
+                        <h3>פרק 6: המעבר לצהרונים – כשהמפגש התחלף למחויבות ארוכת טווח</h3>
+                        <p>התחנה הבאה, והמהפכנית לא פחות, הייתה הצהרונים... בחרתי חוג מרכזי סביבו יתארגנו שאר התכנים – "הסיפור המוזיקלי", שזכה לנתח עניין מדהים של 96% בניסויי שטח. כך, מרבית המאמץ וההשקעה הופנו לפיתוח וליטוש הסיפור המוזיקלי, שהפך לעוגן המרכזי של חוגי הצהרונים.</p>
+                        <div class="chronology-full-content" id="chapter6-full">
+                            <p>התחנה הבאה, והמהפכנית לא פחות, הייתה הצהרונים. שם, מתוך צורך אמיתי בשטח, פיתחתי סוג חדש של פעילות: תוכנית רב-פעמית, כמעין חוג שבועי קבוע הנפרש לאורך כל השנה, וכולל לא פחות מארבעה עשר חוגים שונים בנושאים מרתקים לילדים. ביצעתי מהלך אסטרטגי ששינה את פני הדברים: בחרתי חוג מרכזי סביבו יתארגנו שאר התכנים – "הסיפור המוזיקלי", שזכה לנתח עניין מדהים של 96% בניסויי שטח. כך, מרבית המאמץ וההשקעה הופנו לפיתוח וליטוש הסיפור המוזיקלי, שהפך לעוגן המרכזי של חוגי הצהרונים, כאשר תתי-חוגים אחרים משולבים כריענון תקופתי. חוגי הצהרונים: מהשקפה רחבה לליבת העניין המוזיקלי. פיתוח התכנים לצהרונים, המורכב ממגוון עשיר של כ-14 תתי-חוגים, שואב השראה מניסיון עבר עשיר. אך בפורמט החדש, ביצעתי מהלך אסטרטגי ששינה את פני הדברים: בחרתי חוג מרכזי סביבו יתארגנו שאר התכנים. הבחירה הזו לא הייתה מקרית. היא נבעה משנה שלמה של ניסוי ובחינת שטח בחוגים הקבועים בצהרונים. במהלך תקופה זו, נמדדה רמת העניין של הילדים בכל אחד מהחוגים באופן פרטני. התוצאות היו חד-משמעיות: הסיפור המוזיקלי זכה לנתח עניין של 96%, נתון מדהים שהכתיר אותו לליבת הפעילות. משמעות הדבר היא שמרבית המאמץ וההשקעה הופנו לפיתוח וליטוש הסיפור המוזיקלי, שהפך לעוגן המרכזי של חוגי הצהרונים. תתי-החוגים האחרים, על אף עניינם, ישולבו כעת במינון נכון יותר, וישמשו כגורם מרענן ומשלים בתוך המבנה המרוכז סביב הסיפור המוזיקלי. כך, למשל, אם חוג נגינה זכה ל-70% עניין, הוא לא ייעלם, אלא ישולב כריענון תקופתי, ויבטיח שילדים ימשיכו ליהנות ממנו במינון אופטימלי ששומר על רעננותו ואטרקטיביותו.</p>
+                        </div>
+                        <a class="read-more" data-chapter="chapter6-full">קרא עוד</a>
+                    </div>
+                    <!-- Chapter 7 -->
+                    <div class="chronology-item">
+                        <h3>פרק 7: החזון של היום – מקארו, מרחב חושי-רגשי, ופיתוחים מתקדמים</h3>
+                        <p>אני מאמין במספר עקרונות ברזל המנחים את כל פעילותי עם ילדים... אני מאמין שהרגש הוא המפתח שיגיע אל הילד ויוביל להשפעה ארוכת טווח. היום, אני לא רק מלמד. אני בונה מרחבים רגשיים-חושיים לילדים. אני קורא לזה: מקארו – מקום שבו הילד חווה, לא לומד... אני הילד שפעם רצה שהתמונה תזוז – והיום אני מזיז אותה.</p>
+                        <div class="chronology-full-content" id="chapter7-full">
+                            <p>אני מאמין במספר עקרונות ברזל המנחים את כל פעילותי עם ילדים, במיוחד בעידון הנוכחי. השאלה המרכזית עבורי היא: כיצד להעביר את המסר באופן שיעורר עניין וסקרנות אצל הילד? אני חוזר אל הילד שהייתי פעם, אל הקושי שלי להקשיב בשל הפרעת קשב חמורה, ומציב לעצמי רף גבוה: אם אצליח לעניין ילד עם הפרעת קשב, הרי ברור שזה יצליח עם כל שאר הילדים. זו גם דרכי להעניק לאותם ילדים רגעים של שקט וריכוז. כאמן שהגיע להישגים מוזיקליים כנגד כל הסיכויים, אני יודע היטב מה מניע ומשפיע: רגש, רגש ושוב רק רגש. אני זוכר את החלילן שריגש אותי בילדותי, ולא עסק ב"הפעלות", אלא פשוט ניגן בכישרון. לכן, כאשר יש לי את היכולת לרגש, לא רק דרך המוזיקה אלא בכל היבטי פעילותי, אני מקדיש לכך את זמני היקר. אני מאמין שהרגש הוא המפתח שיגיע אל הילד ויוביל להשפעה ארוכת טווח. היום, אני לא רק מלמד. אני בונה מרחבים רגשיים-חושיים לילדים. אני קורא לזה: מקארו – מקום שבו הילד חווה, לא לומד. שקופיות מדברות בקול, אורות מגיבים, מוזיקה יוצרת הבנה לפני מילים. מקארו הוא רגע שילד שוכח שהוא בכיתה, חיבור בין אור, צבע, צליל ותוכן, ותנועה שבאה מהלב ונוגעת בלב. אני לא רק מתכנת, לא רק מוזיקאי, לא רק ממציא. אני הילד שפעם רצה שהתמונה תזוז – והיום אני מזיז אותה. אני ממשיך לחדש ולפרוץ דרך בתחומים מגוונים.</p>
+                        </div>
+                        <a class="read-more" data-chapter="chapter7-full">קרא עוד</a>
+                    </div>
                 </div>
-                <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg p-4 rounded-2xl shadow-lg transition-transform hover:scale-105 group flex flex-col">
-                    <img src="https://b.stablecog.com/8c0aaac8-b395-4530-b4d5-1e5b0ad13940.jpeg" alt="מוזיקה ונגינה" class="rounded-xl mb-3 w-full music-image">
-                    <h4 class="text-xl font-bold mb-1 italic">מוזיקה ונגינה</h4>
-                    <p class="text-md italic">נצפה בחזי המנגן כתזמורת של איש אחד על 14 כלים שונים. נגלה איך נוצר הצליל בכלים, איך הם נבנו בעבר ואיך הם נוצרים כיום, ואיך הקסם המוזיקלי מתרחש. אולי זה אפילו ידליק בכם את הרצון לנגן בעצמכם ?</p>
-                </div>
-                <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg p-4 rounded-2xl shadow-lg transition-transform hover:scale-105 group flex flex-col">
-                    <img src="https://b.stablecog.com/a2f4b2c0-491a-4b7c-81ab-4015a4069e66.jpeg" alt="אולפן הטלוויזיה שלי AI" class="rounded-xl mb-3 w-full">
-                    <h4 class="text-xl font-bold mb-1 italic">אולפן הטלוויזיה שלי AI</h4>
-                    <p class="text-md italic"> הילדים נכנסים לעולם הקסום של שידורי הטלוויזיה, משתתפים בתוכניות אירוח, ומגלים איך יוצרים תוכן בקלות בעידן הנוכחי     </p>
-                </div>
-                <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg p-4 rounded-2xl shadow-lg transition-transform hover:scale-105 group flex flex-col">
-                    <img src="https://b.stablecog.com/960b94ee-6c72-44ee-acaa-53d40eb5b252.jpeg" alt="קשב בעזרת תיפוף" class="rounded-xl mb-3 w-full">
-                    <h4 class="text-xl font-bold mb-1 italic">קשב בעזרת תיפוף</h4>
-                    <p class="text-md italic">נחדד קשב וריכוז באמצעות תזמור קבוצתי ותקשורת מוזיקלית.</p>
-                </div>
-                <div class="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg p-4 rounded-2xl shadow-lg transition-transform hover:scale-105 group flex flex-col">
-                    <img src="https://b.stablecog.com/a6930538-0627-45eb-96c1-f47d9ac4f2ce.jpeg" alt="סרטים מוזיקליים" class="rounded-xl mb-3 w-full">
-                    <h4 class="text-xl font-bold mb-1 italic">סרטים מוזיקליים מרגשים</h4>
-                    <p class="text-md italic">נצפה בסרטים מוזיקליים : פטר והזאב,טבי הטובה,ובסרטים מקוריים על ילדים שהגשימו חלום.</p>
-                </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Gemini API Feature Section -->
-        <section class="cosmic-nebula-bg p-6 rounded-2xl mb-8">
-            <div class="stars stars1"></div>
-            <div class="stars stars2"></div>
-            <div class="content-layer text-center">
-                <h3 class="magic-text-yellow text-3xl font-bold text-yellow-300 mb-4 italic">✨ מחולל הרעיונות הקסום ✨</h3>
-                <p class="text-lg mb-4 text-gray-200">רוצים רעיון לסיפור או פעילות? כתבו נושא וגלו מה הקסם ימציא לכם!</p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-lg mx-auto">
-                    <input type="text" id="idea-input" class="w-full sm:w-2/3 bg-white bg-opacity-20 text-white placeholder-gray-300 rounded-full py-3 px-5 text-center" placeholder="לדוגמה: חלל, דינוזאורים, פיות...">
-                    <button id="generate-idea-btn" class="w-full sm:w-auto bg-yellow-400 text-purple-800 font-bold py-3 px-8 rounded-full text-lg shadow-lg transition-all duration-300 transform hover:scale-110 hover:bg-yellow-300">
-                        צרו לי קסם!
-                    </button>
-                </div>
-                <div id="loader" class="loader hidden"></div>
-                <div id="idea-result" class="mt-6 text-lg text-teal-200 bg-white bg-opacity-10 rounded-xl p-4 min-h-[100px] whitespace-pre-wrap"></div>
-            </div>
-        </section>
-
-        <div class="text-center mt-8">
-            <h4 class="text-2xl sm:text-3xl font-bold mb-4 text-yellow-300 animate-pulse italic">בואו להצטרף למסע!</h4>
-            <a href="#" class="inline-block bg-yellow-400 text-purple-800 font-bold py-3 px-8 rounded-full text-lg sm:text-xl shadow-lg transition-all duration-300 transform hover:scale-110 hover:bg-yellow-300 italic">
-                לפרטים נוספים והרשמה
-            </a>
-        </div>
-
+        </main>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const headerAnimations = [
-                { id: 'ufo1', duration: 10000 },
-                { id: 'rocket1', duration: 6000 },
-                { id: 'robot-video1', duration: 10000 },
-                { id: 'scanner1', duration: 7000 },
-                { id: 'trippy-ball1', duration: 10000 },
-                { id: 'header-gif', duration: 15000 }
-            ];
-
-            const mainAnimations = [
-                { id: 'light-beam-1', duration: 8000 },
-                { id: 'light-beam-2', duration: 8000 },
-                { id: 'fairy1', duration: 14000 },
-                { id: 'starship1', duration: 15000 },
-                { id: 'starship2', duration: 12000 },
-                { id: 'mysterious-orb1', duration: 8000 },
-                { id: 'comet1', duration: 12000 }
-            ];
-
-            function createAnimationManager(configs, minCooldown, maxCooldown) {
-                let lastIndex = -1;
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Data for feature cards
+    const featuresData = [
+        // Visual Effects (Purple/Pink)
+        { index: 1, original: 'הנפשה לתמונה אחת', professional: 'מנוע הנפשה עדינה', simple: 'מפיח חיים בתמונה בודדת באמצעות תנועה קלה (נשימה, רעד קסום).', category: 'Visual-Effects', colors: {in: 'purple', proc: 'pink', out: 'purple'}, icons: {in: 'image', proc: 'sparkles', out: 'photograph'} },
+        { index: 2, original: 'עיוות רקע אוטומטי', professional: 'מנוע הנפשת רקעים', simple: 'יוצר תנועה גלית או קלה ברקעים סטטיים (שמיים, ים, אור).', category: 'Visual-Effects', colors: {in: 'purple', proc: 'pink', out: 'purple'}, icons: {in: 'photograph', proc: 'switch-horizontal', out: 'video-camera'} },
+        { index: 4, original: 'שכבת ציפורים באוויר', professional: 'מודול שכבות אנימציה', simple: 'מוסיף שכבת GIF/PNG מונפשת של ציפורים בתנועה לכל סצנה.', category: 'Visual-Effects', colors: {in: 'purple', proc: 'pink', out: 'purple'}, icons: {in: 'photograph', proc: 'plus-circle', out: 'film'} },
+        { index: 7, original: 'שכבת עצים נעים', professional: 'מודול שכבות אנימציה', simple: 'מוסיף לכל תמונה שכבת GIF של עצים נעים ברוח.', category: 'Visual-Effects', colors: {in: 'purple', proc: 'pink', out: 'purple'}, icons: {in: 'photograph', proc: 'plus-circle', out: 'film'} },
+        { index: 11, original: 'הוספת שכבת עננים', professional: 'מודול שכבות אנימציה', simple: 'מוסיף שכבת GIF של עננים נעים לכל שקופית עם שמיים פתוחים.', category: 'Visual-Effects', colors: {in: 'purple', proc: 'pink', out: 'purple'}, icons: {in: 'photograph', proc: 'plus-circle', out: 'film'} },
+        { index: 13, original: 'יצירת רקעים חיים', professional: 'מחולל רקעים חיים', simple: 'מטעין "פריסט" של תנועה (גלים, צל, רוח) ומשלב אותו על רקע סטטי.', category: 'Visual-Effects', colors: {in: 'purple', proc: 'pink', out: 'purple'}, icons: {in: 'template', proc: 'refresh', out: 'video-camera'} },
+        { index: 16, original: 'הנפשת גלים בתמונה', professional: 'פריסט גלים להנפשה', simple: 'יוצר תנועת גלים עדינה בתמונה רגילה (מים, רוח) כדי להפיח בה חיים.', category: 'Visual-Effects', colors: {in: 'purple', proc: 'pink', out: 'purple'}, icons: {in: 'image', proc: 'sparkles', out: 'photograph'} },
+        { index: 17, original: 'יצירת רקעים מרובדים', professional: 'מחולל רקעים תלת-שכבתיים', simple: 'משלב רקע, שכבת אובייקטים ותנועה ליצירת תחושת עומק.', category: 'Visual-Effects', colors: {in: 'purple', proc: 'pink', out: 'purple'}, icons: {in: 'collection', proc: 'sort-ascending', out: 'photograph'} },
+        { index: 22, original: 'הנפשה מתקדמת', professional: 'מנוע הנפשה אטמוספרית', simple: 'מחייה עצים או ציפורים בתמונה עם תנועה עדינה מוגדרת מראש.', category: 'Visual-Effects', colors: {in: 'purple', proc: 'pink', out: 'purple'}, icons: {in: 'template', proc: 'sparkles', out: 'film'} },
+        { index: 26, original: 'הנפשת רקע גל', professional: 'פריסט הנפשת גלים', simple: 'מנפיש רקע של תמונה סטטית (ים, שמיים) בתנועות גל עדינות.', category: 'Visual-Effects', colors: {in: 'purple', proc: 'pink', out: 'purple'}, icons: {in: 'photograph', proc: 'refresh', out: 'video-camera'} },
+        { index: 27, original: 'הנפשת פנים בדמות', professional: 'מנוע הנפשת פנים', simple: 'מקבל תמונה רגילה ומוסיף לה פה מדבר ועיניים זזות.', category: 'Visual-Effects', colors: {in: 'purple', proc: 'pink', out: 'purple'}, icons: {in: 'user', proc: 'chat-alt-2', out: 'user-circle'} },
+        { index: 28, original: 'רקע שקוף (Chroma Key)', professional: 'מחולל וידאו Chroma Key', simple: 'יוצר וידאו מונפש עם רקע ירוק/שקוף להלבשה על סיפורים.', category: 'Visual-Effects', colors: {in: 'purple', proc: 'pink', out: 'purple'}, icons: {in: 'video-camera', proc: 'scissors', out: 'film'} },
+        { index: 34, original: 'פריסטים להנפשת תמונות', professional: 'מאגר פריסטים להנפשה', simple: 'מוסיף אנימציות עדינות לתמונה קפואה (תנועת מים, רטט, נשימה).', category: 'Visual-Effects', colors: {in: 'purple', proc: 'pink', out: 'purple'}, icons: {in: 'collection', proc: 'sparkles', out: 'photograph'} },
+        { index: 36, original: 'מציאות רבודה (AR)', professional: 'מערכת AR למצלמה', simple: 'פותח מצלמה, מציג את המשתמש ומוסיף מעליו שכבת עננים נעים.', category: 'Visual-Effects', colors: {in: 'purple', proc: 'pink', out: 'purple'}, icons: {in: 'camera', proc: 'cloud', out: 'video-camera'} },
+        { index: 39, original: 'יצירת עומק מדומה', professional: 'מחולל עומק ויזואלי', simple: 'מפרק תמונה לשכבות ומזיז כל אחת בקצב שונה ליצירת עומק.', category: 'Visual-Effects', colors: {in: 'purple', proc: 'pink', out: 'purple'}, icons: {in: 'photograph', proc: 'sort-ascending', out: 'cube-transparent'} },
+        { index: 40, original: 'רקע אינטראקטיבי', professional: 'מערכת רקע מבוסס תנועה', simple: 'משנה את הרקע בזמן אמת לפי תנועת הילד מול המצלמה.', category: 'Visual-Effects', colors: {in: 'purple', proc: 'pink', out: 'purple'}, icons: {in: 'video-camera', proc: 'user', out: 'switch-horizontal'} },
+        // Dialog & Audio (Blue/Teal)
+        { index: 3, original: 'קול לכל שקופית', professional: 'מערכת קריינות מותאמת', simple: 'סורק מצגת ויוצר קובץ קול מותאם לכל שקופית.', category: 'Dialog-System', colors: {in: 'blue', proc: 'teal', out: 'blue'}, icons: {in: 'presentation-chart-bar', proc: 'microphone', out: 'volume-up'} },
+        { index: 5, original: 'מצלמת קריינות', professional: 'הקלטת קריינות אישית', simple: 'פותח מצלמה ומקליט את קול המשתמש תוך כדי תצוגת שקופיות.', category: 'Dialog-System', colors: {in: 'blue', proc: 'teal', out: 'blue'}, icons: {in: 'camera', proc: 'microphone', out: 'user-circle'} },
+        { index: 9, original: 'תזמון קולות לשקופיות', professional: 'תזמון קריינות מדויק', simple: 'מתאים בין שקופיות לקובצי קול ומשייך אותם אוטומטית.', category: 'Dialog-System', colors: {in: 'blue', proc: 'teal', out: 'blue'}, icons: {in: 'table', proc: 'clock', out: 'presentation-chart-bar'} },
+        { index: 10, original: 'אפקט קולות משולבים', professional: 'מעצב גוון קול דינמי', simple: 'משנה קובץ קול כך שישמע בגוון אחר (עמוק, דק, הד).', category: 'Audio-Processing', colors: {in: 'blue', proc: 'teal', out: 'blue'}, icons: {in: 'volume-up', proc: 'switch-vertical', out: 'chat-alt'} },
+        { index: 21, original: 'נרמול עוצמת אודיו', professional: 'נרמול עוצמה אוטומטי', simple: 'סורק קבצי סאונד ומאזן את עוצמתם לרמה אחידה.', category: 'Audio-Processing', colors: {in: 'blue', proc: 'teal', out: 'blue'}, icons: {in: 'volume-up', proc: 'scale', out: 'volume-up'} },
+        { index: 23, original: 'בקרת גוון קול לדמות', professional: 'מחולל קולות דמויות', simple: 'מקבל טקסט ודמות ויוצר קובץ סאונד מותאם (ילד, מכשפה).', category: 'Audio-Processing', colors: {in: 'blue', proc: 'teal', out: 'blue'}, icons: {in: 'user', proc: 'microphone', out: 'chat-alt-2'} },
+        { index: 29, original: 'סנכרון שפתיים-דיבור', professional: 'מנגנון Lip-sync בעברית', simple: 'מקבל קובץ קול ומחולל הנפשה תואמת של תנועת פה.', category: 'Dialog-System', colors: {in: 'blue', proc: 'teal', out: 'blue'}, icons: {in: 'microphone', proc: 'refresh', out: 'chat-alt-2'} },
+        { index: 31, original: 'עיוות קול לפי רגשות', professional: 'מעצב קול רגשי', simple: 'משמיע טקסטים באפקטים משתנים (לחישה, צעקה, פחד).', category: 'Audio-Processing', colors: {in: 'blue', proc: 'teal', out: 'blue'}, icons: {in: 'volume-up', proc: 'emoji-sad', out: 'chat-alt'} },
+        { index: 35, original: 'הנפשת קטעי סאונד', professional: 'מערכת פסקול סיפורי', simple: 'מוסיף פסי קול (פחד, מתח, קסם) לכל שקופית בהתאם לעלילה.', category: 'Audio-Processing', colors: {in: 'blue', proc: 'teal', out: 'blue'}, icons: {in: 'film', proc: 'music-note', out: 'volume-up'} },
+        { index: 38, original: 'מילוי דממה במוזיקה', professional: 'מילוי דממה אוטומטי', simple: 'סורק וידאו, מאתר קטעים שקטים, ומכניס מוזיקת רקע.', category: 'Audio-Processing', colors: {in: 'blue', proc: 'teal', out: 'blue'}, icons: {in: 'video-camera', proc: 'search-circle', out: 'music-note'} },
+        
+        // Automation (Amber/Gray)
+        { index: 6, original: 'הפעלת רקעים אוטומטית', professional: 'מנוע רקעים חכמים', simple: 'מזהה מספר שקופית ומפעיל רקע תואם אוטומטית.', category: 'Automation', colors: {in: 'amber', proc: 'gray', out: 'amber'}, icons: {in: 'presentation-chart-bar', proc: 'chip', out: 'photograph'} },
+        { index: 8, original: 'יצירת מצגת מטקסט', professional: 'מחולל מצגות אוטומטי', simple: 'מקבל מערך טקסטים ויוצר מצגת PowerPoint מלאה.', category: 'Automation', colors: {in: 'amber', proc: 'gray', out: 'amber'}, icons: {in: 'document-text', proc: 'cog', out: 'presentation-chart-bar'} },
+        { index: 12, original: 'השלמת טקסט אוטומטית', professional: 'השלמת תוכן חכמה', simple: 'סורק מצגת, מזהה שקופיות ריקות ומשלים טקסט.', category: 'Automation', colors: {in: 'amber', proc: 'gray', out: 'amber'}, icons: {in: 'presentation-chart-bar', proc: 'search', out: 'document-text'} },
+        { index: 14, original: 'הפעלת שכבות אוטומטית', professional: 'מנוע שכבות GIF חכם', simple: 'ממפה שקופית לקטגוריה ומשלב GIF מתאים.', category: 'Automation', colors: {in: 'amber', proc: 'gray', out: 'amber'}, icons: {in: 'tag', proc: 'chip', out: 'film'} },
+        { index: 15, original: 'התאמת אודיו אוטומטית', professional: 'התאמת אודיו למצגות', simple: 'מזהה ומצמיד קובץ קול מתאים לכל שקופית.', category: 'Automation', colors: {in: 'amber', proc: 'gray', out: 'amber'}, icons: {in: 'folder', proc: 'link', out: 'presentation-chart-bar'} },
+        { index: 18, original: 'זיהוי סביבה אוטומטי', professional: 'מנוע זיהוי סביבה', simple: 'מזהה סצנת "חוץ" ומוסיף אוטומטית ציפורים ועצים.', category: 'Automation', colors: {in: 'amber', proc: 'gray', out: 'amber'}, icons: {in: 'photograph', proc: 'chip', out: 'sparkles'} },
+        { index: 19, original: 'בקרת הקרנה דו-מסכית', professional: 'בקרת VLC מ-PowerPoint', simple: 'פותח ושולט בנגן VLC במסך שני מתוך המצגת.', category: 'Automation', colors: {in: 'amber', proc: 'gray', out: 'amber'}, icons: {in: 'presentation-chart-bar', proc: 'switch-horizontal', out: 'desktop-computer'} },
+        { index: 20, original: 'סנכרון אודיו-שקופיות', professional: 'מנגנון סנכרון אודיו', simple: 'משייך קבצי MP3 לשקופיות לפי שמות או טבלה.', category: 'Automation', colors: {in: 'amber', proc: 'gray', out: 'amber'}, icons: {in: 'folder', proc: 'clock', out: 'presentation-chart-bar'} },
+        { index: 25, original: 'סריקת קבצים חכמה', professional: 'איתור ותיקון קבצים', simple: 'סורק תיקייה ומזהה חוסרים, כפילויות או טעויות.', category: 'Automation', colors: {in: 'amber', proc: 'gray', out: 'amber'}, icons: {in: 'folder-open', proc: 'search-circle', out: 'check-circle'} },
+        { index: 30, original: 'הפקת סרטון אוטומטי', professional: 'מערכת הפקת סרטונים', simple: 'מייצר סרטון סיפור שלם משקופיות, קול ורקעים.', category: 'Automation', colors: {in: 'amber', proc: 'gray', out: 'amber'}, icons: {in: 'collection', proc: 'cog', out: 'film'} },
+        { index: 32, original: 'בקרת שלמות מצגות', professional: 'בדיקת מצבים אוטומטית', simple: 'סורק מצגת ומזהה שקופיות חסרות תוכן.', category: 'Automation', colors: {in: 'amber', proc: 'gray', out: 'amber'}, icons: {in: 'presentation-chart-bar', proc: 'search', out: 'exclamation'} },
+        { index: 33, original: 'זיהוי דיבור ושיוך תוכן', professional: 'שיוך תוכן אוטומטי', simple: 'קולט הקראה, שולף מילים ומקשר לשקופית תואמת.', category: 'Automation', colors: {in: 'amber', proc: 'gray', out: 'amber'}, icons: {in: 'microphone', proc: 'chip', out: 'link'} },
+        // UI Components (Green)
+        { index: 24, original: 'טבלת שליטה למצגות', professional: 'ממשק בקרה בזמן אמת', simple: 'מציג בזמן אמת את השקופית הנוכחית והאפקטים הפעילים.', category: 'UI-Component', colors: {in: 'green', proc: 'green', out: 'green'}, icons: {in: 'presentation-chart-bar', proc: 'table', out: 'desktop-computer'} },
+        { index: 37, original: 'ממשק בחירה אינטראקטיבי', professional: 'ממשק בחירה חוויתי', simple: 'תפריט גרפי המאפשר לילד לבחור סיפור, דמות או מצב רוח.', category: 'UI-Component', colors: {in: 'green', proc: 'green', out: 'green'}, icons: {in: 'cursor-click', proc: 'template', out: 'presentation-chart-bar'} },
+    ];
+    // SVG Icons map
+    const icons = {
+        image: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>`,
+        sparkles: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>`,
+        photograph: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>`,
+        'switch-horizontal': `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>`,
+        'video-camera': `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>`,
+        'plus-circle': `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`,
+        film: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" /></svg>`,
+        template: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" /></svg>`,
+        refresh: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h5M20 20v-5h-5M20 4h-5v5M4 20h5v-5" /></svg>`,
+        collection: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>`,
+        'sort-ascending': `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4h13M3 8h9M3 12h9m-9 4h13m0-4l4 4m0 0l4-4m-4 4v12" /></svg>`,
+        user: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>`,
+        'chat-alt-2': `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a2 2 0 01-2-2V10a2 2 0 012-2h8z" /></svg>`,
+        'user-circle': `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z" /></svg>`,
+        scissors: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121M12 12l2.879 2.879M12 12L9.121 14.879M12 12L14.879 9.121" /></svg>`,
+        camera: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>`,
+        cloud: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" /></svg>`,
+        'cube-transparent': `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M12 17v-2.5M12 17l-2 1m2-1l2-1m-2-1V12a2 2 0 012-2h2a2 2 0 012 2v2.5" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 17l-6-3.5V9.5l6-3.5 6 3.5v4l-6 3.5z" /></svg>`,
+        'presentation-chart-bar': `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 13v-1m4 1v-3m4 3V8M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" /></svg>`,
+        microphone: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" /></svg>`,
+        'volume-up': `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.108 12 5v14c0 .892-1.077 1.337-1.707.707L5.586 15z" /></svg>`,
+        table: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>`,
+        clock: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`,
+        'switch-vertical': `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16V4m0 12L3 8m4 4l4-4m6 12v-3.5a2.5 2.5 0 00-5 0V16m0 0l-2.5-2.5M17 16l-2.5 2.5" /></svg>`,
+        'chat-alt': `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>`,
+        scale: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" /></svg>`,
+        'emoji-sad': `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`,
+        'music-note': `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z" /></svg>`,
+        'search-circle': `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16l2.879-2.879m0 0a3 3 0 104.243-4.242 3 3 0 00-4.243 4.242zM21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`,
+        chip: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M12 6V5m0 14v-1M9 12l-2-2m6 0l-2 2m6 0l-2-2m-6 4l-2 2m6 0l2 2" /></svg>`,
+        'document-text': `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>`,
+        cog: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>`,
+        search: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>`,
+        tag: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 8v-5z" /></svg>`,
+        folder: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" /></svg>`,
+        link: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" /></svg>`,
+        'desktop-computer': `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>`,
+        'folder-open': `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z" /></svg>`,
+        'check-circle': `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`,
+        exclamation: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>`,
+        'cursor-click': `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" /></svg>`,
+    };
+    // Function to render feature cards
+    function renderFeatures(filter = 'all') {
+        const grid = document.getElementById('features-grid');
+        grid.innerHTML = ''; // Clear existing cards
+        const filteredData = (filter === 'all')
+            ? featuresData
+            : featuresData.filter(f => f.category === filter);
+        filteredData.forEach(feature => {
+            const card = document.createElement('div');
+            card.className = 'feature-card p-4 rounded-xl shadow-md cursor-pointer flex flex-col';
+            card.dataset.category = feature.category;
+            
+            card.innerHTML = `
+                <div class="text-center">
+                    <p class="text-sm font-semibold text-${feature.colors.proc}-400">${feature.professional}</p>
+                    <h4 class="font-bold text-lg mt-1 text-slate-100">${feature.index}. ${feature.original}</h4>
+                </div>
                 
-                function scheduleNext() {
-                    let nextIndex;
-                    do {
-                        nextIndex = Math.floor(Math.random() * configs.length);
-                    } while (nextIndex === lastIndex && configs.length > 1);
-                    lastIndex = nextIndex;
-
-                    const config = configs[nextIndex];
-                    const element = document.getElementById(config.id);
-
-                    if (element) {
-                        element.classList.remove('animate');
-                        
-                        // Set random position before animation starts
-                        const parent = element.parentElement;
-                        if (parent) {
-                                if (element.id === 'ufo1') {
-                                    element.style.top = `10%`;
-                                    element.style.left = `${Math.random() * 60 + 20}%`;
-                                } else if (element.id === 'rocket1') {
-                                    element.style.top = `${Math.random() * 20 + 5}%`;
-                                } else if (element.id === 'robot-video1') {
-                                    element.style.top = '30%';
-                                    element.style.left = '1%';
-                                    element.style.transform = 'translateY(-50%) scaleX(-1)';
-                                } else if (element.id === 'starship1') {
-                                    element.style.top = `${Math.random() * 80 + 10}%`;
-                                    element.style.left = '5%';
-                                } else if (element.id === 'starship2') {
-                                    element.style.top = `${Math.random() * 60 + 20}%`;
-                                    element.style.left = `${Math.random() * 60 + 20}%`;
-                                } else if (element.id === 'scanner1') {
-                                    element.style.top = `${Math.random() * 60 + 20}%`;
-                                    element.style.left = '0%';
-                                } else if (element.id === 'trippy-ball1') {
-                                    element.style.top = `${Math.random() * 60 + 20}%`;
-                                    element.style.left = `${Math.random() * 60 + 20}%`;
-                                } else if (element.id === 'mysterious-orb1') {
-                                    element.style.top = `${Math.random() * 40 + 30}%`;
-                                    element.style.left = `${Math.random() * 40 + 30}%`;
-                                } else if (element.id === 'comet1') {
-                                    element.style.top = `${Math.random() * 20}%`; 
-                                    element.style.left = `${80 + Math.random() * 20}%`;
-                                } else if (element.id === 'header-gif') {
-                                    element.style.top = '50%';
-                                    element.style.left = '5%';
-                                    element.style.transform = 'translateY(-50%)';
-                                }
-                        }
-
-                        setTimeout(() => {
-                            element.classList.add('animate');
-                        }, 50);
-                    }
-
-                    const cooldown = Math.random() * (maxCooldown - minCooldown) + minCooldown;
-                    setTimeout(scheduleNext, config.duration + cooldown);
-                }
-                
-                setTimeout(scheduleNext, minCooldown);
+                <!-- Iconic Flow Diagram for each card -->
+                <div class="flex items-start justify-center gap-2 md:gap-3 p-3 my-3">
+                    <!-- Input -->
+                    <div class="flex flex-col items-center text-center w-16">
+                        <div class="flex items-center justify-center bg-${feature.colors.in}-500/20 border border-${feature.colors.in}-400 rounded-full h-12 w-12 mb-2">
+                            ${icons[feature.icons.in] || ''}
+                        </div>
+                    </div>
+                    <!-- Arrow -->
+                    <div class="text-2xl font-bold text-slate-500 pt-3">←</div>
+                    <!-- Process -->
+                    <div class="flex flex-col items-center text-center w-16">
+                        <div class="flex items-center justify-center bg-${feature.colors.proc}-500/20 border border-${feature.colors.proc}-400 rounded-full h-12 w-12 mb-2">
+                            ${icons[feature.icons.proc] || ''}
+                        </div>
+                    </div>
+                    <!-- Arrow -->
+                    <div class="text-2xl font-bold text-slate-500 pt-3">←</div>
+                    <!-- Output -->
+                    <div class="flex flex-col items-center text-center w-16">
+                        <div class="flex items-center justify-center bg-${feature.colors.out}-500/20 border border-${feature.colors.out}-400 rounded-full h-12 w-12 mb-2">
+                            ${icons[feature.icons.out] || ''}
+                        </div>
+                    </div>
+                </div>
+                <div class="details mt-2 pt-3 border-t border-slate-700">
+                    <p class="text-slate-300 text-center text-sm">${feature.simple}</p>
+                </div>
+            `;
+            
+            card.addEventListener('click', () => {
+                card.querySelector('.details').classList.toggle('open');
+            });
+            grid.appendChild(card);
+        });
+    }
+    // Function to handle navigation highlighting on scroll
+    function handleScrollspy() {
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('section');
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (pageYOffset >= sectionTop - 100) { // Offset for header height
+                current = section.getAttribute('id');
             }
-
-            createAnimationManager(headerAnimations, 1000, 2000);
-            createAnimationManager(mainAnimations, 2000, 4000);
-
-            // Gemini API Feature
-            const generateBtn = document.getElementById('generate-idea-btn');
-            const ideaInput = document.getElementById('idea-input');
-            const ideaResult = document.getElementById('idea-result');
-            const loader = document.getElementById('loader');
-
-            const callGeminiAPI = async (prompt, retries = 3, delay = 1000) => {
-                loader.classList.remove('hidden');
-                ideaResult.textContent = '';
-                
-                const apiKey = ""; 
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-
-                const payload = {
-                    contents: [{
-                        parts: [{ text: prompt }]
-                    }]
-                };
-
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (!response.ok) {
-                        if (response.status === 429 && retries > 0) {
-                            await new Promise(resolve => setTimeout(resolve, delay));
-                            return callGeminiAPI(prompt, retries - 1, delay * 2); 
-                        }
-                        throw new Error(`שגיאת API: ${response.status}`);
-                    }
-                    
-                    const result = await response.json();
-                    
-                    if (result.candidates && result.candidates.length > 0 &&
-                        result.candidates[0].content && result.candidates[0].content.parts &&
-                        result.candidates[0].content.parts.length > 0) {
-                        const text = result.candidates[0].content.parts[0].text;
-                        ideaResult.textContent = text;
-                    } else {
-                       ideaResult.textContent = 'לא הצלחנו ליצור רעיון. אולי ננסה שוב?';
-                    }
-                } catch (error) {
-                    console.error("Error calling Gemini API:", error);
-                    ideaResult.textContent = 'אוי, משהו השתבש. אנא נסו שוב מאוחר יותר.';
-                } finally {
-                    loader.classList.add('hidden');
-                }
-            };
-
-            generateBtn.addEventListener('click', () => {
-                const topic = ideaInput.value.trim();
-                if (topic) {
-                    const prompt = `כתוב רעיון קצר וקסום לפעילות יצירתית לילדים בגילאי 6-9 בנושא "${topic}". שמור על טון קליל, דמיוני ומעורר השראה. הרעיון צריך להיות באורך של 2-3 משפטים.`;
-                    callGeminiAPI(prompt);
-                } else {
-                    ideaResult.textContent = 'כדי שהקסם יעבוד, צריך לכתוב נושא...';
+        });
+        navLinks.forEach(link => {
+            link.classList.remove('active-nav');
+            if (link.getAttribute('href').substring(1) === current) {
+                link.classList.add('active-nav');
+            }
+        });
+    }
+    // Function to handle filter button clicks
+    function setupFilters() {
+        const filters = document.querySelectorAll('.filter-btn');
+        filters.forEach(button => {
+            button.addEventListener('click', () => {
+                filters.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                renderFeatures(button.dataset.filter);
+            });
+        });
+    }
+    
+    // Function to handle chronology expand/collapse
+    function setupChronology() {
+        const readMoreLinks = document.querySelectorAll('.chronology-item .read-more');
+        readMoreLinks.forEach(link => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                const chapterId = link.dataset.chapter;
+                const fullContentDiv = document.getElementById(chapterId);
+                if (fullContentDiv) {
+                    fullContentDiv.classList.toggle('open');
                 }
             });
         });
-    </script>
-    
+    }
+    // Initial setup
+    renderFeatures();
+    setupFilters();
+    setupChronology();
+    window.addEventListener('scroll', handleScrollspy);
+});
+</script>
+
 </body>
 </html>
