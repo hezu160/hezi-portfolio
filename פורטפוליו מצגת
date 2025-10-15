@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<!-- saved from url=(0212)file:///E:/%D7%9E%D7%9B%D7%95%D7%A0%D7%9F%20C/DOC/%D7%A4%D7%95%D7%A8%D7%98%D7%A4%D7%95%D7%9C%D7%99%D7%95%20%D7%90%D7%97%D7%A8%D7%95%D7%9F%20%D7%9C%D7%9C%D7%90%20%D7%AA%D7%95%D7%A1%D7%A4%D7%AA%20%D7%91%207%20.html -->
+<html lang="he" dir="rtl"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>חזי חביבי - פורטפוליו טכני אינטראקטיבי</title>
+    <script src="./חזי חביבי - פורטפוליו טכני אינטראקטיבי_files/saved_resource"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="./חזי חביבי - פורטפוליו טכני אינטראקטיבי_files/css2" rel="stylesheet">
+    
+    <!-- Chosen Palette: Deep Ocean & Vibrant Accents -->
+    <!-- Application Structure Plan: A multi-section portfolio SPA with top navigation (Overview, Architecture, Features, Digital Studio, Toolbox, Chronology). This thematic structure allows different types of users (recruiters, tech leads) to quickly navigate to the content most relevant to them. The core interaction is a filterable grid of cards for the 'Features' section, which turns a long list into an engaging, explorable interface. This design prioritizes usability and content discovery over a linear report format. A new 'Chronology' section provides a summarized timeline with an option for more details. -->
+    <!-- Visualization & Content Choices: Report Info: Hierarchical project data. Goal: Inform, Organize, Showcase. Viz/Presentation Method: Interactive cards with expand/collapse details for main features, and styled responsive tables for architectural/tooling data. Interaction: Filtering cards by category, clicking to reveal details. Justification: Cards are more engaging than tables for feature lists, and filtering aids discovery. Tables are optimal for presenting structured, descriptive data clearly. The Chronology section uses summarized text blocks for quick overview and a 'Read More' link for potential deeper dive. Library/Method: Vanilla JS for interactions, Tailwind CSS for all styling. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <style>
+        body {
+            font-family: 'Assistant', sans-serif;
+            background-color: #0F172A; /* Darker background for depth */
+            color: #E2E8F0; /* Lighter text for contrast */
+            scroll-behavior: smooth;
+        }
+        .active-nav {
+            color: #38BDF8; /* Brighter blue accent */
+            border-bottom-color: #38BDF8;
+        }
+        .table-responsive {
+            display: block;
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .feature-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, border-color 0.2s ease-in-out;
+            background-color: #1E293B; /* Darker Slate Blue */
+            color: #E2E8F0; /* Light Slate Gray */
+            border: 1px solid #334155;
+        }
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(56, 189, 248, 0.1), 0 4px 6px -4px rgba(56, 189, 248, 0.1);
+            border-color: #38BDF8;
+        }
+        .details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+            color: #CBD5E1; /* Lighter Slate Gray for details text */
+        }
+        .details.open {
+            max-height: 1200px; /* Adjusted for potentially longer content */
+            padding-top: 1rem;
+            transition: max-height 0.7s ease-in; /* Longer transition for smoother open */
+        }
+        .filter-btn {
+            transition: background-color 0.2s, color 0.2s;
+            background-color: #334155; /* Darker filter button */
+            color: #F8FAFC;
+        }
+        .filter-btn.active {
+            background-color: #38BDF8; /* Brighter blue accent for active filter */
+            color: white;
+        }
+        .highlight-text {
+            background-color: #3B82F6; /* Blue background for highlight */
+            color: white;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-weight: 600; /* Bold text */
+            line-height: 1.6;
+        }
+        .section-title {
+            color: #38BDF8; /* Blue for section titles */
+        }
+        .card-subtitle {
+            color: #6EE7B7; /* Greenish accent for subtitles */
+        }
+        table th {
+            background-color: #334155; /* Darker table header */
+            color: #F8FAFC;
+        }
+        table td {
+            background-color: #1E293B; /* Darker table cell */
+            color: #E2E8F0;
+        }
+        .chronology-item {
+            background-color: #1E293B;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1rem;
+        }
+        .chronology-item h3 {
+            color: #6EE7B7;
+            font-weight: bold;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+        .chronology-item p {
+            color: #CBD5E1;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        .chronology-item .read-more {
+            color: #38BDF8;
+            font-weight: 600;
+            text-decoration: none;
+            margin-top: 0.5rem;
+            display: inline-block;
+        }
+        .chronology-full-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.7s ease-in-out; /* Smooth transition for expand/collapse */
+            padding-top: 0;
+            color: #A0AEC0; /* Slightly darker text for full content */
+        }
+        .chronology-full-content.open {
+            max-height: 2000px; /* Increased max-height to ensure all content fits */
+            padding-top: 1rem;
+        }
+        .expand-icon {
+            transition: transform 0.3s ease-out;
+        }
+        .icon-open {
+             transform: rotate(45deg);
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.sticky{position:sticky}.top-0{top:0px}.z-10{z-index:10}.mx-auto{margin-left:auto;margin-right:auto}.mb-10{margin-bottom:2.5rem}.mb-12{margin-bottom:3rem}.mb-2{margin-bottom:0.5rem}.mb-24{margin-bottom:6rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.mt-4{margin-top:1rem}.mt-1{margin-top:0.25rem}.flex{display:flex}.grid{display:grid}.w-full{width:100%}.max-w-3xl{max-width:48rem}.max-w-4xl{max-width:56rem}.max-w-7xl{max-width:80rem}.max-w-none{max-width:none}.flex-1{flex:1 1 0%}.cursor-pointer{cursor:pointer}.scroll-mt-24{scroll-margin-top:6rem}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-2{gap:0.5rem}.gap-6{gap:1.5rem}.gap-8{gap:2rem}.space-x-4 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(1rem * var(--tw-space-x-reverse));margin-left:calc(1rem * calc(1 - var(--tw-space-x-reverse)))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.rounded-full{border-radius:9999px}.rounded-xl{border-radius:0.75rem}.border-b{border-bottom-width:1px}.border-b-2{border-bottom-width:2px}.border-t{border-top-width:1px}.border-slate-700{--tw-border-opacity:1;border-color:rgb(51 65 85 / var(--tw-border-opacity, 1))}.border-transparent{border-color:transparent}.bg-slate-700{--tw-bg-opacity:1;background-color:rgb(51 65 85 / var(--tw-bg-opacity, 1))}.bg-slate-800{--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.bg-slate-900{--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.bg-slate-900\/90{background-color:rgb(15 23 42 / 0.9)}.p-2{padding:0.5rem}.p-6{padding:1.5rem}.px-4{padding-left:1rem;padding-right:1rem}.py-12{padding-top:3rem;padding-bottom:3rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-4{padding-top:1rem;padding-bottom:1rem}.pt-4{padding-top:1rem}.text-center{text-align:center}.text-right{text-align:right}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.font-bold{font-weight:700}.font-semibold{font-weight:600}.text-sky-400{--tw-text-opacity:1;color:rgb(56 189 248 / var(--tw-text-opacity, 1))}.text-slate-100{--tw-text-opacity:1;color:rgb(241 245 249 / var(--tw-text-opacity, 1))}.text-slate-300{--tw-text-opacity:1;color:rgb(203 213 225 / var(--tw-text-opacity, 1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:border-sky-400:hover{--tw-border-opacity:1;border-color:rgb(56 189 248 / var(--tw-border-opacity, 1))}.hover\:text-sky-400:hover{--tw-text-opacity:1;color:rgb(56 189 248 / var(--tw-text-opacity, 1))}@media (min-width: 640px){.sm\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.sm\:space-x-8 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(2rem * var(--tw-space-x-reverse));margin-left:calc(2rem * calc(1 - var(--tw-space-x-reverse)))}.sm\:px-6{padding-left:1.5rem;padding-right:1.5rem}.sm\:text-base{font-size:1rem;line-height:1.5rem}}@media (min-width: 768px){.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:p-8{padding:2rem}.md\:text-5xl{font-size:3rem;line-height:1}}@media (min-width: 1024px){.lg\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.lg\:px-8{padding-left:2rem;padding-right:2rem}}</style></head>
+<body class="bg-slate-900">
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <header class="sticky top-0 bg-slate-900/90 backdrop-blur-sm z-10 border-b border-slate-700">
+            <nav class="flex justify-center items-center py-4 space-x-4 sm:space-x-8 text-sm sm:text-base font-semibold text-slate-300">
+                <a href="#overview" class="nav-link p-2 border-b-2 border-transparent hover:text-sky-400 hover:border-sky-400 transition-colors">מבט על</a>
+                <a href="#architecture" class="nav-link p-2 border-b-2 border-transparent hover:text-sky-400 hover:border-sky-400 transition-colors">ארכיטקטורה</a>
+                <a href="#slideshow" class="nav-link p-2 border-b-2 border-transparent hover:text-sky-400 hover:border-sky-400 transition-colors">מצגת פרויקטים</a>
+                <a href="#features" class="nav-link p-2 border-b-2 border-transparent hover:text-sky-400 hover:border-sky-400 transition-colors">פיתוחים ופיצ'רים</a>
+                <a href="#studio" class="nav-link p-2 border-b-2 border-transparent hover:text-sky-400 hover:border-sky-400 transition-colors">אולפן דיגיטלי</a>
+                <a href="#toolbox" class="nav-link p-2 border-b-2 border-transparent hover:text-sky-400 hover:border-sky-400 transition-colors">ארגז כלים</a>
+                <a href="#chronology" class="nav-link p-2 border-b-2 border-transparent hover:text-sky-400 hover:border-sky-400 transition-colors">כרונולוגיה</a>
+            </nav>
+        </header>
+
+        <main class="py-12">
+
+            <section id="overview" class="mb-24 scroll-mt-24">
+                <div class="text-center mb-12">
+                    <h1 class="text-4xl md:text-5xl font-bold text-slate-100">פורטפוליו טכני: ארכיטקטורת מערכת אקולוגית</h1>
+                    <p class="mt-4 text-lg text-slate-400 max-w-3xl mx-auto">מבט-על ארכיטקטוני מקיף על מערך הפיתוחים, הסקריפטים והמודולים המרכיבים את הפרויקט. כל הפיתוחים המוצגים כאן נוצרו ב-3 השנים האחרונות.</p>
+                </div>
+
+                <div class="bg-slate-800 p-6 md:p-8 rounded-xl shadow-lg">
+                    <h2 class="text-3xl font-bold text-sky-400 mb-6 text-center">הסיפור שמאחורי הקוד: מסע של צלילים, טכנולוגיה ורגש</h2>
+                    <div class="prose prose-lg max-w-none text-slate-300 space-y-4">
+                        <p>
+                            סיפורו של חזי חביבי הוא מסע מרתק שמתחיל בחיבור עמוק למוזיקה כבר מגיל הגן, ומתפתח על קו התפר שבין שני עולמות: אמנות וטכנולוגיה. כמוזיקאי, אמן כלי נשיפה (14 כלים שונים) והנדסאי אלקטרוניקה בהכשרתו, הוא מצא דרך ייחודית לשלב את שתי אהבותיו.
+                        </p>
+                        <p>
+                            במשך שנים רבות, שימש כמנהל מוזיקלי נערץ במוסדות חינוך, הקים להקות ייצוגיות מצליחות, טיפח כישרונות צעירים שהגיעו לקדמת הבמה (כמו ב"כוכב נולד"), ואף הקים יחד עם הבמאי ז'אק זרביב את הלהקה הייצוגית של חיל התקשוב. במקביל, יצר מופעים מוסברים בכלי נשיפה שזכו להכרה של "סל תרבות ארצי".
+                        </p>
+                        <p class="highlight-text">
+                            **בשנים האחרונות, המסע הוביל אותו לעולם הגיל הרך, שם זיהה צורך בפעילות חדשנית שתדבר בשפתם של ילדי העידן הדיגיטלי. מתוך החיבור לילד שהיה בעצמו, שהתמודד עם הפרעת קשב חמורה, נולד החזון: ליצור חוויה רב-חושית שתעורר עניין וריכוז דרך רגש. כל הפיתוחים הטכניים המוצגים בפורטפוליו זה הם התוצאה של אותו חזון – הניסיון להפוך סיפור פשוט לחוויה סוחפת, המשלבת מוזיקה, אנימציה, אוטומציה ואינטראקציה, ונוגעת עמוק בלב.**
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="architecture" class="mb-24 scroll-mt-24">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center">⚙️ ארכיטקטורת מערכת וניהול Office</h2>
+                <p class="text-center text-slate-400 max-w-4xl mx-auto mb-10">פרק זה מפרט את יסודות המערכת: קוד הליבה המאפשר אוטומציה ושליטה, ומערך הכלים המנהל את התוכן בסביבת Microsoft Office, שהיא לב המערכת.</p>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-slate-800 p-6 rounded-xl shadow-md">
+                        <h3 class="font-bold text-xl mb-4 card-subtitle">קוד ליבה, אוטומציה וניהול מערכת</h3>
+                        <div class="table-responsive">
+                            <table class="w-full text-sm">
+                                <thead class="bg-slate-700"><tr><th class="p-2 text-right font-semibold">שם הרכיב / מודול</th><th class="p-2 text-right font-semibold">תיאור ותפקיד</th></tr></thead>
+                                <tbody>
+                                    <tr class="border-t border-slate-700"><td>**קוד VBA ראשי**</td><td>קובץ המקור הראשי, נקודת הכניסה לתהליכים המרכזיים.</td></tr>
+                                    <tr class="border-t border-slate-700"><td>**קוד מקור לכל הערוצים**</td><td>מודול ניתוב ובקרה על תהליכים מקבילים.</td></tr>
+                                    <tr class="border-t border-slate-700"><td>**קוד אוטומציה**</td><td>ספריית ליבה של פונקציות אוטומציה גנריות.</td></tr>
+                                    <tr class="border-t border-slate-700"><td>**הפעלת סקריפטים חיצוניים**</td><td>הרצת קבצי Batch ו-AHK להרחבת יכולות המערכת.</td></tr>
+                                    <tr class="border-t border-slate-700"><td>**שליחה למערכת AHK**</td><td>אינטגרציה ייעודית לשליחת פקודות ל-AutoHotkey.</td></tr>
+                                    <tr class="border-t border-slate-700"><td>**אוטומציה, הפעלת תוכנה חיצונית**</td><td>הפעלה ושליטה על תוכנות צד-שלישי (כמו VLC).</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                     <div class="bg-slate-800 p-6 rounded-xl shadow-md">
+                        <h3 class="font-bold text-xl mb-4 card-subtitle">ניהול מצגות ואוטומציה ב-Office</h3>
+                        <div class="table-responsive">
+                            <table class="w-full text-sm">
+                                <thead class="bg-slate-700"><tr><th class="p-2 text-right font-semibold">שם הרכיב / מודול</th><th class="p-2 text-right font-semibold">תיאור ותפקיד</th></tr></thead>
+                                <tbody>
+                                    <tr class="border-t border-slate-700"><td>**מודול מצגות**</td><td>ניהול כללי של קבצי PPTX.</td></tr>
+                                    <tr class="border-t border-slate-700"><td>**שקופית קבע 1-16**</td><td>תהליך אוטומטי לסנכרון תוכן לתבנית בסיס.</td></tr>
+                                    <tr class="border-t border-slate-700"><td>**מודול העתקה**</td><td>העתקה דינמית של שקופיות ואלמנטים.</td></tr>
+                                    <tr class="border-t border-slate-700"><td>**תיקון / שקופיות**</td><td>לוגיקה לתיקון אוטומטי של מבנה או סדר.</td></tr>
+                                    <tr class="border-t border-slate-700"><td>**מודול שמירה ל-PDF**</td><td>המרה אוטומטית של מצגת פעילה ל-PDF.</td></tr>
+                                    <tr class="border-t border-slate-700"><td>**חיבור ותקשורת עם Excel**</td><td>משמש כמקור נתונים דינמי מגיליונות Excel.</td></tr>
+                                    <tr class="border-t border-slate-700"><td>**קוד ל-DOCX**</td><td>אינטגרציה ליצירת דוחות ותסריטים ב-Word.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- New Slideshow Section -->
+            <section id="slideshow" class="mb-24 scroll-mt-24">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center">מצגת פרויקטים ויזואלית</h2>
+                <div id="hezi-slideshow-wrapper">
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+                    <style>
+                        #hezi-slideshow-wrapper { --h-transition-duration: 2.2s; perspective: 1000px; font-family: sans-serif; text-align:center; }
+                        .h-slideshow-container { max-width: 94%; transition: max-width 0.5s, clip-path 0.5s, border-radius 0.5s; width: 100%; position: relative; margin: auto; box-shadow: 0 10px 25px rgba(0,0,0,0.5); border-radius: 1rem; overflow: hidden; background-color: #1f2937; transform-style: preserve-3d; aspect-ratio: 16/10; }
+                        .h-slide { display: none; width: 100%; height:100%; position:absolute; top:0; left:0; backface-visibility: hidden; transform: rotateY(0deg); text-align: center; color: white;}
+                        .h-slide img { width: 100%; height: 100%; vertical-align: middle; object-fit: contain; }
+                        .h-slide-number { position: absolute; top: 1rem; left: 1rem; background-color: rgba(0,0,0,0.6); color: white; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.9rem; z-index: 10; }
+                        .h-controls-external { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 1rem; }
+                        .h-control-btn { background: none; border: none; color: #E2E8F0; font-size: 1.5rem; cursor: pointer; transition: transform 0.2s; }
+                        .h-loader { border: 4px solid #f3f3f3; border-top: 4px solid #3b82f6; border-radius: 50%; width: 40px; height: 40px; animation: h-spin 1s linear infinite; position: absolute; top: 50%; left: 50%; margin-left:-20px; margin-top: -20px; z-index: 5; }
+                        @keyframes h-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+                        .h-fade { animation: h-fade var(--h-transition-duration); } @keyframes h-fade { from {opacity: .4} to {opacity: 1} }
+                        .h-slide-in { animation: h-slide-in var(--h-transition-duration); } @keyframes h-slide-in { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+                        .h-zoom-in { animation: h-zoom-in var(--h-transition-duration); } @keyframes h-zoom-in { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+                        .h-flip-3d { animation: h-flip-3d var(--h-transition-duration) forwards; } @keyframes h-flip-3d { from { transform: rotateY(90deg); } to { transform: rotateY(0deg); } }
+                        .h-cube-3d { animation: h-cube-3d var(--h-transition-duration) forwards; } @keyframes h-cube-3d { from { transform: translateX(100%) rotateY(90deg); } to { transform: translateX(0) rotateY(0deg); } }
+                        .h-curtain { animation: h-curtain var(--h-transition-duration) forwards; clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); } @keyframes h-curtain { to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); } }
+                        .h-shape-circle { border-radius: 50%; } .h-shape-diagonal { clip-path: polygon(0 0, 100% 10%, 100% 100%, 0 90%); } .h-shape-rounded-more { border-radius: 3rem; }
+                    </style>
+                    <div id="h-slideshow" class="h-slideshow-container shape-rounded-more"></div>
+                    <div class="h-controls-external">
+                        <button class="h-control-btn" id="h-prev"><i class="fas fa-chevron-right"></i></button>
+                        <button class="h-control-btn" id="h-play-pause"><i class="fas fa-pause"></i></button>
+                        <button class="h-control-btn" id="h-next"><i class="fas fa-chevron-left"></i></button>
+                    </div>
+                    <script>
+                        (function() {
+                            const projects = [
+                                { "imageUrl": "https://i.postimg.cc/J0DB6SQH/039-7-ft-MP4.png" }, { "imageUrl": "https://i.postimg.cc/gjX6S1K6/0-4-fmm-ary.png" }, { "imageUrl": "https://i.postimg.cc/TYbDrM1h/3.png" }, { "imageUrl": "https://i.postimg.cc/XY0yLHBD/4-039-039.png" }, { "imageUrl": "https://i.postimg.cc/DwKb6j4x/4.png" }, { "imageUrl": "https://i.postimg.cc/fRjSrcYv/9-nam-MP3-Dy.png" }, { "imageUrl": "https://i.postimg.cc/brD2C4Rn/47.png" }, { "imageUrl": "https://i.postimg.cc/9Qtwndyb/A-3.png" }, { "imageUrl": "https://i.postimg.cc/907rtZW9/e-SRP-coe-at.png" }, { "imageUrl": "https://i.postimg.cc/QVZV6CCD/king-4.png" }, { "imageUrl": "https://i.postimg.cc/yd5DZvzv/king-4-29-09.png" }, { "imageUrl": "https://i.postimg.cc/Thvhk11L/king-4-1.png" }, { "imageUrl": "https://i.postimg.cc/9QtLVg6T/OCR.png" }, { "imageUrl": "https://i.postimg.cc/SxpgBbv6/OCR-2.png" }, { "imageUrl": "https://i.postimg.cc/bvmLSDNd/OCR.png" }, { "imageUrl": "https://i.postimg.cc/zBMjpshz/PYTHON-Al.png" }, { "imageUrl": "https://i.postimg.cc/853Hw2vr/RY-039-NNT.png" }, { "imageUrl": "https://i.postimg.cc/prFBSsQT/VBA.png" }, { "imageUrl": "https://i.postimg.cc/sfkmWRyp/VBA-PTTX-1.png" }, { "imageUrl": "https://i.postimg.cc/7ZDNBM5T/VBA-A-B.png" }, { "imageUrl": "https://i.postimg.cc/N0jkts8Z/VBA-A-B.png" }, { "imageUrl": "https://i.postimg.cc/W41wVN6F/VBA.png" }, { "imageUrl": "https://i.postimg.cc/d0VjFsmT/VBA.png" }, { "imageUrl": "https://i.postimg.cc/cHK7KFzy/VBA-PPTX-PDF-PPTX.png" }, { "imageUrl": "https://i.postimg.cc/LXrtjzdZ/VBA.png" }, { "imageUrl": "https://i.postimg.cc/ZnBy7XLd/rns-es-oo-MP4.png" }, { "imageUrl": "https://i.postimg.cc/PJYmyPhw/image.png" }, { "imageUrl": "https://i.postimg.cc/PfwzTFZP/TV-2.png" }, { "imageUrl": "https://i.postimg.cc/sDCPX99K/image.png" }, { "imageUrl": "https://i.postimg.cc/RVx1FQLm/image.png" }, { "imageUrl": "https://i.postimg.cc/VkDXKyy7/image.png" }, { "imageUrl": "https://i.postimg.cc/cLsQ7xzX/2.png" }, { "imageUrl": "https://i.postimg.cc/6pYCMssz/image.png" }, { "imageUrl": "https://i.postimg.cc/L5t1fwBC/039-039.png" }, { "imageUrl": "https://i.postimg.cc/pLqKsNNG/4.png" }, { "imageUrl": "https://i.postimg.cc/FHD0Ttt6/TV.png" }, { "imageUrl": "https://i.postimg.cc/8ztLZ88x/2.png" }, { "imageUrl": "https://i.postimg.cc/nh0q38bZ/image.png" }, { "imageUrl": "https://i.postimg.cc/fbymFHDJ/2-txt.png" }, { "imageUrl": "https://i.postimg.cc/CK5ktvS8/1.png" }, { "imageUrl": "https://i.postimg.cc/W4ygPM1F/image.png" }, { "imageUrl": "https://i.postimg.cc/85rWkjFC/image.png" }, { "imageUrl": "https://i.postimg.cc/zvZhy8Wv/5-3.png" }, { "imageUrl": "https://i.postimg.cc/SQC8wYFg/image.png" }, { "imageUrl": "https://i.postimg.cc/3xJv4LyC/image.png" }, { "imageUrl": "https://i.postimg.cc/CxLqBvZW/image.png" }, { "imageUrl": "https://i.postimg.cc/Gm7skkGd/TJRUI.png" }, { "imageUrl": "https://i.postimg.cc/QMFKSHJd/image.png" }, { "imageUrl": "https://i.postimg.cc/TPBLsftc/3.png" }, { "imageUrl": "https://i.postimg.cc/XvtGP4s2/4.png" }, { "imageUrl": "https://i.postimg.cc/jqHw8VPf/image.png" }, { "imageUrl": "https://i.postimg.cc/Y0zvjgt7/1.png" }, { "imageUrl": "https://i.postimg.cc/CLJZgjvj/image.png" }, { "imageUrl": "https://i.postimg.cc/Njz5yQvc/Al-m.png" }, { "imageUrl": "https://i.postimg.cc/26pywT50/image.png" }, { "imageUrl": "https://i.postimg.cc/1tptY6n9/image.png" }, { "imageUrl": "https://i.postimg.cc/9MGMNTRw/LOGO.png" }, { "imageUrl": "https://i.postimg.cc/sxm23r4L/image.png" }, { "imageUrl": "https://i.postimg.cc/gcHjVVbB/5-maw-am.png" }, { "imageUrl": "https://i.postimg.cc/QNJCQQZR/nn.png" }, { "imageUrl": "https://i.postimg.cc/hPCGwKjz/2500-PDF.png" }, { "imageUrl": "https://i.postimg.cc/gJPcRJSX/image.png" }, { "imageUrl": "https://i.postimg.cc/ZnbT7Qhz/image.png" }, { "imageUrl": "https://i.postimg.cc/T1tTZcRL/image.png" }, { "imageUrl": "https://i.postimg.cc/5tWWKrwT/image.png" }, { "imageUrl": "https://i.postimg.cc/YSNK5x3d/4.png" }, { "imageUrl": "https://i.postimg.cc/GpPwWjQZ/image.png" }, { "imageUrl": "https://i.postimg.cc/50nc0NDn/5-MP3.png" }, { "imageUrl": "https://i.postimg.cc/9Xg5H0dy/MP4.png" }, { "imageUrl": "https://i.postimg.cc/136LFKLm/MP3.png" }, { "imageUrl": "https://i.postimg.cc/MGSgmQSm/MP3.png" }, { "imageUrl": "https://i.postimg.cc/xCj7WVqR/image.png" }, { "imageUrl": "https://i.postimg.cc/Y9XV7DW2/image.png" }, { "imageUrl": "https://i.postimg.cc/BZVywy3Z/2-3.png" }, { "imageUrl": "https://i.postimg.cc/0yg49wby/2.png" }, { "imageUrl": "https://i.postimg.cc/XJvHsKDB/image.png" }, { "imageUrl": "https://i.postimg.cc/bJF6WGKC/image.png" }, { "imageUrl": "https://i.postimg.cc/vTgPsYyW/image.png" }, { "imageUrl": "https://i.postimg.cc/Vs2wb5dx/MP4-HDR.png" }, { "imageUrl": "https://i.postimg.cc/t4NGf52b/2500-PDF-Word-2500-PDF-Word-7.png" }, { "imageUrl": "https://i.postimg.cc/cJ1GNnbY/image.png" }, { "imageUrl": "https://i.postimg.cc/HLSDWkqK/image.png" }, { "imageUrl": "https://i.postimg.cc/x8zWPyXn/image.png" }, { "imageUrl": "https://i.postimg.cc/FHm2jSmL/20.png" }, { "imageUrl": "https://i.postimg.cc/kgcLw5gM/image.png" }, { "imageUrl": "https://i.postimg.cc/VLyykThc/MP4-7.png" }, { "imageUrl": "https://i.postimg.cc/259MRXW7/image.png" }, { "imageUrl": "https://i.postimg.cc/Y9JPjGbR/AI-1.png" }, { "imageUrl": "https://i.postimg.cc/SswPj2DV/AI-2.png" }, { "imageUrl": "https://i.postimg.cc/6qnmZWPw/image.png" }, { "imageUrl": "https://i.postimg.cc/y6Z5tj89/image.png" }, { "imageUrl": "https://i.postimg.cc/WpkKC84L/image.png" }, { "imageUrl": "https://i.postimg.cc/zXYMrhyP/image.png" }, { "imageUrl": "https://i.postimg.cc/Hs1KgMJC/MP4-1.png" }, { "imageUrl": "https://i.postimg.cc/151TQFg3/image.png" }, { "imageUrl": "https://i.postimg.cc/52MshWRH/MP4.png" }
+                            ];
+                            const container = document.getElementById('h-slideshow');
+                            if (!projects || projects.length === 0) { container.innerHTML = '<p style="color:white; padding: 2rem;">No images to display.</p>'; return; }
+                            let slideIndex = 0, slideshowInterval, isPlaying = true;
+                            const speed = 7400; const animation = 'h-cube-3d';
+                            projects.forEach((p, i) => {
+                                const slide = document.createElement('div'); slide.className = 'h-slide';
+                                const num = document.createElement('div'); num.className = 'h-slide-number'; num.textContent = `${i + 1} / ${projects.length}`;
+                                const loader = document.createElement('div'); loader.className = 'h-loader';
+                                const img = document.createElement('img'); img.src = p.imageUrl;
+                                slide.appendChild(num); slide.appendChild(loader); slide.appendChild(img); container.appendChild(slide);
+                            });
+                            const slides = container.getElementsByClassName('h-slide');
+                            const show = (n) => {
+                                if (!slides || slides.length === 0) return;
+                                if (n >= slides.length) slideIndex = 0; if (n < 0) slideIndex = slides.length - 1;
+                                for (let i = 0; i < slides.length; i++) { slides[i].style.display = "none"; slides[i].className = 'h-slide'; }
+                                if(slides[slideIndex]) { 
+                                    const currentSlide = slides[slideIndex];
+                                    const img = currentSlide.querySelector('img');
+                                    const loader = currentSlide.querySelector('.h-loader');
+                                    if (!img.complete) {
+                                        loader.style.display = 'block';
+                                        img.style.visibility = 'hidden';
+                                        img.onload = () => { loader.style.display = 'none'; img.style.visibility = 'visible'; };
+                                        img.onerror = () => { loader.style.display = 'none'; currentSlide.innerHTML += '<p style="margin-top:2rem;">Error loading image.</p>'; };
+                                    } else {
+                                        loader.style.display = 'none';
+                                        img.style.visibility = 'visible';
+                                    }
+                                    currentSlide.style.display = "block"; 
+                                    currentSlide.classList.add(animation); 
+                                }
+                            };
+                            const play = () => { isPlaying = true; clearInterval(slideshowInterval); slideshowInterval = setInterval(() => show(++slideIndex), speed); document.getElementById('h-play-pause').innerHTML = '<i class="fas fa-pause"></i>'; };
+                            const pause = () => { isPlaying = false; clearInterval(slideshowInterval); document.getElementById('h-play-pause').innerHTML = '<i class="fas fa-play"></i>'; };
+                            document.getElementById('h-prev').addEventListener('click', () => { show(--slideIndex); if (isPlaying) { pause(); play(); } });
+                            document.getElementById('h-next').addEventListener('click', () => { show(++slideIndex); if (isPlaying) { pause(); play(); } });
+                            document.getElementById('h-play-pause').addEventListener('click', () => isPlaying ? pause() : play());
+                            show(slideIndex); play();
+                        })();
+                    </script>
+                </div>
+            </section>
+            
+            <section id="features" class="mb-24 scroll-mt-24">
+                <h2 class="text-3xl font-bold section-title mb-2 text-center">📱 פיתוחים ופיצ'רים אינטראקטיביים</h2>
+                <p class="text-center text-slate-400 max-w-4xl mx-auto mb-10">זוהי ליבת הפיתוחים בצד המשתמש: רכיבי UI/UX מתקדמים, לוגיקת משחק ומערכות אינטראקטיביות שנועדו ליצור חוויה עשירה ודינמית. לחצו על קלף כדי לראות הסבר מפורט.</p>
+                 <div id="feature-filters" class="flex flex-wrap justify-center gap-2 mb-8">
+                    <button class="filter-btn active px-4 py-2 text-sm font-semibold rounded-full" data-filter="all">הכל</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold rounded-full" data-filter="UI Component">רכיבי UI</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold rounded-full" data-filter="Game Logic">לוגיקת משחק</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold rounded-full" data-filter="Editor UI">כלי עריכה</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold rounded-full" data-filter="Dialog System">מערכות דיאלוג</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold rounded-full" data-filter="Automation">אוטומציה</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold rounded-full" data-filter="Audio Processing">עיבוד אודיו</button>
+                    <button class="filter-btn px-4 py-2 text-sm font-semibold rounded-full" data-filter="Visual Effects">אפקטים חזותיים</button>
+                </div>
+                <div id="features-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Feature cards will be dynamically inserted here -->
+                </div>
+            </section>
+            
+            <section id="studio" class="mb-24 scroll-mt-24">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center">🎨 אולפן דיגיטלי: אנימציה, דיבוב ו-AI</h2>
+                <p class="text-center text-slate-400 max-w-4xl mx-auto mb-10">מכלול הכלים המתקדמים המאפשרים יצירת תוכן אורקולי עשיר, מאנימציית פנים ודיבוב, ועד לשילוב יכולות בינה מלאכותית להעשרת החוויה.</p>
+                <div class="bg-slate-800 p-6 rounded-xl shadow-md">
+                     <div class="table-responsive">
+                        <table class="w-full text-sm">
+                            <thead class="bg-slate-700"><tr><th class="p-2 text-right font-semibold">שם הרכיב / מודול</th><th class="p-2 text-right font-semibold">תיאור ותפקיד</th><th class="p-2 text-right font-semibold">טכנולוגיה / סוג</th></tr></thead>
+                            <tbody>
+                                <tr class="border-t border-slate-700"><td>**אולפן הקלטות ודיבוב**</td><td>מערכת ניהול דיבוב עם UI להקלטה ועורך טקסט און-ליין.</td><td>`Tool`</td></tr>
+                                <tr class="border-t border-slate-700"><td>**עיבוד קולי SRT**</td><td>סקריפט אוטומטי המנתח קובץ כתוביות (SRT) ומייצר דיבוב מסונכרן.</td><td>`Automation Script`</td></tr>
+                                <tr class="border-t border-slate-700"><td>**מערכת Lip-sync**</td><td>כלי עיבוד וידאו לסנכרון שפתיים על-ידי "הלבשת" אנימציות פה.</td><td>`Video Processing`</td></tr>
+                                <tr class="border-t border-slate-700"><td>**כלי אנימציית פנים**</td><td>סט כלים עם ממשק סליידרים (Sliders) לשליטה מדויקת על תנועות פנים.</td><td>`Animation Tool`</td></tr>
+                                <tr class="border-t border-slate-700"><td>**AI לוגיקה**</td><td>קוד ליבה המכיל לוגיקת AI לקבלת החלטות ויצירת תוכן דינמי.</td><td>`VBA`, `AI`</td></tr>
+                                <tr class="border-t border-slate-700"><td>**עיבוד תמונה מבוסס AI**</td><td>שימוש בלוגיקת AI לעיבוד תמונה, זיהוי אובייקטים או יצירת רקעים.</td><td>`Image Processing`, `AI`</td></tr>
+                                <tr class="border-t border-slate-700"><td>**מערכת זיהוי דיבור**</td><td>מערכת המקליטה פקודות קוליות ומבצעת פעולות תואמות.</td><td>`Speech Recognition`</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="toolbox" class="scroll-mt-24">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center">🧰 ארגז הכלים הדיגיטלי: שליטה בתוכנות</h2>
+                 <p class="text-center text-slate-400 max-w-4xl mx-auto mb-10">רשימה זו מפרטת את התוכנות המרכזיות המשמשות ככלי עבודה בפרויקט, ומדגישה את מגוון היכולות הטכניות הנדרשות להפעלתו.</p>
+                <div class="bg-slate-800 p-6 rounded-xl shadow-md">
+                     <div class="table-responsive">
+                        <table class="w-full text-sm">
+                            <thead class="bg-slate-700"><tr><th class="p-2 text-right font-semibold">תוכנה</th><th class="p-2 text-right font-semibold">קטגוריה</th><th class="p-2 text-right font-semibold">הסבר קצר</th></tr></thead>
+                            <tbody>
+                                <tr class="border-t border-slate-700"><td>**Microsoft PowerPoint**</td><td>סביבת פיתוח מרכזית</td><td>הבמה המרכזית שעליה נבנים ומוצגים כל הסיפורים.</td></tr>
+                                <tr class="border-t border-slate-700"><td>**Microsoft Excel**</td><td>סביבת פיתוח מרכזית</td><td>משמש כ"מוח" ומאגר הנתונים של הפרויקטים.</td></tr>
+                                <tr class="border-t border-slate-700"><td>**Microsoft Word**</td><td>סביבת פיתוח מרכזית</td><td>משמש לכתיבה וניהול של התוכן הנרטיבי והתסריטים.</td></tr>
+                                <tr class="border-t border-slate-700"><td>**CrazyTalk**</td><td>אנימציה</td><td>הנפשת פנים ותמונות סטטיות ליצירת דמויות מדברות.</td></tr>
+                                <tr class="border-t border-slate-700"><td>**Cartoon Animator**</td><td>אנימציה</td><td>יצירת סרטי אנימציה דו-ממדיים מלאים.</td></tr>
+                                <tr class="border-t border-slate-700"><td>**Adobe Character Animator**</td><td>אנימציה</td><td>הנפשת דמויות בזמן אמת באמצעות מצלמת רשת.</td></tr>
+                                <tr class="border-t border-slate-700"><td>**MorphVOX Pro**</td><td>אודיו</td><td>תוכנה לשינוי קול בזמן אמת.</td></tr>
+                                <tr class="border-t border-slate-700"><td>**Adobe Photoshop**</td><td>גרפיקה</td><td>עריכת תמונות, ריטוש ועיצוב גרפי.</td></tr>
+                                <tr class="border-t border-slate-700"><td>**Wondershare Filmora**</td><td>וידאו</td><td>תוכנת עריכת וידאו ידידותית עם אפקטים ותבניות.</td></tr>
+                                <tr class="border-t border-slate-700"><td>**Cubase**</td><td>יצירת מוזיקה</td><td>תחנת עבודה דיגיטלית (DAW) מקצועית.</td></tr>
+                                <tr class="border-t border-slate-700"><td>**OBS Studio**</td><td>תוכנת שידור</td><td>שידור חי (סטרימינג) והקלטת מסך.</td></tr>
+                                <tr class="border-t border-slate-700"><td>**Visual Studio / PyCharm**</td><td>תכנות</td><td>סביבות פיתוח (IDE) למגוון שפות ופייתון.</td></tr>
+                                <tr class="border-t border-slate-700"><td>**AutoHotkey**</td><td>תכנות</td><td>שפת סקריפטים לאוטומציה של משימות בחלונות.</td></tr>
+                                <tr class="border-t border-slate-700"><td>**BlueStacks**</td><td>אמולציית אנדרואיד</td><td>אמולטור להרצת אפליקציות ומשחקי אנדרואיד.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="chronology" class="mb-24 scroll-mt-24">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center">⏳ המסע שלי: אבני דרך כרונולוגיות</h2>
+                <p class="text-center text-slate-400 max-w-4xl mx-auto mb-10">הצצה קצרה אל אבני הדרך המרכזיות במסע המקצועי והאישי שלי, שהובילו לפיתוחים הייחודיים המוצגים בפורטפוליו זה.</p>
+                
+                <div class="space-y-6">
+                    <div class="chronology-item">
+                        <h3>פרק 1: הילדות, החשמל והקסם שבטכנולוגיה – ניצוץ ראשוני ומאבקים מוזיקליים</h3>
+                        <p class="chronology-summary">כבר בגן הילדים ניצתה בי אהבה עמוקה למוזיקה, שהתבטאה בנגינה על כלי נשיפה – תחום בו אני שולט כיום ב-14 כלים שונים. אך לצד האהבה העצומה, נולדו גם אתגרים עצומים. הפרעות קשב קשות הפכו את לימוד קריאת התווים למאבק מתסכל... בכיתה ז' כבר הקמתי מעבדת אלקטרוניקה פרטית משלי – עם מערכת בקרה שכולה נתפרה לפי התוכניות שלי. אפילו הדלת נפתחה אוטומטית, ורמקול הכריז "הדלת פתוחה!" באמצעות טייפ ישן וחיישן שהמצאתי. עוד לא ידעתי לקרוא לזה "מיקרו-בקר" או "אוטומציה", אבל הראש שלי ידע בדיוק מה הוא עושה.</p>
+                        <div class="chronology-full-content" id="chapter1-full">
+                            <p>כבר בגן הילדים ניצתה בי אהבה עמוקה למוזיקה, שהתבטאה בנגינה על כלי נשיפה – תחום בו אני שולט כיום ב-14 כלים שונים. אך לצד האהבה העצומה, נולדו גם אתגרים עצומים. הפרעות קשב קשות הפכו את לימוד קריאת התווים למאבק מתסכל, שכן קריאת תווים דרשה ממני ריכוז בלתי אפשרי. חוויתי כישלון בדבר שאהבתי, כשכל חבריי קראו תווים בקלות ואני נסמכתי רק על שמיעתי, שלא תמיד הובילה לדיוק המיוחל. כחבר בלהקת "בני רחובות", אף נחשבתי ל"נגן גרוע" וקינאתי באחרים.
+במקביל לעולם הצלילים, נמשכתי תמיד לתחכום הפטנטים וההמצאות. עוד לפני שמישהו הסביר לי איך דברים עובדים, פירקתי אותם – כדי להבין לבד. בשנות ה-70, בעודי ילד, קראתי לא מעט ספרים: "הטכנאי הצעיר", "חידושי האלקטרוניקה", ומגזינים נדירים, כל מה שיכולתי לשים עליו יד. בניתי קיטים, מגברים, טלווקסים, שאבים – וכל מה שהציעה התקופה. בכיתה ז' כבר הקמתי מעבדת אלקטרוניקה פרטית משלי – עם מערכת בקרה שכולה נתפרה לפי התוכניות שלי. אפילו הדלת נפתחה אוטומטית, ורמקול הכריז "הדלת פתוחה!" באמצעות טייפ ישן וחיישן שהמצאתי. עוד לא ידעתי לקרוא לזה "מיקרו-בקר" או "אוטומציה", אבל הראש שלי ידע בדיוק מה הוא עושה.</p>
+                        </div>
+                        <a href="#" class="read-more" data-chapter="chapter1-full">קרא עוד על פרק 1</a>
+                    </div>
+                    
+                    <div class="chronology-item">
+                        <h3>פרק 2: תיכון, להקה ראשונה ושירות צבאי ביחידת הלוחמה האלקטרונית</h3>
+                        <p class="chronology-summary">בתיכון ייסדתי, יחד עם מורה שהאמינה בי, את הלהקה הראשונה של אורט רחובות. שם התחילו ניסיונות ההרמוניה והעיבודים שלי. לא ידעתי תווים – אז פשוט שרתי את התפקידים, והילדים ניגנו לפי הקול שלי. במקביל, למרות שעברתי את כל מבחני הקבלה, נותרה בי תחושת צער על כך שלא זכיתי להיות בלהקה צבאית. מאוחר יותר שירתתי במקום יוקרתי בחיל הקשר – יחידת הלוחמה האלקטרונית. שם הוכשרתי לדרג ד', ברמת רכיב, וידעתי שזהו שלב משמעותי בהעמקת ההבנה הטכנית שלי.</p>
+                        <div class="chronology-full-content" id="chapter2-full">
+                            <p>בתיכון ייסדתי, יחד עם מורה שהאמינה בי, את הלהקה הראשונה של אורט רחובות. שם התחילו ניסיונות ההרמוניה והעיבודים שלי. לא ידעתי תווים – אז פשוט שרתי את התפקידים, והילדים ניגנו לפי הקול שלי. חצוצרן רשם בתווים את מה ששרתי – וכך התזמורת ניגנה את מה ש"הסתובב לי בראש". במקביל, למרות שעברתי את כל מבחני הקבלה, נותרה בי תחושת צער על כך שלא זכיתי להיות בלהקה צבאית.
+מאוחר יותר שירתתי במקום יוקרתי בחיל הקשר – יחידת הלוחמה האלקטרונית. שם הוכשרתי לדרג ד', ברמת רכיב, וידעתי שזהו שלב משמעותי בהעמקת ההבנה הטכנית שלי.</p>
+                        </div>
+                        <a href="#" class="read-more" data-chapter="chapter2-full">קרא עוד על פרק 2</a>
+                    </div>
+
+                    <div class="chronology-item">
+                        <h3>פרק 3: הנדסאי אלקטרוניקה ואולפן ביתי – שילוב העולמות</h3>
+                        <p class="chronology-summary">עם סיום השירות, למדתי במסלול הנדסאים ב"יד סינגלובסקי", מוסד יוקרתי למקצועות הטכנולוגיה. הידע שלי באלקטרוניקה היה יסודי, פרקטי ומדויק. השלב הבא היה מתבקש: אבי העביר לי את דירת המרתף שבביתנו הפרטי – ושם בניתי את האולפן האנלוגי הראשון שלי. לא קניתי מערכת מוכנה – תכננתי הכול בעצמי: טייפ פוסטקס 16 ערוצים עם Dolby C, מערכת בקרה, כבלים, מיקסרים – שבניתי או התאמתי, חדרים מבודדים ותאורה מבוקרת. האולפן פעל 7 שנים ברציפות, שימש להקלטות, הפקות ועבודה עם אמנים צעירים. אך בסוף – בגלל בעיות מול העירייה, נאלצתי לפרק אותו בדמעות.</p>
+                        <div class="chronology-full-content" id="chapter3-full">
+                            <p>עם סיום השירות, למדתי במסלול הנדסאים ב"יד סינגלובסקי", מוסד יוקרתי למקצועות הטכנולוגיה. הידע שלי באלקטרוניקה היה יסודי, פרקטי ומדויק. השלב הבא היה מתבקש: אבי העביר לי את דירת המרתף שבביתנו הפרטי – ושם בניתי את האולפן האנלוגי הראשון שלי. לא קניתי מערכת מוכנה – תכננתי הכול בעצמי: טייפ פוסטקס 16 ערוצים עם Dolby C, מערכת בקרה, כבלים, מיקסרים – שבניתי או התאמתי, חדרים מבודדים ותאורה מבוקרת. האולפן פעל 7 שנים ברציפות, שימש להקלטות, הפקות ועבודה עם אמנים צעירים. אך בסוף – בגלל בעיות מול העירייה, נאלצתי לפרק אותו בדמעות.</p>
+                        </div>
+                        <a href="#" class="read-more" data-chapter="chapter3-full">קרא עוד על פרק 3</a>
+                    </div>
+
+                    <div class="chronology-item">
+                        <h3>פרק 4: תקופת המעבר – שטח, הקלטות ניידות, ומתודות שנולדו מתוך אילוץ – ניהול מוזיקלי והצלחה ארצית</h3>
+                        <p class="chronology-summary">כשאין אולפן – יוצאים לשטח. הרכבתי אולפן נייד עם Roland 16 ערוצים, ופיתחתי טכניקות אילתור שהמצאתי בעצמי: הקלטת אקו בעזרת טייפ עם ראש נוסף, שימוש חוזר ברכיבים ישנים, ותכנון "מהראש" – תוך כדי תנועה. במקביל, הגיע גם המחשב הראשון שלי: Atari 1040 ST עם תוכנת SILB, מונו-כרום – וכך התחיל החיבור הראשון בין מוזיקה למחשב. הבנתי אז משהו מהותי: הקוד הוא רק עוד דרך לתת צורה למה שיש לי בראש.
+לאחר מכן, חזרתי לניהול מוזיקלי באורט, והפעם, עם ניסיון חיים עשיר יותר, העמקתי את ניסיונותיי בווקאליזציה. הגעתי לרמות נדירות, כאלו שלא נראו בישראל עד אז, כשאני מנצח על נוער – תלמידים ממגמות שאינן מוזיקה – ומביא אותם לרמת שירה בסגנון ה"סווינגל סינגרס". הדבר היה כה יוצא דופן, עד כי כאשר הלהקה המקורית הגיעה לארץ למופעים, חבריה נדהמו לשמוע בני נוער ישראלים מבצעים את יצירותיהם המורכבות.
+תוך כדי העבודה במספר רב של תיכונים בארץ, המשכתי להקים ולהוביל להקות ייצוגיות ברחבי הארץ. במהלך שנותיי כמנהל מוזיקלי, זיהיתי וטיפחתי תלמידים מוכשרים רבים. חלקם הגדול פרץ לתודעה הציבורית והפך למפורסם במסגרות כמו "כוכב נולד" ובתיאטראות מובילים בארץ – עדות נוספת להשפעתי העצומה. שנים ספורות לאחר סיום פרויקטים אלו, הגיעה הפגישה הגורלית עם הבמאי ז'אק זרביב, שותפי לדרך. יחד, התחלנו לברוא מופעים שלמים, שכללו לא רק תוכן מוזיקלי עשיר, אלא גם תנועה, חוויה, תפאורה ומחזות זמר רבים – כל מה שנדרש כדי להפוך מופע לבלתי נשכח. שנינו כבשנו את במות התיכונים המובחרים בארץ, והצלחתנו הייתה מסחררת. הפכנו למבוקשים, יצרנו להקות ייצוגיות, ערבי כישרונות, והובלנו מאות (!) מסיבות סיום ומחזות זמר מקוריים, והצבנו סטנדרט אמנותי גבוה ויוצא דופן שלא היה מוכר באותה תקופה.
+ואז, הגיע הרגע לסגור את המעגל הצבאי. יחד עם ז'אק, הגשמתי חלום והקמתי את הלהקה הייצוגית של חיל הקשר (כיום להקת חיל התקשוב). הלהקה, שפעילה עד היום, העניקה במה לכישרונות רבים, והוציאה אמנים כמו הראל סקעת ומאיה אברהם (זמרת בתוכניתו של פרויקט רייכל).</p>
+                        </div>
+                        <a href="#" class="read-more" data-chapter="chapter4-full">קרא עוד על פרק 4</a>
+                    </div>
+
+                    <div class="chronology-item">
+                        <h3>פרק 5: המסע המוזיקלי - מופעים בכלי נשיפה, תיכונים וגני ילדים</h3>
+                        <p class="chronology-summary">לאחר סיום פרויקטי הלהקות, החל פרק חדש ומרתק – פיתוח מופעי הנגינה בכלי נשיפה. יצרתי תוכניות נגינה שהן מעין מופעים מוסברים בכלי נשיפה, אשר עברו את מבחני "סל תרבות ארצי" ו"נוער מוזיקלי". תוכניות אלו מיועדות לחטיבות ביניים ותיכונים, וכוללות מופעי "מפגש חוויה" ומופעים גדולים יותר לכלל בית הספר. בשלב זה, בלי לדעת, נכנסתי לאחד מהשלבים המכוננים של דרכי – עולם הגיל הרך. לא כמורה בלבד – אלא כמי שמביא עמו שפה מוזיקלית שלמה שנולדה מהשטח. נכנסתי לגנים עם יכולת שמעטים החזיקו אז: יכולת לנגן על עשרות כלים שונים, לחבר בין סיפור לבין סאונד, ולייצר חוויה מוחשית גם בלי תיאוריה או מצגת.
+אבל העיקר היה ביכולת להמציא פטנטים חיים. רציתי לחשוף את הילדים לסוד הצליל – אז בניתי מודלים מכלים ביתיים, חתכתי בקבוקים, פתחתי צעצועים, חיברתי צינורות ויצרתי מהם כלי נגינה מאולתרים. בכל פעם, הסברתי איך הצליל נוצר דרך המחשה פיזית. אחת הדוגמאות שאני זוכר עד היום – כשהצגתי לילדים את משפחת הסקסופונים ורציתי להמחיש את גודלו של סקסופון קונטרבס. הדפסתי תמונה בגובה של 40 דפי A4 – הילדים אחזו בתחתית על הרצפה, ואני עמדתי על כיסא והצמדתי את הקצה העליון לתקרה. כך הם הרגישו בעצמם את גודל הכלי. הם לא רק ראו – הם חוו. באותה תקופה פיתחתי עשרות תוכניות כאלה, וכל אחת מהן כללה שילוב של סיפור, הדגמה, כלי נגינה אמיתי, הפעלת הילדים ועבודה רב-חושית. לא הייתי רק "מורה למוזיקה", אלא ממציא של גישה. היום אני יודע: כאן נולד השילוב הראשון בין הידע הטכני שלי לבין הדמיון החווייתי, שנבט שנים אחר כך לתוך הקוד, ה-AI, והתיאוריה הרחבה שבניתי.
+פועלי מתחלק לארבע קטגוריות מופעים עיקריות, לצד פיתוחים ותוכניות נוספות:
+**מופעים חד-פעמיים 1:** המופע המבוקש "צלילים שנוגים", המותאם במיוחד לקהל המבוגר יותר. הוא כולל תוכנית נגינה בשלל הכלים, הנוגעת בניגוני עבר נצחיים, המעובדים באופן מרגש לנגינה בכלי הנשיפה. לפרטים מעמיקים יותר בעניין המופע הזה, ניתן לחפש בגוגל: "חזי חביבי דף בית".
+**מופעי הקראות:**
+הראשון, "הספר של כלי נשיפה", מבוסס על סיפורי הראשי, שמטרתו לתת דוגמה חיה לרצון בלתי מתפשר לכבוש מטרה: מוזיקה ונגינה.
+"הספר של כלי נשיפה B" הוא שדרוג מהותי של אותו מופע, הכולל משחק רב-חושי ומוצגים ויזואליים שנוצרו במיוחד עבור התוכנית. סרטים מצוירים מספרים את העלילה והשירים הנלווים בתיאום מוחלט למופע החי, ומספקים חיזוק משלים, המותאם במיוחד לילדים שרגילים לשאוב מידע חזותי בעידן זה.
+**מופעים חד-פעמיים 2:** מופעים מקוריים אלה עוסקים בנושאים שונים ומגוונים, כמובן דרך פריזמת הנגינה בכלי הנשיפה.
+**סדרת קונצרטים "זה מרלך לגיל הרך":** במהלך הזמן, נחשפתי לתוכנית הלימודים של משרד החינוך בגנים, המבוססת על הספרים "זה מרלך לגיל הרך". בעקבות גישת משרד החינוך, יצרתי סדרת קונצרטים ייחודית, המותאמת באופן מושלם לשדרת הספרים הזו ולמועד שבו נלמדות היצירות הכלולות בו – לאורך השנה, על פי לוח השנה העברי. הסדרה מתבססת על שיתוף פעולה ביני לבין הגננות. אני מגיש לילדים קונצרטים שהם אירועי שיא, החותמים תקופה של למידה. כך שהילדים מגיעים לקונצרט כשהם מכירים את החומר, ולכן יכולים לקחת חלק פעיל בחוויה וליהנות ממנה באופן מקסימלי. הילדים מקבלים הכנה לקראת הקונצרט, והם מצפים לו ונרגשים לקראתו, כפי שכל שוחר מוזיקה מבוגר נערך ומתארגן לקראת אירוע תרבותי חשוב ואיכותי.
+**סדנאות ספציפיות ועדכונים שנתיים:**
+**"אינסלט, עד באמת מתחילים" (תוכנית ירוקה):** תוכנית חדשנית לילד בגיל הגן, שיכולה להוות פתרון פשוט ונגיש, הכוללת את כל הנושאים המוזיקליים אותם הילדים אמורים להכיר. התוכנית כוללת ערכה שהוכנה במיוחד וכן דיסק מקורי הכולל ארבעים ושבע רצועות שמע, המכיל שלל דוגמאות וכן שירים מקוריים, המדגישים נושאים חשובים כדרך ללמוד והטמעה אצל הילדים.
+**"כלי הנשיפה שלי":** סדרת קונצרטים מקוריים, המכילה באופן יסודי את כל תחום כלי הנשיפה על צדדיו השונים והמרתקים. היא חוקרת נושאים כמו: כיצד מיוצר הצליל (באמצעות מודלים שנבנו במיוחד מחומרים מוכרים מחיי היומיום), החומרים השונים המשמשים לבניית הכלים, שוני הצליל בין הכלים השונים, הקשר המרתק בין הגודל הפיזי והצליל, צורת הכלים, וכיצד כל זה קורה – כולל הצצה למפעלי כלים בעבר ובהווה.</p>
+                        </div>
+                        <a href="#" class="read-more" data-chapter="chapter5-full">קרא עוד על פרק 5</a>
+                    </section></div>
+
+                    <div class="chronology-item">
+                        <h3>פרק 6: המעבר לצהרונים – כשהמפגש התחלף למחויבות ארוכת טווח</h3>
+                        <p class="chronology-summary">התחנה הבאה, והמהפכנית לא פחות, הייתה הצהרונים. שם, מתוך צורך אמיתי בשטח, פיתחתי סוג חדש של פעילות: תוכנית רב-פעמית, כמעין חוג שבועי קבוע הנפרש לאורך כל השנה, וכולל לא פחות מארבעה עשר חוגים שונים בנושאים מרתקים לילדים. ביצעתי מהלך אסטרטגי ששינה את פני הדברים: בחרתי חוג מרכזי סביבו יתארגנו שאר התכנים – "הסיפור המוזיקלי", שזכה לנתח עניין מדהים של 96% בניסויי שטח. כך, מרבית המאמץ וההשקעה הופנו לפיתוח וליטוש הסיפור המוזיקלי, שהפך לעוגן המרכזי של חוגי הצהרונים, כאשר תתי-חוגים אחרים משולבים כריענון תקופתי.
+חוגי הצהרונים: מהשקפה רחבה לליבת העניין המוזיקלי. פיתוח התכנים לצהרונים, המורכב ממגוון עשיר של כ-14 תתי-חוגים, שואב השראה מניסיון עבר עשיר. אך בפורמט החדש, ביצעתי מהלך אסטרטגי ששינה את פני הדברים: בחרתי חוג מרכזי סביבו יתארגנו שאר התכנים. הבחירה הזו לא הייתה מקרית. היא נבעה משנה שלמה של ניסוי ובחינת שטח בחוגים הקבועים בצהרונים. במהלך תקופה זו, נמדדה רמת העניין של הילדים בכל אחד מהחוגים באופן פרטני. התוצאות היו חד-משמעיות: הסיפור המוזיקלי זכה לנתח עניין של 96%, נתון מדהים שהכתיר אותו לליבת הפעילות. משמעות הדבר היא שמרבית המאמץ וההשקעה הופנו לפיתוח וליטוש הסיפור המוזיקלי, שהפך לעוגן המרכזי של חוגי הצהרונים. תתי-החוגים האחרים, על אף עניינם, ישולבו כעת במינון נכון יותר, וישמשו כגורם מרענן ומשלים בתוך המבנה המרוכז סביב הסיפור המוזיקלי. כך, למשל, אם חוג נגינה זכה ל-70% עניין, הוא לא ייעלם, אלא ישולב כריענון תקופתי, ויבטיח שילדים ימשיכו ליהנות ממנו במינון אופטימלי ששומר על רעננותו ואטרקטיביותו.</p>
+                        </div>
+                        <a href="#" class="read-more" data-chapter="chapter6-full">קרא עוד על פרק 6</a>
+                    
+
+                    <div class="chronology-item">
+                        <h3>פרק 7: החזון של היום – מקארו, מרחב חושי-רגשי, ופיתוחים מתקדמים</h3>
+                        <p class="chronology-summary">אני מאמין במספר עקרונות ברזל המנחים את כל פעילותי עם ילדים, במיוחד בעידון הנוכחי. השאלה המרכזית עבורי היא: כיצד להעביר את המסר באופן שיעורר עניין וסקרנות אצל הילד? אני חוזר אל הילד שהייתי פעם, אל הקושי שלי להקשיב בשל הפרעת קשב חמורה, ומציב לעצמי רף גבוה: אם אצליח לעניין ילד עם הפרעת קשב, הרי ברור שזה יצליח עם כל שאר הילדים. זו גם דרכי להעניק לאותם ילדים רגעים של שקט וריכוז. כאמן שהגיע להישגים מוזיקליים כנגד כל הסיכויים, אני יודע היטב מה מניע ומשפיע: רגש, רגש ושוב רק רגש. אני זוכר את החלילן שריגש אותי בילדותי, ולא עסק ב"הפעלות", אלא פשוט ניגן בכישרון. לכן, כאשר יש לי את היכולת לרגש, לא רק דרך המוזיקה אלא בכל היבטי פעילותי, אני מקדיש לכך את זמני היקר. אני מאמין שהרגש הוא המפתח שיגיע אל הילד ויוביל להשפעה ארוכת טווח. היום, אני לא רק מלמד. אני בונה מרחבים רגשיים-חושיים לילדים. אני קורא לזה: מקארו – מקום שבו הילד חווה, לא לומד. שקופיות מדברות בקול, אורות מגיבים, מוזיקה יוצרת הבנה לפני מילים. מקארו הוא רגע שילד שוכח שהוא בכיתה, חיבור בין אור, צבע, צליל ותוכן, ותנועה שבאה מהלב ונוגעת בלב. אני לא רק מתכנת, לא רק מוזיקאי, לא רק ממציא. אני הילד שפעם רצה שהתמונה תזוז – והיום אני מזיז אותה. אני ממשיך לחדש ולפרוץ דרך בתחומים מגוונים.</p>
+                        </div>
+                        <a href="#" class="read-more" data-chapter="chapter7-full">קרא עוד על פרק 7</a>
+                    
+                
+            
+
+        
+    
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const featuresData = [
+        { index: 1, original: 'הנפשה לתמונה אחת', professional: 'מנוע הנפשה עדינה לתמונות סטטיות', simple: 'מפיח חיים בתמונה בודדת באמצעות תנועה קלה (נשימה, רעד קסום), ללא צורך באנימציה מורכבת. **מיועד להפוך ציורים סטטיים שנוצרו ב-AI לחוויה נושמת ומרגשת, כמו קסם ילדותי.**', category: 'Visual Effects', localPath: '' },
+        { index: 2, original: 'עיוות רקע אוטומטי לזוז', professional: 'מנוע הנפשת רקעים דינמי', simple: 'יוצר תנועה גלית או קלה ברקעים סטטיים (שמיים, ים, אור) כדי להפוך אותם לחיים ונושמים. **מחזיר לתמונות סטילס את התחושה שהעולם ממשיך לפעול, כמו בזיכרונות ילדות שבהם גם השמש צחקה והעננים הלכו.**', category: 'Visual Effects', localPath: '' },
+        { index: 3, original: 'קול לכל שקופית', professional: 'מערכת קריינות מותאמת שקופית', simple: 'סורק מצגת ויוצר קובץ קול מותאם לכל שקופית, לפי סיפור, טון או דמות שנבחרו מראש, להעצמת החוויה הרגשית. **מבוסס על ניסיון עמוק במוזיקה והבנה שמוזיקה מעצימה סצנה רגשית, כמו ילד שביטא: "חזי, זה כמו בסרט!".**', category: 'Dialog System', localPath: '' },
+        { index: 4, original: 'שכבת ציפורים באוויר', professional: 'מודול שכבות אנימציה (ציפורים)', simple: 'מוסיף שכבת GIF/PNG מונפשת של ציפורים בתנועה לכל סצנה, להוספת חיים, קצב ותחושת טבע. **הבנה שגם ציפורים סטטיות ראויות להנפשה, כדי ליצור תחושת מרחב, תנועה וזמן, כמו בחלומות ילדות.**', category: 'Visual Effects', localPath: '' },
+        { index: 5, original: 'מצלמת קריינות', professional: 'מערכת הקלטת קריינות אישית', simple: 'פותח מצלמה פנימית ומקליט את קול המשתמש תוך כדי תצוגת שקופיות, כדי לספר את הסיפור בקול אישי וליצור זיכרון רגשי. **הרעיון נבע מההבנה שקול איכותי מרמקול מודרני מזכיר לילדים את "הבית" (טלוויזיה/מדיה), מה שגורם לאוזן להתביית על הקול ולחיבור עמוק יותר.**', category: 'Dialog System', localPath: '' },
+        { index: 6, original: 'הפעלת רקעים לפי זיהוי שקופית', professional: 'מנוע רקעים חכמים למצגות', simple: 'מזהה את מספר השקופית הפעילה במצגת PowerPoint ומפעיל רקע תואם אוטומטית (יער, לילה, שמיים זזים), ללא התערבות ידנית. **מטרתו ליצור קסם אישי עבור הילד, שירגיש שהשקופית נושמת והעולם זז מעצמו, בלי צורך בפעולה מצדו.**', category: 'Automation', localPath: '' },
+        { index: 7, original: 'שכבת עצים נעים', professional: 'מודול שכבות אנימציה (עצים)', simple: 'מוסיף לכל תמונה שכבת GIF של עצים נעים ברוח, ליצירת תחושת עולם חי ונושם. **מגשר על הפער בין ציור יפה למציאות חיה, והופך תמונה קפואה לסצנה עם נשימה, שילד שוקע בה.**', category: 'Visual Effects', localPath: '' },
+        { index: 8, original: 'יצירת מצגת לפי מערך טקסט', professional: 'מחולל מצגות אוטומטי', simple: 'מקבל מערך טקסטים ויוצר מצגת מלאה עם שקופיות מסודרות, תוך ניצול תצוגת מגיש להפרדת תוכן למורה ולצופה. **מבוסס על הפטנט של תצוגת מגיש, המאפשרת לילד לראות רק את התמונה בגודל מלא, בעוד הטקסט וההוראות נשארים אצל המורה, ליצירת חוויה חלקה וממוקדת.**', category: 'Automation', localPath: '' },
+        { index: 9, original: 'תזמון קולות לשקופיות לפי טבלה', professional: 'מערכת תזמון קריינות מדויקת', simple: 'מתאים בין שקופיות לקובצי קול ומשייך אוטומטית לכל שקופית את הקריינות הנכונה, תוך התחשבות במחקר קשב וריכוז. **נולד מתוך מחקר מעמיק וניסיון בשטח על מה לוכד הקשבה רגעית של ילדים וכמה זמן, במטרה ליצור שינוי קולות לפי דמויות שונות.**', category: 'Dialog System', localPath: '' },
+        { index: 10, original: 'אפקט קולות משולבים לפי טון', professional: 'מעצב גוון קול דינמי', simple: 'משנה קובץ קול כך שישמע בגוון אחר (עמוק, דק, הד) ליצירת מגוון דמויות מאותו קול מקור, כמו תיאטרון שלם מקול יחיד. **נועד להעניק "אישיות" לכל דמות בסיפור ללא צוות מדובבים, תוך הבנה ששינוי קול הופך את הדמות לדמיונית וממשית יותר עבור הילד.**', category: 'Audio Processing', localPath: '' },
+        { index: 11, original: 'הוספת שכבת עננים לשקופית', professional: 'מודול שכבות אנימציה (עננים)', simple: 'מוסיף שכבת GIF של עננים נעים לכל שקופית עם שמיים פתוחים, ליצירת תחושת מרחב וזרימה. **מטרתו לגרום לילד להרגיש שהעולם אינו עומד, אלא נושם וחי, באמצעות תנועה עדינה.**', category: 'Visual Effects', localPath: '' },
+        { index: 12, original: 'בדיקת ריקנות שקופית והשלמת טקסט אוטומטית', professional: 'מערכת השלמת תוכן חכמה למצגות', simple: 'סורק מצגת ומזהה שקופיות ריקות מטקסט, ומשלים עבורן טקסט אוטומטי מותאם לעלילה, למניעת רגעים מתים. **נועד להבטיח רצף חוויתי ולמנוע ניתוק קשב אצל ילדים ברגעים שקטים או ריקים בסיפור.**', category: 'Automation', localPath: '' },
+        { index: 13, original: 'יצירת רקעים חיים מתוך פריסטים', professional: 'מחולל רקעים חיים מבוסס פריסטים', simple: 'מטעין "פריסט" של תנועה (גלים, צל, רוח) ומשלב אותו על רקע סטטי ליצירת מצגת נושמת, ללא צורך באנימטור. **פותח מתוך הבנה שגם ללא אנימטור, ניתן להפוך כל רקע דומם לעולם שזז, וליצור אווירה אמיתית.**', category: 'Visual Effects', localPath: '' },
+        { index: 14, original: 'הפעלת שכבות אוטומטית לפי קטגוריה (GIF)', professional: 'מנוע שכבות GIF חכם', simple: 'ממפה כל שקופית לקטגוריה (יער, יום, לילה, חצר) ומשלב בה את ה־GIF המתאים, לפי כללים מוגדרים, להוספת חיים. **נועד להבטיח שכל שקופית תקבל את האלמנט הוויזואלי המדויק והקטן שיעשה אותה אמיתית ומוחשית עבור הילד.**', category: 'Automation', localPath: '' },
+        { index: 15, original: 'איתור והתאמה של קבצי קול למצגת', professional: 'מערכת התאמת אודיו אוטומטית למצגות', simple: 'מזהה אוטומטית את קובץ הקול המתאים לכל שקופית לפי שם או מזהה, ומצמיד אותו למצגת ללא התערבות ידנית. **פותח מתוך צורך לייעל את תהליך השיוך של עשרות קבצי קול, כדי לשחרר זמן למה שחשוב באמת: הסיפור והחוויה.**', category: 'Automation', localPath: '' },
+        { index: 16, original: 'הנפשה תמונה סטטית עם תנועת גלים (Wave Preset)', professional: 'פריסט גלים להנפשת תמונות', simple: 'יוצר תנועת גלים עדינה בתמונה רגילה (מים, רוח) כדי להפיח בה חיים, במיוחד בתמונות AI איכותיות. **נולד מתוך הרצון להנפיש גם את הים היפה בתמונות AI, וליצור פורמט גנרי שיעבוד לכל סצנות הממים בסיפורים, כולל אפקטים כמו בועות עולות.**', category: 'Visual Effects', localPath: '' },
+        { index: 17, original: 'יצירת רקעים מרובדים עם עומק (Layered Backgrounds)', professional: 'מחולל רקעים תלת-שכבתיים', simple: 'משלב רקע, שכבת אובייקטים ותנועה ליצירת תחושת עומק תלת-שכבתית בתמונה אחת, כמו ציור ישן עם פרספקטיבה. **מטרתו להחזיר לתמונות את העומק, ההצללות והפרספקטיבה של פעם, אך באמצעות קוד, כך שהילד ירגיש בתוך עולם רב-ממדי.**', category: 'Visual Effects', localPath: '' },
+        { index: 18, original: 'זיהוי שקופיות "חוץ" ו"שיחרור" עצים וציפורים אוטומטי', professional: 'מנוע זיהוי סביבה והוספת אלמנטים אוטומטית', simple: 'מזהה אם שקופית מציגה מרחב חיצוני ומוסיף אוטומטית ציפורים, עצים ועננים לפי קטגוריה, למניעת בלבול. **פותח מתוך הבנה שילדים קולטים מיד אם משהו לא "מתאים" בסצנה, ולכן הקוד יודע בעצמו היכן להכניס חיים ללא בלבול.**', category: 'Automation', localPath: '' },
+        { index: 19, original: 'הפעלת נגן VLC במסך 2 לפי שליטה מהמצגת', professional: 'מערכת בקרת הקרנה דו-מסכית', simple: 'פותח סרטון ב-VLC במסך השני (מקרן) תוך שליטה מלאה מתוך PowerPoint, המאפשר הרצאה מקצועית עם הקרנה חיה. **נולד מתוך צורך בפתרון הצגה חיצונית במצב "תצוגת מגיש" (Presenter View), המונעת מעבר בין חלונות ושומרת על שליטה מלאה מאחורי הקלעים.**', category: 'Automation', localPath: '' },
+        { index: 20, original: 'סנכרון בין קובצי סאונד לבין מספרי שקופיות', professional: 'מנגנון סנכרון אודיו-שקופיות', simple: 'משייך קובצי MP3 לשקופיות לפי שמות או טבלת התאמה, ומוודא שהכול מסונכרן בדיוק, ליצירת סיפור זורם. **מטרתו להבטיח שהילד ישמע את הקריינות המתאימה בדיוק לשקופית הנוכחית, ללא טעויות או דילוגים, כדי שהקסם יקרה.**', category: 'Automation', localPath: '' },
+        { index: 21, original: 'בדיקת עומס קולי בקבצי MP3 – נרמול עוצמה', professional: 'מערכת נרמול עוצמת אודיו אוטומטית', simple: 'סורק קבצי סאונד ומאזן את עוצמתם לרמה אחידה, תוך שמירה על דינמיקה רגשית, למניעת הפרעות שמע. **פותח מתוך הבנה שחשוב שכל סצנה או אפקט סאונד יהיה ברמה שווה, כמובן תוך שמירה על דינמיקה מוזיקלית המעצימה רגשות, כדי למנוע ניתוק קשב אצל ילדים.**', category: 'Audio Processing', localPath: '' },
+        { index: 22, original: 'הנפשה מתקדמת של עצים וציפורים לפי פריסטים', professional: 'מנוע הנפשה אטמוספרית מבוסס פריסטים', simple: 'מחייה עצים או ציפורים בתמונה עם תנועה עדינה מוגדרת מראש (רוח רכה, ציפור ממריאה), להוספת עומק רגשי ואווירה. **נועד לגרום לילד להרגיש שיש "רוח" ו"עולם" חי גם בגיף יחיד, ולהוסיף עומק רגשי באמצעות תנועה מתוזמנת.**', category: 'Visual Effects', localPath: '' },
+        { index: 23, original: 'בקרת גוון קול אוטומטית לפי דמות – ילד, מכשפה, דובון', professional: 'מחולל קולות דמויות דינמי', simple: 'מקבל טקסט ודמות ויוצר קובץ סאונד מותאם לקול הרצוי (ילד, דובון, מכשפה), ליצירת "אישיות" לכל דמות ללא צוות מדובבים. **מטרתו להעניק לכל דמות "אישיות" ייחודית באמצעות שינוי קול, ולהפוך את חווית הסיפור לתיאטרון שלם מתוך קול יחיד.**', category: 'Audio Processing', localPath: '' },
+        { index: 24, original: 'טבלת שליטה למצגות – הצגת מצב בשקופית נוכחית', professional: 'ממשק בקרה בזמן אמת למצגות', simple: 'יוצר טבלת שליטה המציגה בזמן אמת את השקופית הנוכחית ואת הפריסטים/אודיו/אפקטים המשויכים אליה, לשליטה חלקה במצגות מורכבות. **נועד למנוע לחץ אצל המפעיל ולאפשר לו לדעת תמיד מה אמור לקרות ומה קורה בפועל, ליצירת הופעה חלקה ומקצועית.**', category: 'UI Component', localPath: '' },
+        { index: 25, original: 'סריקה חכמה של תיקיית סיפורים – איתור קבצים חסרים או כפולים', professional: 'מערכת איתור ותיקון קבצים אוטומטית', simple: 'סורק תיקייה עם קבצי סיפור ומזהה חוסרים, כפילויות או טעויות, כדי להבטיח שלמות והמשכיות הסיפור. **פותח מתוך הבנה שבתוך אלפי קבצים, חוסר או כפילות קטנה יכולים להרוס מצגת שלמה לילדים, והקוד משמש כעוזר הפקה אישי.**', category: 'Automation', localPath: '' },
+        { index: 26, original: 'הנפשת רקע גל על תמונה סטטית (פריסטים)', professional: 'פריסט הנפשת גלים לרקעים', simple: 'מנפיש רקע של תמונה סטטית (ים, שמיים) בתנועות גל עדינות ואפקטים שקופים, ליצירת תחושת חיים ו"נשימה" בתמונה. **נועד להכניס חיים לתמונה סטטית, וליצור אשליה שקטה של תנועה, בדיוק מספיק כדי לגרום לילד להרגיש שהרקע חי.**', category: 'Visual Effects', localPath: '' },
+        { index: 27, original: 'הנפשת עיניים ופה על עצם סטטי (דמות)', professional: 'מנוע הנפשת פנים לדמויות סטטיות', simple: 'מקבל תמונה רגילה ומוסיף לה פה מדבר ועיניים זזות, כדי להחיות אותה כשחקן קטן עם הבעות. **מטרתו להפוך ציור לדמות עם אופי, שתחזיר מבט ותדבר, כי אני נתתי לה חיים בתכנות.**', category: 'Visual Effects', localPath: '' },
+        { index: 28, original: 'רקע שקוף למניפולציה או הקרנה על רקעים אחרים', professional: 'מחולל וידאו עם רקע Chroma Key', simple: 'יוצר וידאו מונפש עם רקע ירוק/שקוף (Chroma Key) להלבשה על סיפורים או מצגות אחרות, המאפשר "ללהק" דמויות מחדש. **פותח מתוך הרצון ש"הבעה אחת תוכל לשמש בכל סיפור", ושהדמות תחיה כמו שחקן שניתן "ללהק" מחדש לכל הצגה.**', category: 'Visual Effects', localPath: '' },
+        { index: 29, original: 'סקריפט שילוב קול עם הנפשת פה (לפי דיבור)', professional: 'מנגנון סנכרון שפתיים-דיבור בעברית', simple: 'מקבל קובץ קול (עברית) ומחולל הנפשה תואמת של תנועת פה, בקצב מדויק, ליצירת דמות עברית שמדברת באופן טבעי. **נועד לוודא שדמות בעברית מדברת כמו שצריך, ושכל מילה שילד שומע תבוא לידי ביטוי בתנועת הפה, כי הסנכרון הזה הופך את הסיפור לחי.**', category: 'Dialog System', localPath: '' },
+        { index: 30, original: 'הפקת סרטון מלא אוטומטי משקופיות + קול + רקע מונפש', professional: 'מערכת הפקת סרטונים אוטומטית', simple: 'מקבל תיקייה עם שקופיות, קבצי קול ורקעים מונפשים, ומייצר סרטון סיפור שלם ואוטומטי, כולל תזמון והנפשה. **פותח מתוך הרצון שילד יוכל לשמוע סיפור מהכיתה גם בבית, ללא צורך בעריכת וידאו ידנית, בלחיצה אחת.**', category: 'Automation', localPath: '' },
+        { index: 31, original: 'עיוות קול לפי רגשות (לחישה, צעקה, פחד)', professional: 'מעצב קול רגשי דינמי', simple: 'משמיע טקסטים מוקלטים באפקטים משתנים (קול רועד, לוחש, נרגש, פחד) כדי שהקול יספר את הרגש שמאחורי המילים. **נועד לוודא שכל משפט מבטא את הרגש הנכון, גם אם הדמות פוחדת או מבקשת בעדינות, כך שהקול יספר את הסיפור הרגשי.**', category: 'Audio Processing', localPath: '' },
+        { index: 32, original: 'בדיקת מצבים אוטומטית למצגת – אילו שקופיות ריקות', professional: 'מערכת בקרת שלמות מצגות', simple: 'סורק מצגת ומזהה שקופיות חסרות טקסט או תוכן, כדי להבטיח שכל סצנה בסיפור מספרת משהו. **פותח כדי להבטיח שלא יהיה רגע מת או שקופית ריקה שתגרום לילד להתנתק מהסיפור.**', category: 'Automation', localPath: '' },
+        { index: 33, original: 'מציאת מילים ראשונות מתוך הקראה ושיוך למצגת', professional: 'מערכת זיהוי דיבור ושיוך תוכן אוטומטית', simple: 'קולט הקראה בקול, שולף ממנה מילים ראשונות ומקשר אוטומטית לכל שקופית תואמת, ללא עריכה ידנית. **נועד ליצור התאמה אוטומטית בין הקראה לשקופית, ללא תיוג או עריכה ידנית, כך שהמערכת תבין את הדיבור ותסדר אותו כמו קסם.**', category: 'Automation', localPath: '' },
+        { index: 34, original: 'פריסטים להנפשת תמונות סטטיות – גלים, נשימה, תנועה', professional: 'מאגר פריסטים להנפשת תמונות', simple: 'מוסיף אנימציות עדינות לתמונה קפואה (תנועת ממים, רטט אוויר, נשימת דמות), כדי להחזיר לה דופק וחיים. **פותח מתוך הרצון להחזיר "דופק" לתמונה עומדת, וליצור שכבת תנועה שקטה שמחזירה חיים למשהו קפוא.**', category: 'Visual Effects', localPath: '' },
+        { index: 35, original: 'הנפשת קטעי סאונד לפי תזמון סיפור – פסקול מלווה', professional: 'מערכת פסקול סיפורי דינמית', simple: 'מוסיף פסי קול (פחד, מתח, הקלה, קסם) לכל שקופית במצגת בהתאם לעלילה, כדי שהמוזיקה תספר את הרגש. **מטרתו לוודא שלכל רגש תהיה מנגינה משלו, גם אם לא נאמרה מילה, כך שהמוזיקה תהיה מספר-שותף לסיפור.**', category: 'Audio Processing', localPath: '' },
+        { index: 36, original: 'פתיחת מצלמה בזמן אמת והוספת שכבת עננים נעים', professional: 'מערכת מציאות רבודה (AR) למצלמה', simple: 'פותח את מצלמת המחשב, מציג את המשתמש ומוסיף מעליו שכבת עננים נעים, כאילו הוא חלק מהעולם המצולם. **נועד לאפשר לילדים להיכנס לתוך הסרט ולהיות הדמויות, כך שהרקע יגיב להם והדמיון יעבוד.**', category: 'Visual Effects', localPath: '' },
+        { index: 37, original: 'ממשק בחירה אינטראקטיבי למצגות ילדים – עם כפתורים ודמויות', professional: 'ממשק בחירה חוויתי למצגות', simple: 'פותח תפריט גרפי אינטראקטיבי המאפשר לילד לבחור סיפור, דמות או מצב רוח בלחיצת כפתור, ומעביר את השליטה לידיו. **מטרתו להעביר את השליטה לידי הילדים, וכשהם בוחרים הם מתחייבים והסיפור נוגע יותר.**', category: 'UI Component', localPath: '' },
+        { index: 38, original: 'איתור אוטומטי של דממה בסרטון והוספת מוזיקה רכה במקומה', professional: 'מערכת מילוי דממה אוטומטית עם מוזיקה', simple: 'סורק קובץ וידאו, מאתר מקטעים שקטים ללא דיבור, ומכניס מוזיקת רקע רכה במקומות אלו, למניעת רגעים מתים וניתוק קשב. **נועד למנוע רגעים מתים בסרטון שיגרמו לניתוק קשב, וליצור מוזיקה שמלטפת ושומרת על קשר רגשי.**', category: 'Audio Processing', localPath: '' },
+        { index: 39, original: 'שילוב בין תנועת מים, שמיים ורקע סטטי על תמונה אחת – יצירת עומק מדומה', professional: 'מחולל עומק ויזואלי בתמונות', simple: 'מפרק תמונה רגילה לשכבות (שמיים, מים, רקע) ומזיז כל אחת בקצב שונה ליצירת עומק מונפש ותחושת מרחב. **מטרתו להחיות ציור ולהפוך דף נייר לעולם חי, תוך מתן תחושה של מרחב ועומק ללא צורך בוידאו מלא.**', category: 'Visual Effects', localPath: '' },
+        { index: 40, original: 'החלפת רקע בזמן אמת לפי תנועה – הילד זז, העננים מגיבים', professional: 'מערכת רקע אינטראקטיבי מבוסס תנועה', simple: 'משנה את הרקע בזמן אמת לפי תנועת הילד מול המצלמה (לדוגמה, הרמת יד מפלגת ענן), כדי שהילד ירגיש שהוא מזיז את העולם. **נועד לגרום לילדים להזיז את העולם ולהבין שהעולם מגיב אליהם, ובכך להפוך אותם לא רק לצופים אלא ליוצרים.**', category: 'Visual Effects', localPath: '' },
+    ];
+    
+    function renderFeatures(filter = 'all') {
+        const grid = document.getElementById('features-grid');
+        grid.innerHTML = '';
+        const filteredData = (filter === 'all')
+            ? featuresData
+            : featuresData.filter(f => f.category === filter);
+
+        filteredData.forEach(feature => {
+            const card = document.createElement('div');
+            card.className = 'feature-card p-6 rounded-xl shadow-md cursor-pointer';
+            card.dataset.category = feature.category;
+            
+            card.innerHTML = `
+                <div class="flex items-start justify-between">
+                    <div class="flex-1">
+                        <p class="text-sm font-semibold text-sky-400">${feature.professional}</p>
+                        <h4 class="font-bold text-lg mt-1 text-slate-100">${feature.index}. ${feature.original}</h4>
+                    </div>
+                    <div class="text-slate-400">
+                        <svg class="w-6 h-6 expand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                    </div>
+                </div>
+                <div class="details mt-4 pt-4 border-t border-slate-700">
+                    <p class="text-slate-300">${feature.simple}</p>
+                </div>
+            `;
+            
+            card.addEventListener('click', () => {
+                const details = card.querySelector('.details');
+                const iconContainer = card.querySelector('.expand-icon').parentElement;
+                const icon = card.querySelector('.expand-icon');
+                
+                details.classList.toggle('open');
+                iconContainer.classList.toggle('icon-open');
+
+                if (details.classList.contains('open')) {
+                    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12H6"></path>';
+                } else {
+                    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>';
+                }
+            });
+
+            grid.appendChild(card);
+        });
+    }
+
+    function handleScrollspy() {
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('main section');
+        let current = '';
+
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (pageYOffset >= sectionTop - 100) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active-nav');
+            if (link.hash.substring(1) === current) {
+                link.classList.add('active-nav');
+            }
+        });
+    }
+
+    function setupFilters() {
+        const filters = document.querySelectorAll('.filter-btn');
+        filters.forEach(button => {
+            button.addEventListener('click', () => {
+                filters.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                renderFeatures(button.dataset.filter);
+            });
+        });
+    }
+    
+    function setupChronology() {
+        document.querySelectorAll('.read-more').forEach(link => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                const chapterId = link.dataset.chapter;
+                const fullContentDiv = document.getElementById(chapterId);
+                const summary = link.previousElementSibling;
+                
+                if (fullContentDiv) {
+                    const isOpen = fullContentDiv.classList.toggle('open');
+                    if(isOpen) {
+                        summary.style.display = 'none';
+                        link.textContent = 'הסתר';
+                    } else {
+                        summary.style.display = 'block';
+                        link.textContent = `קרא עוד על ${link.textContent.split(' ').pop()}`;
+                    }
+                }
+            });
+        });
+    }
+    
+    renderFeatures();
+    setupFilters();
+    setupChronology();
+    window.addEventListener('scroll', handleScrollspy);
+});
+</script>
+
+
+
+</body></html>
