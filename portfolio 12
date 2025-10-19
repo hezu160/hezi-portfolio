@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>חזי חביב - פורטפוליו טכני אינטראקטיבי</title>
+    
+    <!-- Google Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- General Styles --- */
+        :root {
+            --bg-dark: #0F172A;
+            --bg-medium: #1E293B;
+            --border-color: #334155;
+            --text-light: #E2E8F0;
+            --text-medium: #94A3B8;
+            --text-dark: #CBD5E1;
+            --accent-blue: #38BDF8;
+            --accent-green: #6EE7B7;
+        }
+
+        body {
+            font-family: 'Assistant', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            scroll-behavior: smooth;
+        }
+
+        /* --- Reusable Components --- */
+        .section-title {
+            color: var(--accent-blue);
+            font-size: 2.25rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-medium);
+            max-width: 56rem;
+            margin: 0 auto 3rem auto;
+            font-size: 1.125rem;
+            line-height: 1.75;
+        }
+
+        .card {
+            background-color: var(--bg-medium);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            transition: transform .2s ease-in-out, box-shadow .2s ease-in-out, border-color .2s ease-in-out;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(56, 189, 248, .1), 0 4px 6px -4px rgba(56, 189, 248, .1);
+            border-color: var(--accent-blue);
+        }
+
+        /* --- Header & Navigation --- */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .nav-link {
+            padding: 0.5rem;
+            border-bottom: 2px solid transparent;
+            transition: color 0.3s, border-color 0.3s;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--text-dark);
+        }
+        .nav-link:hover, .nav-link.active-nav {
+            color: var(--accent-blue);
+            border-bottom-color: var(--accent-blue);
+        }
+
+        /* --- HERO IMAGE --- */
+        .hero-wrap { position:relative; border-radius:1rem; overflow:hidden; box-shadow:0 10px 25px rgba(0,0,0,.5); margin-top: 1rem; }
+        .hero-img { width:100%; height:100%; object-fit:cover; display:block; aspect-ratio: 16/6; }
+        .hero-overlay {
+          position:absolute; inset:0; background:linear-gradient(180deg, rgba(15,23,42,.15), rgba(15,23,42,.45) 70%, rgba(15,23,42,.75));
+          pointer-events:none;
+        }
+
+        /* --- Slideshow --- */
+        .slideshow-container {
+            max-width: 94%;
+            transition: max-width .5s, clip-path .5s, border-radius .5s;
+            width:100%;
+            position:relative;
+            margin:auto;
+            box-shadow:0 10px 25px rgba(0,0,0,.5);
+            border-radius:1rem;
+            overflow:hidden;
+            background-color:#1f2937;
+            transform-style:preserve-3d;
+            aspect-ratio:16/10;
+        }
+        .h-slide { display:none; width:100%; height:100%; position:absolute; top:0; left:0; backface-visibility:hidden; text-align:center; color:#fff; }
+        .h-slide img { width:100%; height:100%; vertical-align:middle; object-fit:contain; }
+        .h-controls-external { display:flex; align-items:center; justify-content:center; gap:1rem; margin-top:1rem; }
+        .h-control-btn { background:none; border:none; color: var(--text-light); font-size:1.5rem; cursor:pointer; transition:transform .2s; }
+        .h-cube-3d{animation:h-cube-3d 2.2s forwards}
+        @keyframes h-cube-3d{from{transform:translateX(100%) rotateY(90deg)}to{transform:translateX(0) rotateY(0)}}
+
+        /* --- Technical Sections (Features, Tables) --- */
+        .table-responsive { display: block; width: 100%; overflow-x: auto; }
+        table { width: 100%; text-align: right; border-collapse: collapse; }
+        th, td { padding: 0.75rem 1rem; border-top: 1px solid var(--border-color); }
+        th { background-color: #334155; font-weight: 600; }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 9999px;
+            background-color: #334155;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .filter-btn:hover { background-color: #475569; }
+        .filter-btn.active { background-color: var(--accent-blue); color: var(--bg-dark); }
+        
+        .feature-card { cursor: pointer; }
+        .feature-card .details { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out; }
+        .feature-card .details.open { max-height: 500px; }
+
+        /* --- Chronology Section --- */
+        .chronology-item { margin-bottom: 1rem; }
+        .read-more { color: var(--accent-blue); font-weight: 600; text-decoration: none; margin-top: 0.5rem; display: inline-block; cursor: pointer; }
+        .chronology-full-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 1.5s ease-in-out;
+            padding-top: 0;
+            color: var(--text-medium);
+            line-height: 1.7;
+        }
+        .chronology-full-content.open { max-height: 4000px; padding-top: 1rem; }
+
+        /* Highlight Text */
+        .highlight-text {
+            background-color: #3B82F6;
+            color: white;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-weight: 600;
+            line-height: 1.6;
+        }
+
+    </style>
+</head>
+
+<body style="--tw-border-spacing-x:0; --tw-border-spacing-y:0; --tw-translate-x:0; --tw-translate-y:0; --tw-rotate:0; --tw-skew-x:0; --tw-skew-y:0; --tw-scale-x:1; --tw-scale-y:1; --tw-ring-offset-width:0px; --tw-ring-offset-color:#fff; --tw-ring-color:rgb(59 130 246 / 0.5);">
+    <div style="max-width: 80rem; margin: 0 auto; padding: 0 1rem;"> <!-- Container -->
+
+        <header>
+             <nav style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; padding: 1rem 0; gap: 1rem;">
+                <a href="#overview" class="nav-link active-nav">מבט על</a>
+                <a href="#capabilities" class="nav-link">יכולות והצעה</a>
+                <a href="#slideshow" class="nav-link">מצגת פרויקטים</a>
+                <a href="#architecture" class="nav-link">ארכיטקטורה</a>
+                <a href="#features" class="nav-link">פיצ'רים</a>
+                <a href="#toolbox" class="nav-link">ארגז כלים</a>
+                <a href="#chronology" class="nav-link">המסע שלי</a>
+            </nav>
+        </header>
+
+        <main>
+            <!-- HERO IMAGE SECTION -->
+            <section id="hero">
+                <div class="hero-wrap">
+                    <img src="https://i.postimg.cc/pLL4kPHb/image.png" alt="תמונת שער - חזי חביבי" class="hero-img" loading="eager" fetchpriority="high"/>
+                    <div class="hero-overlay"></div>
+                </div>
+            </section>
+            
+            <!-- Overview Section -->
+            <section id="overview" style="padding: 4rem 0;">
+                <h1 class="section-title">פורטפוליו טכני: ארכיטקטורת מערכת אקולוגית</h1>
+                <p class="section-subtitle">מבט-על ארכיטקטוני מקיף על מערך הפיתוחים, הסקריפטים והמודולים המרכיבים את הפרויקט. כל הפיתוחים המוצגים כאן נוצרו ב-3 השנים האחרונות.</p>
+                <div class="card" style="max-width: 56rem; margin: 0 auto;">
+                     <h2 style="font-size: 1.875rem; font-weight: 700; color: var(--accent-blue); text-align: center; margin-bottom: 1.5rem;">הסיפור שמאחורי הקוד: מסע של צלילים, טכנולוגיה ורגש</h2>
+                     <div style="line-height: 1.75; font-size: 1.1rem; color: var(--text-dark); display: flex; flex-direction: column; gap: 1rem;">
+                         <p>
+                            סיפורו של חזי חביבי הוא מסע מרתק שמתחיל בחיבור עמוק למוזיקה כבר מגיל הגן, ומתפתח על קו התפר שבין שני עולמות: אמנות וטכנולוגיה. כמוזיקאי, אמן כלי נשיפה (14 כלים שונים) והנדסאי אלקטרוניקה בהכשרתו, הוא מצא דרך ייחודית לשלב את שתי אהבותיו.
+                         </p>
+                         <p>
+                            במשך שנים רבות, שימש כמנהל מוזיקלי נערץ במוסדות חינוך, הקים להקות ייצוגיות מצליחות, טיפח כישרונות צעירים שהגיעו לקדמת הבמה (כמו ב"כוכב נולד"), ואף הקים יחד עם הבמאי ז'אק זרביב את הלהקה הייצוגית של חיל התקשוב. במקביל, יצר מופעים מוסברים בכלי נשיפה שזכו להכרה של "סל תרבות ארצי".
+                         </p>
+                         <p class="highlight-text">
+                            <strong>בשנים האחרונות, המסע הוביל אותו לעולם הגיל הרך, שם זיהה צורך בפעילות חדשנית שתדבר בשפתם של ילדי העידן הדיגיטלי. מתוך החיבור לילד שהיה בעצמו, שהתמודד עם הפרעת קשב חמורה, נולד החזון: ליצור חוויה רב-חושית שתעורר עניין וריכוז דרך רגש. כל הפיתוחים הטכניים המוצגים בפורטפוליו זה הם התוצאה של אותו חזון – הניסיון להפוך סיפור פשוט לחוויה סוחפת, המשלבת מוזיקה, אנימציה, אוטומציה ואינטראקציה, ונוגעת עמוק בלב.</strong>
+                         </p>
+                     </div>
+                 </div>
+            </section>
+            
+            <!-- Capabilities Section -->
+            <section id="capabilities" style="padding: 4rem 0;">
+                <h2 class="section-title">💡 יכולות והצעת ערך</h2>
+                <p class="section-subtitle">סיכום היכולות הטכניות, תחומי ההתמחות והערך המרכזי שכל פרויקט מביא.</p>
+                <div style="display: grid; grid-template-columns: 1fr; gap: 2rem; max-width: 64rem; margin: 0 auto;">
+                    <div class="card">
+                         <h3 style="font-weight: 700; font-size: 1.25rem; margin-bottom: 1.5rem; color: var(--accent-green);">יכולות טכניות מרכזיות</h3>
+                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                            <div><b>פיתוח בעזרת AI:</b> מומחיות בעבודה אינטראקטיבית עם מודלי שפה לתכנון ופיתוח קוד מורכב.</div>
+                            <div><b>Python:</b> רמה גבוהה בכתיבת סקריפטים, עבודה עם ספריות ובניית לוגיקה עסקית.</div>
+                            <div><b>אוטומציה:</b> כתיבת סקריפטים (Python, AutoHotkey) לאוטומציה של משימות, תהליכים בין-יישומיים וארגון קבצים.</div>
+                            <div><b>עיבוד מדיה (Audio &amp; Video):</b> שימוש בכלים כמו FFmpeg לעיבוד וידאו, הפרדת ערוצי אודיו, דיבוב וסנכרון.</div>
+                            <div><b>עיבוד תמונה:</b> יצירת אנימציות (GIF), החלת פילטרים, הסרת רקעים ושילוב תמונות.</div>
+                            <div><b>עבודה עם מסמכים:</b> עיבוד אוטומטי של קובצי Office (Word, Excel, PPTX) ו-PDF.</div>
+                         </div>
+                    </div>
+                     <div class="card highlight-text" style="background-color: #2563EB;">
+                         <h3 style="font-weight: 700; font-size: 1.25rem; margin-bottom: 1rem; color: white;">הצעת הערך</h3>
+                         <p style="color: white; font-weight: normal;">יכולת ייחודית לפתרון בעיות באופן יצירתי וטכנולוגי, תוך מינוף מלא של כלי AI מודרניים. התמחות בלקיחת תהליכים ידניים ומסורבלים והפיכתם לאוטומטיים, יעילים וחכמים. הניסיון המצטבר בבניית כלים לעיבוד מדיה ומסמכים מעיד על יכולת למידה עצמית גבוהה והתמודדות עם אתגרים טכנולוגיים מגוונים.</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Slideshow Section -->
+            <section id="slideshow" style="padding: 4rem 0;">
+                <h2 class="section-title">🖼️ מצגת פרויקטים ויזואלית</h2>
+                <div id="hezi-slideshow-wrapper">
+                  <div id="h-slideshow" class="slideshow-container"></div>
+                  <div class="h-controls-external">
+                    <button class="h-control-btn" id="h-prev"><i class="fas fa-chevron-right"></i></button>
+                    <button class="h-control-btn" id="h-play-pause"><i class="fas fa-pause"></i></button>
+                    <button class="h-control-btn" id="h-next"><i class="fas fa-chevron-left"></i></button>
+                  </div>
+                </div>
+            </section>
+
+            <!-- Architecture Section -->
+            <section id="architecture" style="padding: 4rem 0;">
+                <h2 class="section-title">⚙️ ארכיטקטורת מערכת וניהול Office</h2>
+                <p class="section-subtitle">יסודות המערכת: קוד הליבה המאפשר אוטומציה ושליטה, ומערך הכלים המנהל את התוכן בסביבת Microsoft Office.</p>
+                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; max-width: 64rem; margin: 0 auto;">
+                    <div class="card">
+                        <h3 style="font-weight: 700; font-size: 1.25rem; margin-bottom: 1rem; color: var(--accent-green);">קוד ליבה ואוטומציה</h3>
+                        <div class="table-responsive">
+                           <table>
+                                <thead><tr><th>שם הרכיב</th><th>תיאור ותפקיד</th></tr></thead>
+                                <tbody>
+                                    <tr><td><b>קוד VBA ראשי</b></td><td>נקודת הכניסה לתהליכים המרכזיים.</td></tr>
+                                    <tr><td><b>קוד אוטומציה</b></td><td>ספריית ליבה של פונקציות אוטומציה גנריות.</td></tr>
+                                    <tr><td><b>הפעלת סקריפטים חיצוניים</b></td><td>הרצת קבצי Batch ו-AHK.</td></tr>
+                                    <tr><td><b>הפעלת תוכנה חיצונית</b></td><td>שליטה על תוכנות צד-שלישי (כמו VLC).</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3 style="font-weight: 700; font-size: 1.25rem; margin-bottom: 1rem; color: var(--accent-green);">ניהול Office</h3>
+                        <div class="table-responsive">
+                            <table>
+                                <thead><tr><th>שם הרכיב</th><th>תיאור ותפקיד</th></tr></thead>
+                                <tbody>
+                                    <tr><td><b>מודול מצגות (PPTX)</b></td><td>ניהול כללי של מצגות.</td></tr>
+                                    <tr><td><b>מודול העתקה</b></td><td>העתקה דינמית של שקופיות ואלמנטים.</td></tr>
+                                    <tr><td><b>חיבור ל-Excel</b></td><td>משמש כמקור נתונים דינמי.</td></tr>
+                                    <tr><td><b>קוד ל-DOCX</b></td><td>אינטגרציה ליצירת דוחות ותסריטים.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section id="features" style="padding: 4rem 0;">
+                <h2 class="section-title">📱 פיתוחים ופיצ'רים אינטראקטיביים</h2>
+                <p class="section-subtitle">זוהי רשימה חלקית מתוך עשרות פיתוחים ורכיבים אינטראקטיביים שנוצרו. לחצו על קלף כדי לראות הסבר מפורט.</p>
+                <div id="feature-filters" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin-bottom: 2rem;">
+                    <!-- Filter buttons are generated by JS -->
+                </div>
+                <div id="features-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+                    <!-- Feature cards are generated by JS -->
+                </div>
+            </section>
+            
+            <!-- Toolbox Section -->
+            <section id="toolbox" style="padding: 4rem 0;">
+                <h2 class="section-title">🧰 ארגז כלים (תוכנות)</h2>
+                <p class="section-subtitle">התוכנות המרכזיות המשמשות ככלי עבודה בפרויקט, המדגישות את מגוון היכולות הטכניות.</p>
+                <div class="card" style="max-width: 56rem; margin: 0 auto;">
+                     <div class="table-responsive">
+                        <table>
+                            <thead><tr><th>תוכנה</th><th>קטגוריה</th></tr></thead>
+                            <tbody>
+                                <tr><td><b>Microsoft Office Suite</b></td><td>סביבת פיתוח מרכזית</td></tr>
+                                <tr><td><b>Python (PyCharm)</b></td><td>תכנות ואוטומציה</td></tr>
+                                <tr><td><b>CrazyTalk / Cartoon Animator</b></td><td>אנימציה</td></tr>
+                                <tr><td><b>Adobe Suite (Photoshop, etc.)</b></td><td>גרפיקה ואנימציה</td></tr>
+                                <tr><td><b>Wondershare Filmora</b></td><td>עריכת וידאו</td></tr>
+                                <tr><td><b>AutoHotkey</b></td><td>אוטומציית Desktop</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Chronology Section -->
+            <section id="chronology" style="padding: 4rem 0;">
+                <h2 class="section-title">⏳ המסע שלי: אבני דרך</h2>
+                <p class="section-subtitle">הצצה אל המסע המקצועי והאישי שלי, שהוביל לפיתוחים המוצגים כאן.</p>
+                <div style="max-width: 56rem; margin: 0 auto; display: flex; flex-direction: column; gap: 1rem;">
+                    <!-- Chronology items are inserted here by JavaScript -->
+                </div>
+            </section>
+        </main>
+        
+        <footer style="text-align: center; padding: 3rem 1rem; border-top: 1px solid var(--border-color); margin-top: 4rem;">
+            <p style="font-size: 0.9rem; color: #64748B;">נבנה ועוצב על ידי חזי חביב © 2025</p>
+        </footer>
+
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- Slideshow Logic ---
+        const slideshowProjects = [
+            { "imageUrl": "https://i.postimg.cc/J0DB6SQH/039-7-ft-MP4.png" }, { "imageUrl": "https://i.postimg.cc/gjX6S1K6/0-4-fmm-ary.png" }, { "imageUrl": "https://i.postimg.cc/TYbDrM1h/3.png" }, { "imageUrl": "https://i.postimg.cc/XY0yLHBD/4-039-039.png" }, { "imageUrl": "https://i.postimg.cc/DwKb6j4x/4.png" }, { "imageUrl": "https://i.postimg.cc/fRjSrcYv/9-nam-MP3-Dy.png" }, { "imageUrl": "https://i.postimg.cc/brD2C4Rn/47.png" }, { "imageUrl": "https://i.postimg.cc/9Qtwndyb/A-3.png" },
+        ];
+        const slideshowContainer = document.getElementById('h-slideshow');
+        if (slideshowContainer && slideshowProjects.length > 0) {
+            let slideIndex = 0, slideshowInterval, isPlaying = true;
+            slideshowProjects.forEach((p) => {
+                slideshowContainer.innerHTML += `<div class="h-slide"><img src="${p.imageUrl}" loading="lazy"></div>`;
+            });
+            const slides = slideshowContainer.getElementsByClassName('h-slide');
+            const show = (n) => {
+                if (n >= slides.length) slideIndex = 0;
+                if (n < 0) slideIndex = slides.length - 1;
+                for (let i = 0; i < slides.length; i++) {
+                    slides[i].style.display = "none";
+                    slides[i].className = 'h-slide';
+                }
+                if (slides[slideIndex]) {
+                    slides[slideIndex].style.display = "block";
+                    slides[slideIndex].classList.add('h-cube-3d');
+                }
+            };
+            const play = () => { isPlaying = true; clearInterval(slideshowInterval); slideshowInterval = setInterval(() => show(++slideIndex), 7400); document.getElementById('h-play-pause').innerHTML = '<i class="fas fa-pause"></i>'; };
+            const pause = () => { isPlaying = false; clearInterval(slideshowInterval); document.getElementById('h-play-pause').innerHTML = '<i class="fas fa-play"></i>'; };
+            document.getElementById('h-prev').addEventListener('click', () => { show(--slideIndex); if (isPlaying) { pause(); play(); } });
+            document.getElementById('h-next').addEventListener('click', () => { show(++slideIndex); if (isPlaying) { pause(); play(); } });
+            document.getElementById('h-play-pause').addEventListener('click', () => isPlaying ? pause() : play());
+            show(slideIndex); play();
+        }
+
+        // --- Features Data & Logic ---
+        const featuresData = [
+            { index: 1, original: 'הנפשה לתמונה אחת', professional: 'מנוע הנפשה עדינה לתמונות סטטיות', simple: 'מפיח חיים בתמונה בודדת באמצעות תנועה קלה (נשימה, רעד קסום), ללא צורך באנימציה מורכבת.', category: 'Visual-Effects' },
+            { index: 2, original: 'עיוות רקע אוטומטי לזוז', professional: 'מנוע הנפשת רקעים דינמי', simple: 'יוצר תנועה גלית או קלה ברקעים סטטיים (שמיים, ים, אור) כדי להפוך אותם לחיים ונושמים.', category: 'Visual-Effects' },
+            { index: 3, original: 'קול לכל שקופית', professional: 'מערכת קריינות מותאמת שקופית', simple: 'סורק מצגת ויוצר קובץ קול מותאם לכל שקופית, לפי סיפור, טון או דמות שנבחרו מראש, להעצמת החוויה הרגשית.', category: 'Dialog-System' },
+            { index: 4, original: 'שכבת ציפורים באוויר', professional: 'מודול שכבות אנימציה (ציפורים)', simple: 'מוסיף שכבת GIF/PNG מונפשת של ציפורים בתנועה לכל סצנה, להוספת חיים, קצב ותחושת טבע.', category: 'Visual-Effects' },
+            { index: 5, original: 'מצלמת קריינות', professional: 'מערכת הקלטת קריינות אישית', simple: 'פותח מצלמה פנימית ומקליט את קול המשתמש תוך כדי תצוגת שקופיות, כדי לספר את הסיפור בקול אישי וליצור זיכרון רגשי.', category: 'Dialog-System' },
+            { index: 6, original: 'הפעלת רקעים לפי זיהוי שקופית', professional: 'מנוע רקעים חכמים למצגות', simple: 'מזהה את מספר השקופית הפעילה במצגת PowerPoint ומפעיל רקע תואם אוטומטית (יער, לילה, שמיים זזים), ללא התערבות ידנית.', category: 'Automation' },
+            { index: 8, original: 'יצירת מצגת לפי מערך טקסט', professional: 'מחולל מצגות אוטומטי', simple: 'מקבל מערך טקסטים ויוצר מצגת מלאה עם שקופיות מסודרות, תוך ניצול תצוגת מגיש להפרדת תוכן למורה ולצופה.', category: 'Automation' },
+            { index: 10, original: 'אפקט קולות משולבים לפי טון', professional: 'מעצב גוון קול דינמי', simple: 'משנה קובץ קול כך שישמע בגוון אחר (עמוק, דק, הד) ליצירת מגוון דמויות מאותו קול מקור, כמו תיאטרון שלם מקול יחיד.', category: 'Audio-Processing' },
+            { index: 19, original: 'הפעלת נגן VLC במסך 2 לפי שליטה מהמצגת', professional: 'מערכת בקרת הקרנה דו-מסכית', simple: 'פותח סרטון ב-VLC במסך השני (מקרן) תוך שליטה מלאה מתוך PowerPoint, המאפשר הרצאה מקצועית עם הקרנה חיה.', category: 'Automation' },
+            { index: 21, original: 'בדיקת עומס קולי בקבצי MP3 – נרמול עוצמה', professional: 'מערכת נרמול עוצמת אודיו אוטומטית', simple: 'סורק קבצי סאונד ומאזן את עוצמתם לרמה אחידה, תוך שמירה על דינמיקה רגשית, למניעת הפרעות שמע.', category: 'Audio-Processing' },
+            { index: 24, original: 'טבלת שליטה למצגות – הצגת מצב בשקופית נוכחית', professional: 'ממשק בקרה בזמן אמת למצגות', simple: 'יוצר טבלת שליטה המציגה בזמן אמת את השקופית הנוכחית ואת הפריסטים/אודיו/אפקטים המשויכים אליה, לשליטה חלקה במצגות מורכבות.', category: 'UI-Component' },
+            { index: 30, original: 'הפקת סרטון מלא אוטומטי משקופיות + קול + רקע מונפש', professional: 'מערכת הפקת סרטונים אוטומטית', simple: 'מקבל תיקייה עם שקופיות, קבצי קול ורקעים מונפשים, ומייצר סרטון סיפור שלם ואוטומטי, כולל תזמון והנפשה.', category: 'Automation' },
+            { index: 37, original: 'ממשק בחירה אינטראקטיבי למצגות ילדים – עם כפתורים ודמויות', professional: 'ממשק בחירה חוויתי למצגות', simple: 'פותח תפריט גרפי אינטראקטיבי המאפשר לילד לבחור סיפור, דמות או מצב רוח בלחיצת כפתור, ומעביר את השליטה לידיו.', category: 'UI-Component' },
+        ];
+        
+        const featuresGrid = document.getElementById('features-grid');
+        const featureFiltersContainer = document.getElementById('feature-filters');
+        
+        if (featuresGrid && featureFiltersContainer) {
+            // Create filter buttons dynamically
+            const categories = ['all', ...new Set(featuresData.map(f => f.category))];
+            const categoryTranslations = {
+                'all': 'הכל',
+                'Visual-Effects': 'אפקטים חזותיים',
+                'Dialog-System': 'מערכות דיאלוג',
+                'Automation': 'אוטומציה',
+                'Audio-Processing': 'עיבוד אודיו',
+                'UI-Component': 'רכיבי UI'
+            };
+            
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'filter-btn';
+                if (cat === 'all') btn.classList.add('active');
+                btn.dataset.filter = cat;
+                btn.textContent = categoryTranslations[cat] || cat;
+                featureFiltersContainer.appendChild(btn);
+            });
+
+            // Render feature cards
+            featuresData.forEach(feature => {
+                const card = document.createElement('div');
+                card.className = 'card feature-card';
+                card.dataset.category = feature.category;
+                card.innerHTML = `<div><p style="font-size: 0.875rem; font-weight: 600; color: var(--accent-blue);">${feature.professional}</p><h4 style="font-weight: 700; font-size: 1.125rem; margin-top: 0.25rem;">${feature.index}. ${feature.original}</h4></div><div class="details" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color);"><p>${feature.simple}</p></div>`;
+                card.addEventListener('click', () => card.querySelector('.details').classList.toggle('open'));
+                featuresGrid.appendChild(card);
+            });
+
+            // Add filter functionality
+            const filterButtons = featureFiltersContainer.querySelectorAll('.filter-btn');
+            const featureCards = featuresGrid.querySelectorAll('.feature-card');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    const filter = button.dataset.filter;
+                    featureCards.forEach(card => {
+                        card.style.display = (filter === 'all' || card.dataset.category === filter) ? 'block' : 'none';
+                    });
+                });
+            });
+        }
+
+
+        // --- Chronology Data & Logic ---
+        const chronologyData = [
+            { 
+                title: 'פרק 1: הילדות, החשמל והקסם שבטכנולוגיה', 
+                summary: 'כבר בגן הילדים ניצתה בי אהבה למוזיקה, שהתבטאה בנגינה על כלי נשיפה – תחום בו אני שולט כיום ב-14 כלים שונים. אך לצד האהבה העצומה, נולדו גם אתגרים עצומים...', 
+                full: 'כבר בגן הילדים ניצתה בי אהבה עמוקה למוזיקה, שהתבטאה בנגינה על כלי נשיפה – תחום בו אני שולט כיום ב-14 כלים שונים. אך לצד האהבה העצומה, נולדו גם אתגרים עצומים. הפרעות קשב קשות הפכו את לימוד קריאת התווים למאבק מתסכל, שכן קריאת תווים דרשה ממני ריכוז בלתי אפשרי. חוויתי כישלון בדבר שאהבתי, כשכל חבריי קראו תווים בקלות ואני נסמכתי רק על שמיעתי, שלא תמיד הובילה לדיוק המיוחל. כחבר בלהקת "בני רחובות", אף נחשבתי ל"נגן גרוע" וקינאתי באחרים. במקביל לעולם הצלילים, נמשכתי תמיד לתחכום הפטנטים וההמצאות. עוד לפני שמישהו הסביר לי איך דברים עובדים, פירקתי אותם – כדי להבין לבד. בשנות ה-70, בעודי ילד, קראתי לא מעט ספרים: "הטכנאי הצעיר", "חידושי האלקטרוניקה", ומגזינים נדירים, כל מה שיכולתי לשים עליו יד. בניתי קיטים, מגברים, טלווקסים, שאבים – וכל מה שהציעה התקופה. בכיתה ז\' כבר הקמתי מעבדת אלקטרוניקה פרטית משלי – עם מערכת בקרה שכולה נתפרה לפי התוכניות שלי. אפילו הדלת נפתחה אוטומטית, ורמקול הכריז "הדלת פתוחה!" באמצעות טייפ ישן וחיישן שהמצאתי. עוד לא ידעתי לקרוא לזה "מיקרו-בקר" או "אוטומציה", אבל הראש שלי ידע בדיוק מה הוא עושה.' 
+            },
+            { 
+                title: 'פרק 2: תיכון, להקה ראשונה ושירות צבאי', 
+                summary: 'בתיכון ייסדתי, יחד עם מורה שהאמינה בי, את הלהקה הראשונה של אורט רחובות. שם התחילו ניסיונות ההרמוניה והעיבודים שלי...',
+                full: 'בתיכון ייסדתי, יחד עם מורה שהאמינה בי, את הלהקה הראשונה של אורט רחובות. שם התחילו ניסיונות ההרמוניה והעיבודים שלי. לא ידעתי תווים – אז פשוט שרתי את התפקידים, והילדים ניגנו לפי הקול שלי. חצוצרן רשם בתווים את מה ששרתי – וכך התזמורת ניגנה את מה ש"הסתובב לי בראש". במקביל, למרות שעברתי את כל מבחני הקבלה, נותרה בי תחושת צער על כך שלא זכיתי להיות בלהקה צבאית. מאוחר יותר שירתתי במקום יוקרתי בחיל הקשר – יחידת הלוחמה האלקטרונית. שם הוכשרתי לדרג ד\', ברמת רכיב, וידעתי שזהו שלב משמעותי בהעמקת ההבנה הטכנית שלי.'
+            },
+            {
+                title: 'פרק 3: הנדסאי אלקטרוניקה ואולפן ביתי',
+                summary: 'עם סיום השירות, למדתי במסלול הנדסאים ב"יד סינגלובסקי". השלב הבא היה מתבקש: בניתי במרתף ביתי את האולפן האנלוגי הראשון שלי...',
+                full: 'עם סיום השירות, למדתי במסלול הנדסאים ב"יד סינגלובסקי", מוסד יוקרתי למקצועות הטכנולוגיה. הידע שלי באלקטרוניקה היה יסודי, פרקטי ומדויק. השלב הבא היה מתבקש: אבי העביר לי את דירת המרתף שבביתנו הפרטי – ושם בניתי את האולפן האנלוגי הראשון שלי. לא קניתי מערכת מוכנה – תכננתי הכול בעצמי: טייפ פוסטקס 16 ערוצים עם Dolby C, מערכת בקרה, כבלים, מיקסרים – שבניתי או התאמתי, חדרים מבודדים ותאורה מבוקרת. האולפן פעל 7 שנים ברציפות, שימש להקלטות, הפקות ועבודה עם אמנים צעירים. אך בסוף – בגלל בעיות מול העירייה, נאלצתי לפרק אותו בדמעות.'
+            },
+            {
+                title: 'פרק 4: תקופת המעבר – ניהול מוזיקלי והצלחה ארצית',
+                summary: 'כשאין אולפן – יוצאים לשטח. הרכבתי אולפן נייד ופיתחתי טכניקות אילתור. במקביל, הגיע המחשב הראשון שלי, וכך התחיל החיבור בין מוזיקה למחשב...',
+                full: 'כשאין אולפן – יוצאים לשטח. הרכבתי אולפן נייד עם Roland 16 ערוצים, ופיתחתי טכניקות אילתור שהמצאתי בעצמי: הקלטת אקו בעזרת טייפ עם ראש נוסף, שימוש חוזר ברכיבים ישנים, ותכנון "מהראש" – תוך כדי תנועה. במקביל, הגיע גם המחשב הראשון שלי: Atari 1040 ST עם תוכנת SILB, מונו-כרום – וכך התחיל החיבור הראשון בין מוזיקה למחשב. הבנתי אז משהו מהותי: הקוד הוא רק עוד דרך לתת צורה למה שיש לי בראש. לאחר מכן, חזרתי לניהול מוזיקלי באורט, והפעם, עם ניסיון חיים עשיר יותר, העמקתי את ניסיונותיי בווקאליזציה. הגעתי לרמות נדירות, כאלו שלא נראו בישראל עד אז, כשאני מנצח על נוער – תלמידים ממגמות שאינן מוזיקה – ומביא אותם לרמת שירה בסגנון ה"סווינגל סינגרס". הדבר היה כה יוצא דופן, עד כי כאשר הלהקה המקורית הגיעה לארץ למופעים, חבריה נדהמו לשמוע בני נוער ישראלים מבצעים את יצירותיהם המורכבות. תוך כדי העבודה במספר רב של תיכונים בארץ, המשכתי להקים ולהוביל להקות ייצוגיות ברחבי הארץ. במהלך שנותיי כמנהל מוזיקלי, זיהיתי וטיפחתי תלמידים מוכשרים רבים. חלקם הגדול פרץ לתודעה הציבורית והפך למפורסם במסגרות כמו "כוכב נולד" ובתיאטראות מובילים בארץ – עדות נוספת להשפעתי העצומה. שנים ספורות לאחר סיום פרויקטים אלו, הגיעה הפגישה הגורלית עם הבמאי ז\'אק זרביב, שותפי לדרך. יחד, התחלנו לברוא מופעים שלמים, שכללו לא רק תוכן מוזיקלי עשיר, אלא גם תנועה, חוויה, תפאורה ומחזות זמר רבים – כל מה שנדרש כדי להפוך מופע לבלתי נשכח. שנינו כבשנו את במות התיכונים המובחרים בארץ, והצלחתנו הייתה מסחררת. הפכנו למבוקשים, יצרנו להקות ייצוגיות, ערבי כישרונות, והובלנו מאות (!) מסיבות סיום ומחזות זמר מקוריים, והצבנו סטנדרט אמנותי גבוה ויוצא דופן שלא היה מוכר באותה תקופה. ואז, הגיע הרגע לסגור את המעגל הצבאי. יחד עם ז\'אק, הגשמתי חלום והקמתי את הלהקה הייצוגית של חיל הקשר (כיום להקת חיל התקשוב). הלהקה, שפעילה עד היום, העניקה במה לכישרונות רבים, והוציאה אמנים כמו הראל סקעת ומאיה אברהם (זמרת בתוכניתו של פרויקט רייכל).'
+            },
+            {
+                title: 'פרק 5: המסע המוזיקלי - מופעים, תיכונים וגני ילדים',
+                summary: 'לאחר סיום פרויקטי הלהקות, התחלתי לפתח מופעי נגינה בכלי נשיפה שעברו את מבחני "סל תרבות ארצי". במקביל, נכנסתי לעולם הגיל הרך, לא כמורה בלבד, אלא כמי שמביא שפה מוזיקלית שלמה מהשטח.',
+                full: 'לאחר סיום פרויקטי הלהקות, החל פרק חדש ומרתק – פיתוח מופעי הנגינה בכלי נשיפה. יצרתי תוכניות נגינה שהן מעין מופעים מוסברים בכלי נשיפה, אשר עברו את מבחני "סל תרבות ארצי" ו"נוער מוזיקלי". תוכניות אלו מיועדות לחטיבות ביניים ותיכונים, וכוללות מופעי "מפגש חוויה" ומופעים גדולים יותר לכלל בית הספר. בשלב זה, בלי לדעת, נכנסתי לאחד מהשלבים המכוננים של דרכי – עולם הגיל הרך. לא כמורה בלבד – אלא כמי שמביא עמו שפה מוזיקלית שלמה שנולדה מהשטח. נכנסתי לגנים עם יכולת שמעטים החזיקו אז: יכולת לנגן על עשרות כלים שונים, לחבר בין סיפור לבין סאונד, ולייצר חוויה מוחשית גם בלי תיאוריה או מצגת. אבל העיקר היה ביכולת להמציא פטנטים חיים. רציתי לחשוף את הילדים לסוד הצליל – אז בניתי מודלים מכלים ביתיים, חתכתי בקבוקים, פתחתי צעצועים, חיברתי צינורות ויצרתי מהם כלי נגינה מאולתרים. בכל פעם, הסברתי איך הצליל נוצר דרך המחשה פיזית. אחת הדוגמאות שאני זוכר עד היום – כשהצגתי לילדים את משפחת הסקסופונים ורציתי להמחיש את גודלו של סקסופון קונטרבס. הדפסתי תמונה בגובה של 40 דפי A4 – הילדים אחזו בתחתית על הרצפה, ואני עמדתי על כיסא והצמדתי את הקצה העליון לתקרה. כך הם הרגישו בעצמם את גודל הכלי. הם לא רק ראו – הם חוו. באותה תקופה פיתחתי עשרות תוכניות כאלה, וכל אחת מהן כללה שילוב של סיפור, הדגמה, כלי נגינה אמיתי, הפעלת הילדים ועבודה רב-חושית. לא הייתי רק "מורה למוזיקה", אלא ממציא של גישה. היום אני יודע: כאן נולד השילוב הראשון בין הידע הטכני שלי לבין הדמיון החווייתי, שנבט שנים אחר כך לתוך הקוד, ה-AI, והתיאוריה הרחבה שבניתי.'
+            },
+            {
+                title: 'פרק 6: המעבר לצהרונים – מחויבות ארוכת טווח',
+                summary: 'התחנה הבאה הייתה הצהרונים, שם פיתחתי תוכנית רב-פעמית כחוג שנתי. מתוך 14 חוגים שונים, "הסיפור המוזיקלי" זכה ל-96% עניין והפך לעוגן המרכזי.',
+                full: 'התחנה הבאה, והמהפכנית לא פחות, הייתה הצהרונים. שם, מתוך צורך אמיתי בשטח, פיתחתי סוג חדש של פעילות: תוכנית רב-פעמית, כמעין חוג שבועי קבוע הנפרש לאורך כל השנה, וכולל לא פחות מארבעה עשר חוגים שונים בנושאים מרתקים לילדים. ביצעתי מהלך אסטרטגי ששינה את פני הדברים: בחרתי חוג מרכזי סביבו יתארגנו שאר התכנים – "הסיפור המוזיקלי", שזכה לנתח עניין מדהים של 96% בניסויי שטח. כך, מרבית המאמץ וההשקעה הופנו לפיתוח וליטוש הסיפור המוזיקלי, שהפך לעוגן המרכזי של חוגי הצהרונים, כאשר תתי-חוגים אחרים משולבים כריענון תקופתי. פיתוח התכנים לצהרונים, המורכב ממגוון עשיר של כ-14 תתי-חוגים, שואב השראה מניסיון עבר עשיר. אך בפורמט החדש, ביצעתי מהלך אסטרטגי ששינה את פני הדברים: בחרתי חוג מרכזי סביבו יתארגנו שאר התכנים. הבחירה הזו לא הייתה מקרית. היא נבעה משנה שלמה של ניסוי ובחינת שטח בחוגים הקבועים בצהרונים. במהלך תקופה זו, נמדדה רמת העניין של הילדים בכל אחד מהחוגים באופן פרטני. התוצאות היו חד-משמעיות: הסיפור המוזיקלי זכה לנתח עניין של 96%, נתון מדהים שהכתיר אותו לליבת הפעילות.'
+            },
+            {
+                title: 'פרק 7: החזון של היום – מקארו ופיתוחים מתקדמים',
+                summary: 'היום אני לא רק מלמד, אני בונה מרחבים רגשיים-חושיים לילדים תחת השם "מקארו" – מקום שבו הילד חווה, לא לומד.',
+                full: 'אני מאמין במספר עקרונות ברזל המנחים את כל פעילותי עם ילדים. השאלה המרכזית עבורי היא: כיצד להעביר את המסר באופן שיעורר עניין וסקרנות אצל הילד? אני חוזר אל הילד שהייתי פעם, אל הקושי שלי להקשיב בשל הפרעת קשב חמורה, ומציב לעצמי רף גבוה: אם אצליח לעניין ילד עם הפרעת קשב, הרי ברור שזה יצליח עם כל שאר הילדים. כאמן שהגיע להישגים מוזיקליים כנגד כל הסיכויים, אני יודע היטב מה מניע ומשפיע: רגש. אני מאמין שהרגש הוא המפתח שיגיע אל הילד ויוביל להשפעה ארוכת טווח. היום, אני לא רק מלמד. אני בונה מרחבים רגשיים-חושיים לילדים. אני קורא לזה: מקארו – מקום שבו הילד חווה, לא לומד. שקופיות מדברות בקול, אורות מגיבים, מוזיקה יוצרת הבנה לפני מילים. מקארו הוא רגע שילד שוכח שהוא בכיתה, חיבור בין אור, צבע, צליל ותוכן, ותנועה שבאה מהלב ונוגעת בלב. אני לא רק מתכנת, לא רק מוזיקאי, לא רק ממציא. אני הילד שפעם רצה שהתמונה תזוז – והיום אני מזיז אותה. אני ממשיך לחדש ולפרוץ דרך בתחומים מגוונים.'
+            }
+        ];
+        const chronologyContainer = document.querySelector('#chronology > div');
+        if(chronologyContainer) {
+            chronologyData.forEach((item, index) => {
+                const id = `chapter${index + 1}-full`;
+                const card = document.createElement('div');
+                card.className = 'card chronology-item';
+                card.innerHTML = `<h3>${item.title}</h3><p>${item.summary}</p><div class="chronology-full-content" id="${id}"><p>${item.full.replace(/\n/g, '<br>')}</p></div><span class="read-more" data-chapter="${id}">קרא עוד</span>`;
+                chronologyContainer.appendChild(card);
+            });
+            chronologyContainer.querySelectorAll('.read-more').forEach(link => {
+                link.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const chapterId = link.dataset.chapter;
+                    const fullContentDiv = document.getElementById(chapterId);
+                    const isOpen = fullContentDiv.classList.toggle('open');
+                    link.textContent = isOpen ? 'הסתר' : 'קרא עוד';
+                });
+            });
+        }
+        
+        // --- Scrollspy for Navigation ---
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('main section');
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                if (window.pageYOffset >= section.offsetTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active-nav');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active-nav');
+                }
+            });
+        });
+    });
+    </script>
+</body>
+</html>
